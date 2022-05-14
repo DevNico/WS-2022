@@ -23,7 +23,7 @@ jobs:
           token_format: "access_token"
           access_token_scopes: "email, openid, https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/firebase"
           workload_identity_provider: "projects/827464709272/locations/global/workloadIdentityPools/gh-pool/providers/actions-provider"
-          service_account: "gh-deployment@service-release-manager.iam.gserviceaccount.com"
+          service_account: "gh-actions-deployment@service-release-manager.iam.gserviceaccount.com"
           create_credentials_file: true
 
       - uses: actions/setup-node@v3
