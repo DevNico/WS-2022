@@ -1,5 +1,17 @@
 {
-  "projects": {
-    "default": "service-release-manager"
-  }
+	"projects": {
+		"default": "service-release-manager"
+	},
+	"targets": {
+		"service-release-manager": {
+			"hosting": {
+				"prod": [
+					"service-release-manager"
+				],
+				"develop": [
+					"service-release-manager-develop"
+				]
+			}
+		}
+	}
 }

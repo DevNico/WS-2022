@@ -1,9 +1,9 @@
-name: Deploy to Firebase Hosting on merge
+name: Deploy to Firebase Hosting Develop on merge
 "on":
   workflow_dispatch:
   push:
     branches:
-      - main
+      - develop
     paths:
       - "frontend/**"
 
@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: main
+          ref: develop
 
       - id: "auth"
         name: "Authenticate to Google Cloud"
@@ -40,5 +40,5 @@ jobs:
       - run: npm run build
         working-directory: "frontend"
 
-      - run: npx firebase-tools deploy --only hosting:prod --project service-release-manager
+      - run: npx firebase-tools deploy --only hosting:develop --project service-release-manager
         working-directory: "frontend"
