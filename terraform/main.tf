@@ -1,7 +1,8 @@
 resource "google_service_account" "gh_actions_deployment" {
   project      = var.project_id
   account_id   = "gh-actions-deployment"
-  display_name = "Service Account for deployments via Github Actions"
+  display_name = "Github Actions Deployment"
+  description  = "Service Account for deployments via Github Actions"
   disabled     = false
 }
 
