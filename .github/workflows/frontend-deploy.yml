@@ -26,6 +26,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+        working-directory: "frontend"
       - run: npm run build
+        working-directory: "frontend"
       - run: npx firebase-tools deploy --only hosting --project service-release-manager
+        working-directory: "frontend"
