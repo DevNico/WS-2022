@@ -19,6 +19,8 @@ jobs:
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v0"
         with:
+          token_format: "access_token"
+          access_token_scopes: "email, openid, https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/firebase"
           workload_identity_provider: "projects/827464709272/locations/global/workloadIdentityPools/gh-pool/providers/actions-provider"
           service_account: "gh-deployment@service-release-manager.iam.gserviceaccount.com"
           create_credentials_file: true
@@ -26,6 +28,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+        working-directory: "frontend"
       - run: npm run build
+        working-directory: "frontend"
       - run: npx firebase-tools deploy --only hosting --project service-release-manager
+        working-directory: "frontend"
