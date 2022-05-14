@@ -24,6 +24,7 @@
     "fp-ts": "^2.12.1",
     "i18next": "^21.8.1",
     "i18next-browser-languagedetector": "^6.1.4",
+    "prettier": "^2.6.2",
     "react": "^18.1.0",
     "react-div-100vh": "^0.7.0",
     "react-dom": "^18.1.0",

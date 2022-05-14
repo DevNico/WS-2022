@@ -1,4 +1,4 @@
-name: Deploy to Firebase Hosting Develop on merge
+name: Frontend Dev Deploy
 "on":
   workflow_dispatch:
   push:
