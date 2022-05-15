@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  postgresql:
+    image: postgres:14.2-alpine
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "localhost", "5432"]
+      interval: 1s
+      timeout: 10s
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/postgis-volume/data:/var/lib/postgresql/data
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.0
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 1s
+      timeout: 10s
+      start_period: 20s
+    command: [
+        "start-dev",
+        # "--import-realm"
+      ]
+    volumes:
+      - ./realms/realm.json:/opt/keycloak/data/import/realm.json:ro
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_FEATURES: admin2
+      KC_HEALTH_ENABLED: true
