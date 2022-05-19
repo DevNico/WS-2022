@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/devnico/code/ws2022/backend/ServiceReleaseManager/ServiceReleaseManager/ServiceReleaseManager.csproj": {}
+    "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj": {}
   },
   "projects": {
-    "/Users/devnico/code/ws2022/backend/ServiceReleaseManager/ServiceReleaseManager/ServiceReleaseManager.csproj": {
+    "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/devnico/code/ws2022/backend/ServiceReleaseManager/ServiceReleaseManager/ServiceReleaseManager.csproj",
+        "projectUniqueName": "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj",
         "projectName": "ServiceReleaseManager",
-        "projectPath": "/Users/devnico/code/ws2022/backend/ServiceReleaseManager/ServiceReleaseManager/ServiceReleaseManager.csproj",
-        "packagesPath": "/Users/devnico/.nuget/packages/",
-        "outputPath": "/Users/devnico/code/ws2022/backend/ServiceReleaseManager/ServiceReleaseManager/obj/",
+        "projectPath": "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj",
+        "packagesPath": "C:\\Users\\marku\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/devnico/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\marku\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,6 +44,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[6.0.4, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
@@ -61,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.202/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
