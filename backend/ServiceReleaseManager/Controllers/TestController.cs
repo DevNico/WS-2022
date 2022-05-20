@@ -9,17 +9,17 @@ namespace ServiceReleaseManager.Controllers;
 [Route("[controller]")]
 public class TestController : ControllerBase
 {
-    private readonly UserDbContext _userDbContext;
+    private readonly ServiceReleaseManagerDbContext _dbContext;
 
-    public TestController(UserDbContext userDbContext)
+    public TestController(ServiceReleaseManagerDbContext dbContext)
     {
-        _userDbContext = userDbContext;
+        _dbContext = dbContext;
     }
 
     [HttpGet("Test")]
     public async Task<IReadOnlyCollection<User>> Test()
     {
-        return await _userDbContext.Users.ToListAsync();
+        return await _dbContext.Users.ToListAsync();
     }
 
     [HttpGet("Test1")]
@@ -28,8 +28,8 @@ public class TestController : ControllerBase
         var user = new User();
         user.Admin = false;
         user.Email = "test@localhost";
-        _userDbContext.Users.Add(user);
-        await _userDbContext.SaveChangesAsync();
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
         
         return Accepted(user);
     }

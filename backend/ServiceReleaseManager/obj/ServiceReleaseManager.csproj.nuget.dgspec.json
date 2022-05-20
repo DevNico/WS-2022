@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj": {}
+    "/Users/markus/RiderProjects/WS-2022/backend/ServiceReleaseManager/ServiceReleaseManager.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj": {
+    "/Users/markus/RiderProjects/WS-2022/backend/ServiceReleaseManager/ServiceReleaseManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj",
+        "projectUniqueName": "/Users/markus/RiderProjects/WS-2022/backend/ServiceReleaseManager/ServiceReleaseManager.csproj",
         "projectName": "ServiceReleaseManager",
-        "projectPath": "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\ServiceReleaseManager.csproj",
-        "packagesPath": "C:\\Users\\marku\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marku\\RiderProjects\\WS-2022\\backend\\ServiceReleaseManager\\obj\\",
+        "projectPath": "/Users/markus/RiderProjects/WS-2022/backend/ServiceReleaseManager/ServiceReleaseManager.csproj",
+        "packagesPath": "/Users/markus/.nuget/packages/",
+        "outputPath": "/Users/markus/RiderProjects/WS-2022/backend/ServiceReleaseManager/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\marku\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/markus/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,6 +39,12 @@
           "targetAlias": "net6.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.5, )"
             },
@@ -75,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.202/RuntimeIdentifierGraph.json"
         }
       }
     }
