@@ -271,4 +271,9 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/
 
+!ServiceReleaseManager/Domain/Models/Release
+/ServiceReleaseManager/obj
+/ServiceReleaseManager/bin
+/.idea
+
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
