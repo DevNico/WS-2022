@@ -9,7 +9,7 @@
 					"service-release-manager"
 				],
 				"develop": [
-					"service-release-manager-develop"
+					"service-release-manager-dev"
 				]
 			}
 		}
