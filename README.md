@@ -1,5 +1,17 @@
 # WS-2022
 
+## Backend
+
+The backend application is based on: [Clean Architecture Template](https://github.com/ardalis/CleanArchitecture).
+
+For local development, start the postgres database with the `docker/start.sh` script.
+
+To generate a migration, run the following command in the `backend/src` directory:
+
+```bash
+dotnet ef migrations add -s ServiceReleaseManager.Api -c AppDbContext -p ServiceReleaseManager.Infrastructure <MigrationName>
+```
+
 ## Frontend
 
 The frontend application is automatically deployed to Firebase Hosting.
@@ -11,7 +23,7 @@ The frontend application is automatically deployed to Firebase Hosting.
 
 ## Terraform
 
-Terraform is used to manage the Google Cloud Platform environment. It creates and manages the infrastructure for the application.
+Terraform is used to manage the Google Cloud Platform environment as well as a self hosted K3S Cluster where the Postgres instance, Keycloak and the backend will be deployed.
 
 | Service  | Url                                |
 | -------- | ---------------------------------- |
