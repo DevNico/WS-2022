@@ -6,6 +6,7 @@ scopes:
   - backend
   - terraform
   - docs
+  - ci
 
 types:
   - feat
