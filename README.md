@@ -16,10 +16,10 @@ dotnet ef migrations add -s ServiceReleaseManager.Api -c AppDbContext -p Service
 
 The frontend application is automatically deployed to Firebase Hosting.
 
-| Branch  | Url                        |
-| ------- | -------------------------- |
-| main    | https://srm.devnico.me     |
-| develop | https://dev.srm.devnico.me |
+| Branch  | Url                           |
+| ------- | ----------------------------- |
+| main    | https://srm.devnico.cloud     |
+| develop | https://dev.srm.devnico.cloud |
 
 ## Terraform
 
