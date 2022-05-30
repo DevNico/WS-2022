@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="OrganisationAggregate\Handlers" />
+    <Folder Include="OrganisationAggregate\Services" />
     <Folder Include="Services" />
   </ItemGroup>
 

@@ -2,8 +2,7 @@
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 
-public record OrganisationRecord(int Id, string Name, DateTime UpdatedAt,
-  DateTime CreatedAt)
+public record OrganisationRecord(int Id, string Name, DateTime UpdatedAt, DateTime CreatedAt)
 {
   public static OrganisationRecord FromEntity(Organisation entity)
   {
