@@ -55,7 +55,6 @@ builder.Services.AddAuthorization(options =>
     .RequireAuthenticatedUser()
     .Build();
 });
-builder.Services.AddSingleton<IAuthorizationHandler, OrganisationAuthorizationHandler>();
 
 
 // Swagger

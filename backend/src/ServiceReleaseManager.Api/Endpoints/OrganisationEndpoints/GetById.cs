@@ -1,7 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -12,8 +11,8 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationByIdRequest>.WithActionResult<
   OrganisationRecord>
 {
-  private readonly IRepository<Organisation> _repository;
   private readonly IAuthorizationService _authorizationService;
+  private readonly IRepository<Organisation> _repository;
 
   public GetById(IRepository<Organisation> repository, IAuthorizationService authorizationService)
   {
@@ -41,10 +40,7 @@ public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationByIdRequest>
       return NotFound();
     }
 
-    var isAuthorized =
-      await _authorizationService.AuthorizeAsync(User, organisation, new OrganisationRequirement());
-    if (!isAuthorized.Succeeded) return NotFound();
-
+    // TODO: Authorize organisation resource
 
     var response = OrganisationRecord.FromEntity(organisation);
     return Ok(response);

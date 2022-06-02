@@ -16,7 +16,9 @@ public class DefaultInfrastructureModule : Module
   private readonly List<Assembly> _assemblies = new();
   private readonly bool _isDevelopment;
 
-  public DefaultInfrastructureModule(bool isDevelopment, Assembly? callingAssembly = null)
+  public DefaultInfrastructureModule(
+    bool isDevelopment,
+    Assembly? callingAssembly = null)
   {
     _isDevelopment = isDevelopment;
     var coreAssembly = Assembly.GetAssembly(typeof(Organisation));
