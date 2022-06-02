@@ -2,18 +2,13 @@
 
 public interface IKeycloakClient
 {
-  public Task<KeycloakUserRecord> CreateUser(
-    String username,
-    String firstname,
-    String lastname,
-    String email,
-    bool enabled,
-    bool emailVerified,
-    bool totp);
+  public Task<KeycloakUserRecord> CreateUser(KeycloakUserCreation userCreation);
 
   public Task<KeycloakUserRecord> GetUser(string userId);
 
   public Task<KeycloakUserRecord> GetUserByEmail(string email);
+
+  public Task UpdateUser(KeycloakUserRecord user);
   
   public Task SetUserDisplayName(string userId, string firstname, string lastname);
   
@@ -25,15 +20,25 @@ public interface IKeycloakClient
 }
 
 public record KeycloakUserRecord(
-  String Id,
-  String Username,
-  String? Firstname,
-  String? Lastname,
-  String? Email,
+  string Id,
+  string Username,
+  string? Firstname,
+  string? Lastname,
+  string? Email,
   bool EmailVerified,
   bool Enabled,
   bool Totp,
-  List<String> RequiredActions,
+  List<string> RequiredActions,
   DateTime NotBefore,
   DateTime CreatedTimestamp
+);
+
+public record KeycloakUserCreation(
+  string username,
+  string firstName,
+  string lastName,
+  string email,
+  bool emailVerified = false,
+  bool totp = false,
+  bool enabled = true
 );

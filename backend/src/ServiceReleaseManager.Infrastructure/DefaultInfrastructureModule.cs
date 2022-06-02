@@ -2,6 +2,7 @@
 using Autofac;
 using MediatR;
 using MediatR.Pipeline;
+using Microsoft.Extensions.Configuration;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Infrastructure.Data;
@@ -15,12 +16,12 @@ public class DefaultInfrastructureModule : Module
 {
   private readonly List<Assembly> _assemblies = new();
   private readonly bool _isDevelopment;
-
-  public DefaultInfrastructureModule(
-    bool isDevelopment,
-    Assembly? callingAssembly = null)
+  private readonly IConfiguration _configuration;
+  
+  public DefaultInfrastructureModule(bool isDevelopment, IConfiguration configuration, Assembly? callingAssembly = null)
   {
     _isDevelopment = isDevelopment;
+    _configuration = configuration;
     var coreAssembly = Assembly.GetAssembly(typeof(Organisation));
     var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
     if (coreAssembly != null)
@@ -91,6 +92,9 @@ public class DefaultInfrastructureModule : Module
     }
 
     builder.RegisterType<EmailSender>().As<IEmailSender>()
+      .InstancePerLifetimeScope();
+
+    builder.Register(_ => new KeycloakClient(_configuration)).As<IKeycloakClient>()
       .InstancePerLifetimeScope();
   }
 

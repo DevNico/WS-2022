@@ -99,7 +99,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultCoreModule());
   containerBuilder.RegisterModule(new DefaultInfrastructureModule(
-    builder.Environment.EnvironmentName == "Development"));
+    builder.Environment.EnvironmentName == "Development", builder.Configuration));
 });
 
 var app = builder.Build();
