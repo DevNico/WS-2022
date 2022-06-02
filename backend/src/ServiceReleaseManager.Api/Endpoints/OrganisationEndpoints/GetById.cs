@@ -13,12 +13,10 @@ public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationByIdRequest>
   OrganisationRecord>
 {
   private readonly IRepository<Organisation> _repository;
-  private readonly IAuthorizationService _authorizationService;
 
-  public GetById(IRepository<Organisation> repository, IAuthorizationService authorizationService)
+  public GetById(IRepository<Organisation> repository)
   {
     _repository = repository;
-    _authorizationService = authorizationService;
   }
 
   [HttpGet(GetOrganisationByIdRequest.Route)]
@@ -40,11 +38,6 @@ public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationByIdRequest>
     {
       return NotFound();
     }
-
-    var isAuthorized =
-      await _authorizationService.AuthorizeAsync(User, organisation, new OrganisationRequirement());
-    if (!isAuthorized.Succeeded) return NotFound();
-
 
     var response = OrganisationRecord.FromEntity(organisation);
     return Ok(response);
