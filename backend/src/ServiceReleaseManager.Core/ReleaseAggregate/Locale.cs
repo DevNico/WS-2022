@@ -6,22 +6,22 @@ namespace ServiceReleaseManager.Core.ReleaseAggregate;
 
 public class Locale : EntityBase
 {
-  public Locale(string languageCode, string countryCode, bool @default = false)
+  public Locale(string languageCode, string countryCode, bool isDefault = false)
   {
     LanguageCode = languageCode;
     CountryCode = countryCode;
-    Default = @default;
+    IsDefault = isDefault;
   }
   
   [Required]
   [DefaultValue(false)]
-  public bool Default { get; set; }
+  public bool IsDefault { get; set; }
   
   [Required]
-  [MaxLength(2)]
+  [MaxLength(3)]
   public string LanguageCode { get; set; }
   
   [Required]
-  [MaxLength(2)]
+  [MaxLength(3)]
   public string CountryCode { get; set; }
 }

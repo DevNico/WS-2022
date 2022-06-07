@@ -5,14 +5,14 @@ namespace ServiceReleaseManager.Core.ReleaseAggregate.Events;
 
 public class ReleasePublishedEvent : DomainEventBase
 {
-  public ReleasePublishedEvent(Release release, OrganisationUser organisationUser, DateTime at)
+  public ReleasePublishedEvent(Release release, OrganisationUser organisationUser, DateTime publishedAt)
   {
     Release = release;
     OrganisationUser = organisationUser;
-    At = at;
+    PublishedAt = publishedAt;
   }
 
   public Release Release { get; }
   public OrganisationUser OrganisationUser { get; }
-  public DateTime At { get; }
+  public DateTime PublishedAt { get; }
 }

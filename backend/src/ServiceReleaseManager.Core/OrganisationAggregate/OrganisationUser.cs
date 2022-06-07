@@ -9,7 +9,7 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 public class OrganisationUser : EntityBase
 {
   public OrganisationUser(string userId, string email, bool emailVerified, string firstName, string lastName,
-    DateTime lastSignIn)
+    DateTime? lastSignIn)
   {
     UserId = userId;
     Email = email;
@@ -25,9 +25,9 @@ public class OrganisationUser : EntityBase
     RegisterDomainEvent(organisationUserCreatedEvent);
   }
 
-  [Required] [MaxLength(50)] public String UserId { get; set; }
+  [Required] public String UserId { get; set; }
 
-  [Required] [MaxLength(50)] public String Email { get; set; }
+  [Required] [EmailAddress] public String Email { get; set; }
 
   [Required] public bool EmailVerified { get; set; }
 
@@ -35,7 +35,7 @@ public class OrganisationUser : EntityBase
 
   [Required] [MaxLength(50)] public String LastName { get; set; }
 
-  public DateTime LastSignIn { get; set; }
+  public DateTime? LastSignIn { get; set; }
 
   [Required] public OrganisationRole Role { get; set; }
 

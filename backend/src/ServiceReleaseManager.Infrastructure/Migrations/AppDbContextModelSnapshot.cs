@@ -104,8 +104,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("EmailVerified")
                         .HasColumnType("boolean");
@@ -123,7 +122,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<DateTime>("LastSignIn")
+                    b.Property<DateTime?>("LastSignIn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("OrganisationId")
@@ -137,8 +136,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -159,19 +157,19 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.Property<string>("CountryCode")
                         .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)");
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("Default")
+                    b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
 
                     b.Property<string>("LanguageCode")
                         .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("character varying(2)");
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
 
                     b.Property<int?>("ServiceId")
                         .HasColumnType("integer");
