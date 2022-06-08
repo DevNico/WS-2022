@@ -5,7 +5,7 @@ using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.RelaseTargetEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.ReleaseTargetEndpoints;
 
 public class Create : EndpointBaseAsync
   .WithRequest<CreateReleaseTargetRequest>

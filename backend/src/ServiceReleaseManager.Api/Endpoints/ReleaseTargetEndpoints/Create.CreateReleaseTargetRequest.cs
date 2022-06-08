@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.RelaseTargetEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.ReleaseTargetEndpoints;
 
 public class CreateReleaseTargetRequest
 {
