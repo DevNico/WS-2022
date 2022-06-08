@@ -3,10 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate.Events;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.ReleaseAggregate;
 
-public class Release : EntityBase
+public class Release : EntityBase, IAggregateRoot
 {
   public Release(string version, int buildNumber, string metadata)
   {
