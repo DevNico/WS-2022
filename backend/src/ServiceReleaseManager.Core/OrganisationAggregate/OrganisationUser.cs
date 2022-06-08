@@ -1,12 +1,13 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.Core.OrganisationAggregate.Events;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
-public class OrganisationUser : EntityBase
+public class OrganisationUser : EntityBase, IAggregateRoot
 {
   public OrganisationUser(string userId, string email, bool emailVerified, string firstName, string lastName,
     DateTime? lastSignIn)

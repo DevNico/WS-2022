@@ -1,9 +1,10 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
-public class OrganisationRole : EntityBase
+public class OrganisationRole : EntityBase, IAggregateRoot
 {
   public OrganisationRole(string name, bool serviceRead, bool serviceWrite, bool serviceDelete,
     bool userRead, bool userWrite, bool userDelete)
