@@ -2,12 +2,12 @@
 
 public class DeleteLocaleRequest
 {
-  public const string Route = "locales/{LocaleId}";
+  public const string Route = "/locales/{LocaleId:int}";
   
   public int LocaleId { get; set; }
   
   public static string BuildRoute(int localeId)
   {
-    return Route.Replace("{LocaleId}", localeId.ToString());
+    return Route.Replace("{LocaleId:int}", localeId.ToString());
   }
 }

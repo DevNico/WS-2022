@@ -2,10 +2,11 @@
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Events;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.ServiceAggregate;
 
-public class Service : EntityBase
+public class Service : EntityBase, IAggregateRoot
 {
   public Service()
   {

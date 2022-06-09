@@ -1,7 +1,8 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ReleaseAggregate;
-using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
+using ServiceReleaseManager.Core.ServiceAggregate;
+using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,10 +13,12 @@ public class Create : EndpointBaseAsync
   .WithActionResult<LocaleRecord>
 {
   private readonly IRepository<Locale> _repository;
+  private readonly IRepository<Service> _serviceRepository;
 
-  public Create(IRepository<Locale> repository)
+  public Create(IRepository<Locale> repository, IRepository<Service> serviceRepository)
   {
     _repository = repository;
+    _serviceRepository = serviceRepository;
   }
 
   [HttpPost(CreateLocaleRequest.Route)]
@@ -33,8 +36,14 @@ public class Create : EndpointBaseAsync
       return BadRequest();
     }
 
-    var spec = new LocaleByLanguageAndCountryCodeSpec(request.LanguageCode, request.CountryCode);
-    if (await _repository.CountAsync(spec, cancellationToken) > 0)
+    var spec = new ServiceByIdSpec(request.ServiceId);
+    var service = await _serviceRepository.GetBySpecAsync(spec, cancellationToken);
+    if (service == null)
+    {
+      return NotFound();
+    }
+
+    if (service.Locales.Any(l => l.LanguageCode == request.LanguageCode && l.CountryCode == request.CountryCode))
     {
       return Conflict();
     }
@@ -42,8 +51,12 @@ public class Create : EndpointBaseAsync
     var locale = new Locale(request.LanguageCode, request.CountryCode, request.IsDefault.GetValueOrDefault(false));
     var createdLocale = await _repository.AddAsync(locale, cancellationToken);
     await _repository.SaveChangesAsync(cancellationToken);
-    var response = LocaleRecord.FromEntity(createdLocale);
+    
+    service.Locales.Add(createdLocale);
+    await _serviceRepository.UpdateAsync(service, cancellationToken);
+    await _serviceRepository.SaveChangesAsync(cancellationToken);
 
+    var response = LocaleRecord.FromEntity(createdLocale);
     return Ok(response);
   }
 }

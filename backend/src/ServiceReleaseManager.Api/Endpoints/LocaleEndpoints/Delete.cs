@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
+using ServiceReleaseManager.Core.ServiceAggregate;
+using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -9,11 +11,13 @@ namespace ServiceReleaseManager.Api.Endpoints.LocaleEndpoints;
 
 public class Delete : EndpointBaseAsync.WithRequest<DeleteLocaleRequest>.WithoutResult
 {
-  private readonly IRepository<Locale> _repository;
+  private readonly IRepository<Service> _repository;
+  private readonly IRepository<Locale> _localeRepository;
 
-  public Delete(IRepository<Locale> repository)
+  public Delete(IRepository<Service> repository, IRepository<Locale> localeRepository)
   {
     _repository = repository;
+    _localeRepository = localeRepository;
   }
 
   [HttpDelete(DeleteLocaleRequest.Route)]
@@ -24,18 +28,28 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteLocaleRequest>.Without
     Tags = new[] { "LocaleEndpoints" }
   )]
   public override async Task<ActionResult> HandleAsync([FromRoute] DeleteLocaleRequest request,
-    CancellationToken cancellationToken = new CancellationToken())
+    CancellationToken cancellationToken = new ())
   {
-    var spec = new LocaleByIdSpec(request.LocaleId);
-    var localeToDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
+    var localeSpec = new LocaleByIdSpec(request.LocaleId);
+    var localeToDelete = await _localeRepository.GetBySpecAsync(localeSpec, cancellationToken);
     if (localeToDelete == null)
     {
       return NotFound();
     }
 
-    // TODO: Check for dependencies
-    await _repository.DeleteAsync(localeToDelete, cancellationToken);
+    var spec = new ServiceByLocaleIdSpec(request.LocaleId);
+    var service = await _repository.GetBySpecAsync(spec, cancellationToken);
+    if (service == null)
+    {
+      return NotFound();
+    }
+
+    service.Locales.Remove(localeToDelete);
+    await _repository.UpdateAsync(service, cancellationToken);
     await _repository.SaveChangesAsync(cancellationToken);
+
+    await _localeRepository.DeleteAsync(localeToDelete, cancellationToken);
+    await _localeRepository.SaveChangesAsync(cancellationToken);
 
     return NoContent();
   }
