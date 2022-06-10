@@ -13,12 +13,10 @@ public class Create : EndpointBaseAsync
   .WithRequest<CreateOrganisationRoleRequest>
   .WithActionResult<OrganisationRoleRecord>
 {
-  private readonly IRepository<Organisation> _organisationRepository;
-  private readonly IRepository<OrganisationRole> _repository;
+  private readonly IRepository<Organisation> _repository;
 
-  public Create(IRepository<Organisation> organisationRepository, IRepository<OrganisationRole> repository)
+  public Create(IRepository<Organisation> repository)
   {
-    _organisationRepository = organisationRepository;
     _repository = repository;
   }
 
@@ -38,7 +36,7 @@ public class Create : EndpointBaseAsync
     }
 
     var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _organisationRepository.GetBySpecAsync(orgSpec, cancellationToken);
+    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
     if (org == null)
     {
       return Unauthorized();
@@ -51,15 +49,12 @@ public class Create : EndpointBaseAsync
       return Conflict();
     }
 
-    var newRole = new OrganisationRole(request.Name, request.ServiceRead, request.ServiceWrite, request.ServiceDelete, request.UserRead, request.UserWrite, request.UserDelete);
-    var createdOrganisation = await _repository.AddAsync(newRole, cancellationToken);
+    var newRole = new OrganisationRole(request.Name, request.ServiceRead, request.ServiceWrite, request.ServiceDelete, request.UserRead, request.UserWrite, request.UserDelete); 
+    org.Roles.Add(newRole);
+    await _repository.UpdateAsync(org);
     await _repository.SaveChangesAsync(cancellationToken);
     
-    org.Roles.Add(newRole);
-    await _organisationRepository.UpdateAsync(org);
-    await _organisationRepository.SaveChangesAsync(cancellationToken);
-    
-    var response = OrganisationRoleRecord.FromEntity(createdOrganisation);
+    var response = OrganisationRoleRecord.FromEntity(newRole);
     return Ok(response);
   }
 }

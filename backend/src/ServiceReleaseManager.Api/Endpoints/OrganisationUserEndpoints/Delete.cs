@@ -11,12 +11,10 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
 public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationUserRequest>.WithoutResult
 {
-  private readonly IRepository<Organisation> _organisationRepository;
-  private readonly IRepository<OrganisationUser> _repository;
+  private readonly IRepository<Organisation> _repository;
 
-  public Delete(IRepository<Organisation> organisationRepository, IRepository<OrganisationUser> repository)
+  public Delete(IRepository<Organisation> repository)
   {
-    _organisationRepository = organisationRepository;
     _repository = repository;
   }
 
@@ -38,7 +36,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationUserReques
     }
 
     var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _organisationRepository.GetBySpecAsync(orgSpec, cancellationToken);
+    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
     if (org == null)
     {
       return Unauthorized();
@@ -53,7 +51,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationUserReques
 
 
     organisationUserToDelete.Deactivate();
-    await _repository.UpdateAsync(organisationUserToDelete);
+    await _repository.UpdateAsync(org);
     await _repository.SaveChangesAsync(cancellationToken);
 
     return NoContent();

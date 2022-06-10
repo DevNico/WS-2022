@@ -13,12 +13,10 @@ public class Create : EndpointBaseAsync
   .WithRequest<CreateOrganisationUserRequest>
   .WithActionResult<OrganisationUserRecord>
 {
-  private readonly IRepository<Organisation> _organisationRepository;
-  private readonly IRepository<OrganisationUser> _repository;
+  private readonly IRepository<Organisation> _repository;
 
-  public Create(IRepository<Organisation> organisationRepository, IRepository<OrganisationUser> repository)
+  public Create(IRepository<Organisation> repository)
   {
-    _organisationRepository = organisationRepository;
     _repository = repository;
   }
 
@@ -39,7 +37,7 @@ public class Create : EndpointBaseAsync
     }
 
     var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _organisationRepository.GetBySpecAsync(orgSpec, cancellationToken);
+    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
     if (org == null)
     {
       return Unauthorized();
@@ -52,15 +50,12 @@ public class Create : EndpointBaseAsync
       return Conflict();
     }
 
-    var newUser = new OrganisationUser(request.UserId, request.Email, false, request.FirstName ?? "", request.LastName ?? "", null);
-    var createdOrganisation = await _repository.AddAsync(newUser, cancellationToken);
-    await _repository.SaveChangesAsync();
-    
+    var newUser = new OrganisationUser(request.UserId, request.Email, false, request.FirstName ?? "", request.LastName ?? "", null);  
     org.Users.Add(newUser);
-    await _organisationRepository.UpdateAsync(org);
-    await _organisationRepository.SaveChangesAsync();
+    await _repository.UpdateAsync(org);
+    await _repository.SaveChangesAsync();
 
-    var response = OrganisationUserRecord.FromEntity(createdOrganisation);
+    var response = OrganisationUserRecord.FromEntity(newUser);
     return Ok(response);
   }
 }

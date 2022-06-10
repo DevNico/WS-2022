@@ -4,7 +4,7 @@ using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
-public class OrganisationRole : EntityBase, IAggregateRoot
+public class OrganisationRole : EntityBase
 {
   public OrganisationRole(string name, bool serviceRead, bool serviceWrite, bool serviceDelete,
     bool userRead, bool userWrite, bool userDelete)

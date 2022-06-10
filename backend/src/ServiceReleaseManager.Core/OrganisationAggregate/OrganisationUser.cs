@@ -7,7 +7,7 @@ using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
-public class OrganisationUser : EntityBase, IAggregateRoot
+public class OrganisationUser : EntityBase
 {
   public OrganisationUser(string userId, string email, bool emailVerified, string firstName, string lastName,
     DateTime? lastSignIn)

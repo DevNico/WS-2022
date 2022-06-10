@@ -12,13 +12,11 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
 public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRoleRequest>.WithoutResult
 {
-  private readonly IRepository<Organisation> _organisationRepository;
-  private readonly IRepository<OrganisationRole> _repository;
+  private readonly IRepository<Organisation> _repository;
 
-  public Delete(IRepository<Organisation> organisationRepository, IRepository<OrganisationRole> repository)
+  public Delete(IRepository<Organisation> repository)
   {
-    _organisationRepository = organisationRepository; 
-    _repository = repository;
+    _repository = repository; 
   }
 
   [HttpDelete(RouteHelper.OrganizationRoles_Delete)]
@@ -39,7 +37,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRoleReques
     }
 
     var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _organisationRepository.GetBySpecAsync(orgSpec, cancellationToken);
+    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
     if (org == null)
     {
       return BadRequest();
@@ -52,11 +50,8 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRoleReques
       return NotFound();
     }
     org.Roles.Remove(organisationRoleToDelete);
-    await _organisationRepository.UpdateAsync(org);
-    await _organisationRepository.SaveChangesAsync();
-
-    await _repository.DeleteAsync(organisationRoleToDelete, cancellationToken);
-    await _repository.SaveChangesAsync(cancellationToken);
+    await _repository.UpdateAsync(org);
+    await _repository.SaveChangesAsync();
 
     return NoContent();
   }
