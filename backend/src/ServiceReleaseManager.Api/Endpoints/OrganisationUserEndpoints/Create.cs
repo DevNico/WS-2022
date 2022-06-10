@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -12,14 +13,16 @@ public class Create : EndpointBaseAsync
   .WithRequest<CreateOrganisationUserRequest>
   .WithActionResult<OrganisationUserRecord>
 {
+  private readonly IRepository<Organisation> _organisationRepository;
   private readonly IRepository<OrganisationUser> _repository;
 
-  public Create(IRepository<OrganisationUser> repository)
+  public Create(IRepository<Organisation> organisationRepository, IRepository<OrganisationUser> repository)
   {
+    _organisationRepository = organisationRepository;
     _repository = repository;
   }
 
-  [HttpPost(CreateOrganisationUserRequest.Route)]
+  [HttpPost(RouteHelper.OrganizationUsers_Create)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Creates a new OrganisationUser",
@@ -29,22 +32,35 @@ public class Create : EndpointBaseAsync
   ]
   public override async Task<ActionResult<OrganisationUserRecord>> HandleAsync(CreateOrganisationUserRequest request, CancellationToken cancellationToken = new())
   {
-    if (request.UserId == null || request.Email == null)
+
+    if (string.IsNullOrWhiteSpace(request.UserId)|| string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.OrganisationName))
     {
       return BadRequest();
     }
 
+    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
+    var org = await _organisationRepository.GetBySpecAsync(orgSpec, cancellationToken);
+    if (org == null)
+    {
+      return Unauthorized();
+    }
+
     var spec = new OrganisationUserByUserIdSpec(request.UserId);
-    var found = await _repository.GetBySpecAsync(spec, cancellationToken);
+    var found = spec.Evaluate(org.Users).FirstOrDefault();
     if (found != null)
     {
       return Conflict();
     }
 
-    var newOrganisation = new OrganisationUser(request.UserId, request.Email, false, request.FirstName, request.LastName, null);
-    var createdOrganisation = await _repository.AddAsync(newOrganisation, cancellationToken);
-    var response = OrganisationUserRecord.FromEntity(createdOrganisation);
+    var newUser = new OrganisationUser(request.UserId, request.Email, false, request.FirstName ?? "", request.LastName ?? "", null);
+    var createdOrganisation = await _repository.AddAsync(newUser, cancellationToken);
+    await _repository.SaveChangesAsync();
+    
+    org.Users.Add(newUser);
+    await _organisationRepository.UpdateAsync(org);
+    await _organisationRepository.SaveChangesAsync();
 
+    var response = OrganisationUserRecord.FromEntity(createdOrganisation);
     return Ok(response);
   }
 }

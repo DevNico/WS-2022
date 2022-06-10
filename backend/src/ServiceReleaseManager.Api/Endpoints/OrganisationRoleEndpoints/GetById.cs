@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -9,17 +10,17 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
-public class GetByName : EndpointBaseAsync.WithRequest<GetOrganisationRoleByNameRequest>.WithActionResult<
+public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationRoleByIdRequest>.WithActionResult<
   OrganisationRoleRecord>
 {
-  private readonly IRepository<OrganisationRole> _repository;
+  private readonly IRepository<Organisation> _repository;
 
-  public GetByName(IRepository<OrganisationRole> repository)
+  public GetById(IRepository<Organisation> repository)
   {
     _repository = repository;
   }
 
-  [HttpGet(GetOrganisationRoleByNameRequest.Route)]
+  [HttpGet(RouteHelper.OrganizationRoles_GetByName)]
   [Authorize]
   [SwaggerOperation(
     Summary = "Gets a single OrganisationRole",
@@ -28,16 +29,23 @@ public class GetByName : EndpointBaseAsync.WithRequest<GetOrganisationRoleByName
     Tags = new[] { "OrganisationRolesEndpoints" })
   ]
   public override async Task<ActionResult<OrganisationRoleRecord>> HandleAsync(
-    [FromRoute] GetOrganisationRoleByNameRequest request,
+    [FromRoute] GetOrganisationRoleByIdRequest request,
     CancellationToken cancellationToken = new())
   {
-    if(request?.Name == null)
+    if(string.IsNullOrWhiteSpace(request?.OrganisationName))
     {
       return BadRequest();
     }
 
-    var spec = new OrganisationRoleByNameSpec(request.Name);
-    var organisationRole = await _repository.GetBySpecAsync(spec, cancellationToken);
+    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
+    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
+    if (org == null)
+    {
+      return Unauthorized();
+    }
+
+    var spec = new OrganisationRoleByIdSpec(request.RoleId);
+    var organisationRole = spec.Evaluate(org.Roles).FirstOrDefault();
 
     if (organisationRole == null)
     {

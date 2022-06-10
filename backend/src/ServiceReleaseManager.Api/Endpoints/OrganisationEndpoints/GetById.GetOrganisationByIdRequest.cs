@@ -1,13 +1,9 @@
-﻿namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 
 public class GetOrganisationByIdRequest
 {
-  public const string Route = "/organisations/{OrganisationId:int}";
+  [Required] public int OrganisationId { get; set; }
 
-  public int OrganisationId { get; set; }
-
-  public static string BuildRoute(int organisationId)
-  {
-    return Route.Replace("{OrganisationId:int}", organisationId.ToString());
-  }
 }

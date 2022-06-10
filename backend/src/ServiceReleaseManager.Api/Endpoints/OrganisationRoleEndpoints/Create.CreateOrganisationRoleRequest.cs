@@ -4,8 +4,7 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
 public class CreateOrganisationRoleRequest
 {
-  public const string Route = "/organisationroles";
-
+  [Required] public string? OrganisationName { get; set; }
   [Required] [MaxLength(50)] public string? Name { get; set; }
 
   [Required] public bool ServiceRead { get; set; }

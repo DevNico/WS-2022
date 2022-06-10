@@ -35,4 +35,5 @@ public class OrganisationRole : EntityBase, IAggregateRoot
   [Required] public bool UserWrite { get; set; }
 
   [Required] public bool UserDelete { get; set; }
+
 }

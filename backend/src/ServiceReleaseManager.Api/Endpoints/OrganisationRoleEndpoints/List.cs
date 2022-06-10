@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -8,16 +9,16 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
-public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<OrganisationRoleRecord>>
+public class List : EndpointBaseAsync.WithRequest<ListOrganisationRoleRequest>.WithActionResult<List<OrganisationRoleRecord>>
 {
-  private readonly IRepository<OrganisationRole> _repository;
+  private readonly IRepository<Organisation> _repository;
 
-  public List(IRepository<OrganisationRole> repository)
+  public List(IRepository<Organisation> repository)
   {
     _repository = repository;
   }
 
-  [HttpGet("/organisationroles")]
+  [HttpGet(RouteHelper.OrganizationRoles_List)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Gets a list of all OrganisationRoles",
@@ -25,11 +26,22 @@ public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<Organ
     Tags = new[] { "OrganisationRolesEndpoints" })
   ]
   public override async Task<ActionResult<List<OrganisationRoleRecord>>> HandleAsync(
-    CancellationToken cancellationToken = new())
+    ListOrganisationRoleRequest request, CancellationToken cancellationToken = new())
   {
-    var organisationRoles = await _repository.ListAsync(cancellationToken);
+    if (string.IsNullOrWhiteSpace(request.OrganisationName))
+    {
+      return BadRequest();
+    }
 
-    var response = organisationRoles
+    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
+    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
+    if (org == null)
+    {
+      return BadRequest();
+    }
+
+
+    var response = org.Roles
       .Select(OrganisationRoleRecord.FromEntity)
       .ToList();
 

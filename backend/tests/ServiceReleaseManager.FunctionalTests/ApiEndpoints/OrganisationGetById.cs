@@ -4,6 +4,7 @@ using Ardalis.HttpClientTestExtensions;
 using IdentityModel.Client;
 using ServiceReleaseManager.Api;
 using ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
+using ServiceReleaseManager.Api.Routes;
 using Xunit;
 
 namespace ServiceReleaseManager.FunctionalTests.ApiEndpoints;
@@ -24,7 +25,7 @@ public class ProjectGetById : IClassFixture<CustomWebApplicationFactory<WebMarke
     var client = _factory.CreateClient();
     client.SetBearerToken(ApiTokenHelper.GetAdminUserToken());
 
-    var route = GetOrganisationByIdRequest.BuildRoute(1);
+    var route = RouteHelper.Organizations_GetById.ReplaceOrganisationNameAttr("1");
     var result = await client.GetAndDeserialize<OrganisationRecord>(route);
 
     Assert.Equal(1, result.Id);
@@ -37,7 +38,7 @@ public class ProjectGetById : IClassFixture<CustomWebApplicationFactory<WebMarke
     var client = _factory.CreateClient();
     client.SetBearerToken(ApiTokenHelper.GetNormalUserToken());
 
-    var route = GetOrganisationByIdRequest.BuildRoute(1);
+    var route = RouteHelper.Organizations_GetById.ReplaceOrganisationNameAttr("1");
     await client.GetAndEnsureNotFound(route);
   }
 
@@ -47,7 +48,7 @@ public class ProjectGetById : IClassFixture<CustomWebApplicationFactory<WebMarke
     var client = _factory.CreateClient();
     client.SetBearerToken(ApiTokenHelper.GetAdminUserToken());
 
-    var route = GetOrganisationByIdRequest.BuildRoute(0);
+    var route = RouteHelper.Organizations_GetById.ReplaceOrganisationNameAttr("0");
 
     await client.GetAndEnsureNotFound(route);
   }

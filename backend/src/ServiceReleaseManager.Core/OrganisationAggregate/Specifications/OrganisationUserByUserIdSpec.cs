@@ -8,6 +8,6 @@ public sealed class OrganisationUserByUserIdSpec : Specification<OrganisationUse
   public OrganisationUserByUserIdSpec(string userId)
   {
     Query
-      .Where(r => r.UserId.Equals(userId, StringComparison.OrdinalIgnoreCase));
+      .Where(u => u.UserId.Equals(userId, StringComparison.OrdinalIgnoreCase));
   }
 }

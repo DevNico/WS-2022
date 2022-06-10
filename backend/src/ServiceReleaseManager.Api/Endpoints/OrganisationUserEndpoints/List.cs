@@ -6,31 +6,42 @@ using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
-public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<OrganisationUserRecord>>
+public class List : EndpointBaseAsync.WithRequest<ListOrganisationUserRequest>.WithActionResult<List<OrganisationUserRecord>>
 {
-  private readonly IRepository<OrganisationUser> _repository;
+  private readonly IRepository<Organisation> _repository;
 
-  public List(IRepository<OrganisationUser> repository)
+  public List(IRepository<Organisation> repository)
   {
     _repository = repository;
   }
 
-  [HttpGet("/organisations")]
+  [HttpGet("/organisations/{OrganisationId:int}/users")]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Gets a list of all OrganisationUsers",
     OperationId = "OrganisationUser.List",
     Tags = new[] { "OrganisationUserEndpoints" })
   ]
-  public override async Task<ActionResult<List<OrganisationUserRecord>>> HandleAsync(
+  public override async Task<ActionResult<List<OrganisationUserRecord>>> HandleAsync(ListOrganisationUserRequest request,
     CancellationToken cancellationToken = new())
   {
-    var organisations = await _repository.ListAsync(cancellationToken);
+
+    if (string.IsNullOrWhiteSpace(request.OrganisationName))
+    {
+      return BadRequest();
+    }
+
+    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
+    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
+    if (org == null)
+    {
+      return BadRequest();
+    }
+
     var spec = new ActiveOrganisationUsersSearchSpec();
-    var activeOrganisations = spec.Evaluate(organisations);
+    var activeOrganisations = spec.Evaluate(org.Users);
 
     var response = activeOrganisations
       .Select(OrganisationUserRecord.FromEntity)

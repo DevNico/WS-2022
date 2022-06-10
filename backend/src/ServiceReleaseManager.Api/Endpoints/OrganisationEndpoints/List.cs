@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -17,7 +18,7 @@ public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<Organ
     _repository = repository;
   }
 
-  [HttpGet("/organisations")]
+  [HttpGet(RouteHelper.Organizations_List)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Gets a list of all Organisations",
