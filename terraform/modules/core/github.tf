@@ -13,10 +13,9 @@ resource "google_project_iam_member" "firebase_hosting_binding" {
 }
 
 module "gh_oidc" {
-
   source      = "terraform-google-modules/github-actions-runners/google//modules/gh-oidc"
   project_id  = var.project_id
-  pool_id     = "gh-pool"
+  pool_id     = "github-pool"
   provider_id = "actions-provider"
   sa_mapping = {
     "gh-actions-service-account" = {

@@ -1,0 +1,14 @@
+name: Frontend Prod
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+
+jobs:
+  build_and_deploy:
+    uses: ./.github/workflows/frontend-deploy.yml
+    with:
+      branch: main

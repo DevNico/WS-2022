@@ -37,31 +37,31 @@ resource "keycloak_role" "admin" {
   name     = "admin"
 }
 
-resource "keycloak_role" "superAdmin" {
+resource "keycloak_role" "super_admin" {
   realm_id = keycloak_realm.keycloak_env.id
   name     = "superAdmin"
 }
 
-# resource "keycloak_user" "user" {
-#   for_each       = var.keycloak_users
-#   realm_id       = keycloak_realm.keycloak_env.id
-#   enabled        = true
-#   email_verified = true
+resource "keycloak_user" "user" {
+  for_each       = var.keycloak_users
+  realm_id       = keycloak_realm.keycloak_env.id
+  enabled        = true
+  email_verified = true
 
-#   email      = each.key
-#   username   = each.key
-#   first_name = each.value.first_name
-#   last_name  = each.value.last_name
-# }
-# resource "keycloak_user_roles" "user_roles" {
-#   for_each = keycloak_user.user
-#   realm_id = keycloak_realm.keycloak_env.id
-#   user_id  = each.value.id
+  email      = each.key
+  username   = each.key
+  first_name = each.value.first_name
+  last_name  = each.value.last_name
+}
+resource "keycloak_user_roles" "user_roles" {
+  for_each = keycloak_user.user
+  realm_id = keycloak_realm.keycloak_env.id
+  user_id  = each.value.id
 
-#   role_ids = [
-#     keycloak_role.super_admin.id
-#   ]
-# }
+  role_ids = [
+    keycloak_role.super_admin.id
+  ]
+}
 
 resource "keycloak_openid_client" "backend" {
   realm_id  = keycloak_realm.keycloak_env.id
@@ -75,7 +75,7 @@ resource "keycloak_openid_client" "backend" {
   standard_flow_enabled        = true
   direct_access_grants_enabled = true
 
-  valid_redirect_uris = ["*"]
+  valid_redirect_uris = var.backend_redirect_urls
 
   login_theme = "keycloak"
 }
@@ -92,13 +92,8 @@ resource "keycloak_openid_client" "webapp" {
   implicit_flow_enabled        = true
   direct_access_grants_enabled = true
 
-  valid_redirect_uris = [
-    "*"
-  ]
-
-  web_origins = [
-    "*"
-  ]
+  valid_redirect_uris = var.webapp_redirect_urls
+  web_origins         = ["*"]
 }
 
 resource "keycloak_openid_audience_protocol_mapper" "audience_mapper" {
