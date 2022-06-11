@@ -17,12 +17,9 @@ public class Service : EntityBase
     RegisterDomainEvent(serviceCreatedEvent);
   }
 
-  [Required]
-  public List<Release> Releases { get; set; }
-  
-  [Required]
-  public List<Locale> Locales { get; set; }
-  
-  [Required]
-  public List<ReleaseTarget> ReleaseTargets { get; set; }
+  [Required] public List<Release> Releases { get; set; }
+
+  [Required] public List<Locale> Locales { get; set; }
+
+  [Required] public List<ReleaseTarget> ReleaseTargets { get; set; }
 }

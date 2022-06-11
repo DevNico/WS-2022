@@ -6,5 +6,4 @@ public class DeleteOrganisationUserRequest
 {
   [Required] public string? OrganisationName { get; set; }
   [Required] public int OrgUserId { get; set; }
-
 }

@@ -11,16 +11,10 @@ public class ReleaseTrigger : EntityBase
     Event = @event;
     Url = url;
   }
-  
-  [Required]
-  [MaxLength(50)]
-  public string Name { get; set; }
-  
-  [Required]
-  [MaxLength(50)]
-  public string Event { get; set; }
-  
-  [Required]
-  [MaxLength(250)]
-  public string Url { get; set; }
+
+  [Required] [MaxLength(50)] public string Name { get; set; }
+
+  [Required] [MaxLength(50)] public string Event { get; set; }
+
+  [Required] [MaxLength(250)] public string Url { get; set; }
 }

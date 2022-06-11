@@ -11,7 +11,7 @@ public class ReleaseApprovedEvent : DomainEventBase
     OrganisationUser = organisationUser;
     At = at;
   }
-  
+
   public Release Release { get; }
   public OrganisationUser OrganisationUser { get; }
   public DateTime At { get; }

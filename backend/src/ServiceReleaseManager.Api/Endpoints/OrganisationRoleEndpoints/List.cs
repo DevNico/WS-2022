@@ -9,7 +9,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
-public class List : EndpointBaseAsync.WithRequest<ListOrganisationRoleRequest>.WithActionResult<List<OrganisationRoleRecord>>
+public class List : EndpointBaseAsync.WithRequest<ListOrganisationRoleRequest>.WithActionResult<
+  List<OrganisationRoleRecord>>
 {
   private readonly IRepository<Organisation> _repository;
 

@@ -18,5 +18,4 @@ public class CreateOrganisationRoleRequest
   [Required] public bool UserWrite { get; set; }
 
   [Required] public bool UserDelete { get; set; }
-
 }

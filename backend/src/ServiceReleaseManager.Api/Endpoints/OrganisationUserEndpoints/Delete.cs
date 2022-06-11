@@ -30,7 +30,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationUserReques
     [FromRoute] DeleteOrganisationUserRequest request,
     CancellationToken cancellationToken = new())
   {
-    if(string.IsNullOrWhiteSpace(request?.OrganisationName))
+    if (string.IsNullOrWhiteSpace(request?.OrganisationName))
     {
       return BadRequest();
     }

@@ -1,7 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
@@ -16,7 +15,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRoleReques
 
   public Delete(IRepository<Organisation> repository)
   {
-    _repository = repository; 
+    _repository = repository;
   }
 
   [HttpDelete(RouteHelper.OrganizationRoles_Delete)]
@@ -49,6 +48,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRoleReques
     {
       return NotFound();
     }
+
     org.Roles.Remove(organisationRoleToDelete);
     await _repository.UpdateAsync(org);
     await _repository.SaveChangesAsync();

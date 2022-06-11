@@ -1,7 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
@@ -10,8 +9,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
-public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationRoleByIdRequest>.WithActionResult<
-  OrganisationRoleRecord>
+public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationRoleByIdRequest>.
+  WithActionResult<
+    OrganisationRoleRecord>
 {
   private readonly IRepository<Organisation> _repository;
 
@@ -32,7 +32,7 @@ public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationRoleByIdRequ
     [FromRoute] GetOrganisationRoleByIdRequest request,
     CancellationToken cancellationToken = new())
   {
-    if(string.IsNullOrWhiteSpace(request?.OrganisationName))
+    if (string.IsNullOrWhiteSpace(request?.OrganisationName))
     {
       return BadRequest();
     }

@@ -12,16 +12,10 @@ public class Locale : EntityBase
     CountryCode = countryCode;
     IsDefault = isDefault;
   }
-  
-  [Required]
-  [DefaultValue(false)]
-  public bool IsDefault { get; set; }
-  
-  [Required]
-  [MaxLength(3)]
-  public string LanguageCode { get; set; }
-  
-  [Required]
-  [MaxLength(3)]
-  public string CountryCode { get; set; }
+
+  [Required] [DefaultValue(false)] public bool IsDefault { get; set; }
+
+  [Required] [MaxLength(3)] public string LanguageCode { get; set; }
+
+  [Required] [MaxLength(3)] public string CountryCode { get; set; }
 }

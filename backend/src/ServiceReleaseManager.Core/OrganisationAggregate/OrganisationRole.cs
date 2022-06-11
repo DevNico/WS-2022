@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.SharedKernel;
-using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationRole : EntityBase
 {
+  public static readonly OrganisationRole Administrator =
+    new("Administrator", true, true, true, true, true, true);
+
   public OrganisationRole(string name, bool serviceRead, bool serviceWrite, bool serviceDelete,
     bool userRead, bool userWrite, bool userDelete)
   {
@@ -17,9 +19,6 @@ public class OrganisationRole : EntityBase
     UserWrite = userWrite;
     UserDelete = userDelete;
   }
-
-  public static readonly OrganisationRole Administrator =
-    new("Administrator", true, true, true, true, true, true);
 
 
   [Required] [MaxLength(50)] public String Name { get; set; }
@@ -35,5 +34,4 @@ public class OrganisationRole : EntityBase
   [Required] public bool UserWrite { get; set; }
 
   [Required] public bool UserDelete { get; set; }
-
 }

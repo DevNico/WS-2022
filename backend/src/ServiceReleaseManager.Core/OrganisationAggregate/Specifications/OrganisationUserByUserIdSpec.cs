@@ -2,9 +2,9 @@
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 
-public sealed class OrganisationUserByUserIdSpec : Specification<OrganisationUser>, ISingleResultSpecification
+public sealed class OrganisationUserByUserIdSpec : Specification<OrganisationUser>,
+  ISingleResultSpecification
 {
-
   public OrganisationUserByUserIdSpec(string userId)
   {
     Query

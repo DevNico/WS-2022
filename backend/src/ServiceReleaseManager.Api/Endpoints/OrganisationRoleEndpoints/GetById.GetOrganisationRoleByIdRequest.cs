@@ -6,5 +6,4 @@ public class GetOrganisationRoleByIdRequest
 {
   [Required] public string? OrganisationName { get; set; }
   [Required] public int RoleId { get; set; }
-
 }

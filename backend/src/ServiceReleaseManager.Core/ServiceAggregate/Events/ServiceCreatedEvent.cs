@@ -8,6 +8,6 @@ public class ServiceCreatedEvent : DomainEventBase
   {
     Service = service;
   }
-  
+
   public Service Service { get; }
 }

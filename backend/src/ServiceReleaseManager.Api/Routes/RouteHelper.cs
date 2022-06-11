@@ -13,14 +13,16 @@ public static class RouteHelper
   public const string Organizations_GetById = $"{_organisationsBaseRoute}/{_organisationNameAttr}";
   public const string Organizations_List = $"{_organisationsBaseRoute}";
 
-  private const string _organisationRolesBaseRoute = $"{_organisationsBaseRoute}/{_organisationNameAttr}/roles";
+  private const string _organisationRolesBaseRoute =
+    $"{_organisationsBaseRoute}/{_organisationNameAttr}/roles";
 
   public const string OrganizationRoles_Create = $"{_organisationRolesBaseRoute}";
   public const string OrganizationRoles_Delete = $"{_organisationRolesBaseRoute}/{_roleIdAttr}";
   public const string OrganizationRoles_GetByName = $"{_organisationRolesBaseRoute}/{_roleIdAttr}";
   public const string OrganizationRoles_List = $"{_organisationRolesBaseRoute}";
 
-  private const string _organisationUsersBaseRoute = $"{_organisationsBaseRoute}/{_organisationNameAttr}/users";
+  private const string _organisationUsersBaseRoute =
+    $"{_organisationsBaseRoute}/{_organisationNameAttr}/users";
 
   public const string OrganizationUsers_Create = $"{_organisationUsersBaseRoute}";
   public const string OrganizationUsers_Delete = $"{_organisationUsersBaseRoute}/{_orgUserIdAttr}";
@@ -34,12 +36,11 @@ public static class RouteHelper
 
   public static string ReplaceRoleIdAttr(this string routeStr, string roleId)
   {
-    return routeStr.Replace(_roleIdAttr, roleId.ToString());
+    return routeStr.Replace(_roleIdAttr, roleId);
   }
 
   public static string ReplaceOrgUserIdAttr(this string routeStr, int userId)
   {
     return routeStr.Replace(_orgUserIdAttr, userId.ToString());
   }
-
 }

@@ -9,9 +9,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
-public class Create : EndpointBaseAsync
-  .WithRequest<CreateOrganisationUserRequest>
-  .WithActionResult<OrganisationUserRecord>
+public class Create : EndpointBaseAsync.WithRequest<CreateOrganisationUserRequest>.WithActionResult<
+  OrganisationUserRecord>
 {
   private readonly IRepository<Organisation> _repository;
 
@@ -28,10 +27,11 @@ public class Create : EndpointBaseAsync
     OperationId = "OrganisationUser.Create",
     Tags = new[] { "OrganisationUserEndpoints" })
   ]
-  public override async Task<ActionResult<OrganisationUserRecord>> HandleAsync(CreateOrganisationUserRequest request, CancellationToken cancellationToken = new())
+  public override async Task<ActionResult<OrganisationUserRecord>> HandleAsync(
+    CreateOrganisationUserRequest request, CancellationToken cancellationToken = new())
   {
-
-    if (string.IsNullOrWhiteSpace(request.UserId)|| string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.OrganisationName))
+    if (string.IsNullOrWhiteSpace(request.UserId) || string.IsNullOrWhiteSpace(request.Email) ||
+        string.IsNullOrWhiteSpace(request.OrganisationName))
     {
       return BadRequest();
     }
@@ -50,7 +50,8 @@ public class Create : EndpointBaseAsync
       return Conflict();
     }
 
-    var newUser = new OrganisationUser(request.UserId, request.Email, false, request.FirstName ?? "", request.LastName ?? "", null);  
+    var newUser = new OrganisationUser(request.UserId, request.Email, false,
+      request.FirstName ?? "", request.LastName ?? "", null);
     org.Users.Add(newUser);
     await _repository.UpdateAsync(org);
     await _repository.SaveChangesAsync();

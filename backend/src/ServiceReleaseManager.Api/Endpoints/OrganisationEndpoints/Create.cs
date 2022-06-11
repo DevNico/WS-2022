@@ -9,9 +9,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 
-public class Create : EndpointBaseAsync
-  .WithRequest<CreateOrganisationRequest>
-  .WithActionResult<OrganisationRecord>
+public class Create : EndpointBaseAsync.WithRequest<CreateOrganisationRequest>.WithActionResult<
+  OrganisationRecord>
 {
   private readonly IRepository<Organisation> _repository;
 
@@ -39,7 +38,7 @@ public class Create : EndpointBaseAsync
 
     var spec = new OrganisationByNameSpec(request.Name);
     var org = await _repository.GetBySpecAsync(spec, cancellationToken);
-    if(org != null)
+    if (org != null)
     {
       return Conflict();
     }

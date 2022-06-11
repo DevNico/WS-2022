@@ -9,9 +9,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
-public class Create : EndpointBaseAsync
-  .WithRequest<CreateOrganisationRoleRequest>
-  .WithActionResult<OrganisationRoleRecord>
+public class Create : EndpointBaseAsync.WithRequest<CreateOrganisationRoleRequest>.WithActionResult<
+  OrganisationRoleRecord>
 {
   private readonly IRepository<Organisation> _repository;
 
@@ -28,9 +27,11 @@ public class Create : EndpointBaseAsync
     OperationId = "OrganisationRole.Create",
     Tags = new[] { "OrganisationRoleEndpoints" })
   ]
-  public async override Task<ActionResult<OrganisationRoleRecord>> HandleAsync(CreateOrganisationRoleRequest request, CancellationToken cancellationToken = new())
+  public override async Task<ActionResult<OrganisationRoleRecord>> HandleAsync(
+    CreateOrganisationRoleRequest request, CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.OrganisationName))
+    if (string.IsNullOrWhiteSpace(request.Name) ||
+        string.IsNullOrWhiteSpace(request.OrganisationName))
     {
       return BadRequest();
     }
@@ -49,11 +50,12 @@ public class Create : EndpointBaseAsync
       return Conflict();
     }
 
-    var newRole = new OrganisationRole(request.Name, request.ServiceRead, request.ServiceWrite, request.ServiceDelete, request.UserRead, request.UserWrite, request.UserDelete); 
+    var newRole = new OrganisationRole(request.Name, request.ServiceRead, request.ServiceWrite,
+      request.ServiceDelete, request.UserRead, request.UserWrite, request.UserDelete);
     org.Roles.Add(newRole);
     await _repository.UpdateAsync(org);
     await _repository.SaveChangesAsync(cancellationToken);
-    
+
     var response = OrganisationRoleRecord.FromEntity(newRole);
     return Ok(response);
   }

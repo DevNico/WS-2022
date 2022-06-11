@@ -9,8 +9,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
-public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationUserByIdRequest>.WithActionResult<
-  OrganisationUserRecord>
+public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationUserByIdRequest>.
+  WithActionResult<
+    OrganisationUserRecord>
 {
   private readonly IRepository<Organisation> _repository;
 
@@ -31,10 +32,11 @@ public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationUserByIdRequ
     [FromRoute] GetOrganisationUserByIdRequest request,
     CancellationToken cancellationToken = new())
   {
-    if(string.IsNullOrWhiteSpace(request.OrganisationName))
+    if (string.IsNullOrWhiteSpace(request.OrganisationName))
     {
       return BadRequest();
     }
+
     var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
     var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
     if (org == null)
