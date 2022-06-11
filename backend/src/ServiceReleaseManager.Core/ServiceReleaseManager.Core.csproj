@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.1.3" />
+  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.1.3"/>
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,23 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.GuardClauses" />
-    <PackageReference Include="Ardalis.Result" />
-    <PackageReference Include="Ardalis.SmartEnum" />
-    <PackageReference Include="Ardalis.Specification" />
-    <PackageReference Include="Autofac" />
-    <PackageReference Include="MediatR" />
-    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="Ardalis.GuardClauses"/>
+    <PackageReference Include="Ardalis.Result"/>
+    <PackageReference Include="Ardalis.SmartEnum"/>
+    <PackageReference Include="Ardalis.Specification"/>
+    <PackageReference Include="Autofac"/>
+    <PackageReference Include="MediatR"/>
+    <PackageReference Include="IdentityModel"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServiceReleaseManager.SharedKernel\ServiceReleaseManager.SharedKernel.csproj" />
+    <ProjectReference Include="..\ServiceReleaseManager.SharedKernel\ServiceReleaseManager.SharedKernel.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="OrganisationAggregate\Handlers" />
-    <Folder Include="OrganisationAggregate\Services" />
-    <Folder Include="Services" />
+    <Folder Include="OrganisationAggregate\Handlers"/>
+    <Folder Include="OrganisationAggregate\Services"/>
+    <Folder Include="Services"/>
   </ItemGroup>
 
 </Project>

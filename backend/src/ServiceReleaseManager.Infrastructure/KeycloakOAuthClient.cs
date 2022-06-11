@@ -7,10 +7,10 @@ namespace ServiceReleaseManager.Core;
 public class KeycloakOAuthClient
 {
   private static readonly HttpClient _httpClient = new();
-  private readonly string _url;
-  private readonly string _realm;
   private readonly string _clientId;
   private readonly string _clientSecret;
+  private readonly string _realm;
+  private readonly string _url;
 
   private TokenCache? _token;
 
@@ -28,18 +28,23 @@ public class KeycloakOAuthClient
     {
       return _token.respone.access_token;
     }
-    
-    using (var content = new FormUrlEncodedContent(new Dictionary<string, string>()
+
+    using (var content = new FormUrlEncodedContent(new Dictionary<string, string>
            {
-             { "client_id", _clientId }, { "client_secret", _clientSecret }, { "grant_type", "client_credentials" }
+             { "client_id", _clientId },
+             { "client_secret", _clientSecret },
+             { "grant_type", "client_credentials" }
            }))
     {
       content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-      var response = await _httpClient.PostAsync($"{_url}/realms/{_realm}/protocol/openid-connect/token", content);
+      var response =
+        await _httpClient.PostAsync($"{_url}/realms/{_realm}/protocol/openid-connect/token",
+          content);
 
       if (response.StatusCode != HttpStatusCode.OK)
       {
-        throw new HttpRequestException("Could not get the keycloak oauth token", null, response.StatusCode);
+        throw new HttpRequestException("Could not get the keycloak oauth token", null,
+          response.StatusCode);
       }
 
       var token = await response.Content.ReadFromJsonAsync<TokenResponse>();
@@ -64,11 +69,5 @@ public record TokenCache(
   DateTime expiresAt
 )
 {
-  public bool IsExpired
-  {
-    get
-    {
-      return DateTime.UtcNow.AddSeconds(30) >= expiresAt;
-    }
-  }
+  public bool IsExpired => DateTime.UtcNow.AddSeconds(30) >= expiresAt;
 }

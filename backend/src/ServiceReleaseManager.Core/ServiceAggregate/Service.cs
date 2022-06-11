@@ -18,12 +18,9 @@ public class Service : EntityBase, IAggregateRoot
     RegisterDomainEvent(serviceCreatedEvent);
   }
 
-  [Required]
-  public List<Release> Releases { get; set; }
-  
-  [Required]
-  public List<Locale> Locales { get; set; }
-  
-  [Required]
-  public List<ReleaseTarget> ReleaseTargets { get; set; }
+  [Required] public List<Release> Releases { get; set; }
+
+  [Required] public List<Locale> Locales { get; set; }
+
+  [Required] public List<ReleaseTarget> ReleaseTargets { get; set; }
 }

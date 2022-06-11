@@ -15,10 +15,11 @@ namespace ServiceReleaseManager.Infrastructure;
 public class DefaultInfrastructureModule : Module
 {
   private readonly List<Assembly> _assemblies = new();
-  private readonly bool _isDevelopment;
   private readonly IConfiguration _configuration;
-  
-  public DefaultInfrastructureModule(bool isDevelopment, IConfiguration configuration, Assembly? callingAssembly = null)
+  private readonly bool _isDevelopment;
+
+  public DefaultInfrastructureModule(bool isDevelopment, IConfiguration configuration,
+    Assembly? callingAssembly = null)
   {
     _isDevelopment = isDevelopment;
     _configuration = configuration;

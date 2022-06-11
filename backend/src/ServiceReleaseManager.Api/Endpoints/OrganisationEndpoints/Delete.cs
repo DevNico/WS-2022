@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -17,7 +18,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRequest>.W
     _repository = repository;
   }
 
-  [HttpDelete(DeleteOrganisationRequest.Route)]
+  [HttpDelete(RouteHelper.Organizations_Delete)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Deletes a Organisation",
@@ -29,7 +30,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRequest>.W
     [FromRoute] DeleteOrganisationRequest request,
     CancellationToken cancellationToken = new())
   {
-    var spec = new OrganisationByIdSpec(request.OrganisationId);
+    var spec = new OrganisationByNameSpec(request.OrganisationName);
     var organisationToDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
     if (organisationToDelete == null)
     {
@@ -37,6 +38,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRequest>.W
     }
 
     organisationToDelete.Deactivate();
+    await _repository.UpdateAsync(organisationToDelete);
     await _repository.SaveChangesAsync(cancellationToken);
 
     return NoContent();

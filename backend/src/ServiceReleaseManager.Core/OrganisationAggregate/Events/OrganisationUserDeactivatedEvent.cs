@@ -8,6 +8,6 @@ public class OrganisationUserDeactivatedEvent : DomainEventBase
   {
     OrganisationUser = organisationUser;
   }
-  
+
   public OrganisationUser OrganisationUser { get; }
 }
