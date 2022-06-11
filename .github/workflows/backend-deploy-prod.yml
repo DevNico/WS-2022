@@ -1,0 +1,17 @@
+name: Backend Dev
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+
+jobs:
+  build_and_deploy:
+    uses: ./.github/workflows/backend-deploy.yml
+    permissions:
+      contents: "read"
+      id-token: "write"
+    with:
+      branch: main

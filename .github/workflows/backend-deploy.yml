@@ -1,0 +1,72 @@
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    defaults:
+      run:
+        working-directory: "backend"
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.branch }}
+
+      - id: "auth"
+        name: 🪪 Authenticate to Google Cloud
+        uses: "google-github-actions/auth@v0"
+        with:
+          workload_identity_provider: "projects/827464709272/locations/global/workloadIdentityPools/github-pool/providers/actions-provider"
+          service_account: "gh-actions-deployment@service-release-manager.iam.gserviceaccount.com"
+
+      - id: "secrets"
+        name: 🔒 Get Secrets from Google Cloud
+        uses: "google-github-actions/get-secretmanager-secrets@v0"
+        with:
+          secrets: |-
+            registry_username:service-release-manager/registry_username
+            registry_password:service-release-manager/registry_password
+            kube_config:service-release-manager/kube_config
+
+      - run: docker login -u '${{ steps.secrets.outputs.registry_username }}' -p '${{ steps.secrets.outputs.registry_password }}' registry.k3s.devnico.cloud
+        name: 🔒 Login to Docker Registry
+
+      - run: make
+        name: 🔨 Build Backend Docker and Push to registry
+
+      - uses: danielr1996/envsubst-action@b10d6e6eb5dba1c22527571460ceb83bc17c0b28
+        name: 🔍 Replace Environment Variables
+        if: ${{ inputs.branch == 'main' }}
+        env:
+          NAME: srm-prod
+          VERSION: ${{ github.sha }}
+          HOSTNAME: api.srm.devnico.cloud
+        with:
+          input: .deployment/deployment.tpl.yaml
+          output: .deployment/deployment.yaml
+
+      - uses: danielr1996/envsubst-action@b10d6e6eb5dba1c22527571460ceb83bc17c0b28
+        name: 🔍 Replace Environment Variables
+        if: ${{ inputs.branch == 'develop' }}
+        env:
+          NAME: srm-dev
+          VERSION: ${{ github.sha }}
+          HOSTNAME: api.dev.srm.devnico.cloud
+        with:
+          input: .deployment/deployment.tpl.yaml
+          output: .deployment/deployment.yaml
+
+      - uses: actions-hub/kubectl@master
+        name: 🚀 Deploy Backend
+        env:
+          KUBE_CONFIG: ${{ steps.secrets.outputs.kube_config }}
+        with:
+          args: apply -f .deployment/deployment.yaml
