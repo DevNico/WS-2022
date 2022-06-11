@@ -15,7 +15,7 @@ keycloak_users = {
   },
   "ws22@markusjx.com" = {
     first_name = "Markus",
-    last_name  = "Jager"
+    last_name  = "Jaeger"
   }
   "philipp.cerweny@gmx.de" = {
     first_name = "Philipp",
