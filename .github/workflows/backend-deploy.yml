@@ -48,6 +48,7 @@ jobs:
         env:
           NAME: srm-prod
           VERSION: ${{ github.sha }}
+          ENVIRONMENT: prod
           HOSTNAME: api.srm.devnico.cloud
         with:
           input: .deployment/deployment.tpl.yaml
@@ -59,6 +60,7 @@ jobs:
         env:
           NAME: srm-dev
           VERSION: ${{ github.sha }}
+          ENVIRONMENT: dev
           HOSTNAME: api.dev.srm.devnico.cloud
         with:
           input: .deployment/deployment.tpl.yaml

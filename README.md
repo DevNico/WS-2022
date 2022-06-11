@@ -1,6 +1,6 @@
 # WS-2022
 
-
+[![Backend Dev](https://github.com/DevNico/WS-2022/actions/workflows/backend-deploy-dev.yml/badge.svg?branch=develop)](https://github.com/DevNico/WS-2022/actions/workflows/backend-deploy-dev.yml) [![Frontend Dev](https://github.com/DevNico/WS-2022/actions/workflows/frontend-deploy-dev.yml/badge.svg?branch=develop)](https://github.com/DevNico/WS-2022/actions/workflows/frontend-deploy-dev.yml)
 
 ## Backend
 
