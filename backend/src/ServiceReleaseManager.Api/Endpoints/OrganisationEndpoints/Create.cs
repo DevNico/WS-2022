@@ -1,15 +1,16 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
+using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 
-public class Create : EndpointBaseAsync
-  .WithRequest<CreateOrganisationRequest>
-  .WithActionResult<OrganisationRecord>
+public class Create : EndpointBaseAsync.WithRequest<CreateOrganisationRequest>.WithActionResult<
+  OrganisationRecord>
 {
   private readonly IRepository<Organisation> _repository;
 
@@ -18,7 +19,7 @@ public class Create : EndpointBaseAsync
     _repository = repository;
   }
 
-  [HttpPost(CreateOrganisationRequest.Route)]
+  [HttpPost(RouteHelper.Organisations_Create)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Creates a new Organisation",
@@ -30,12 +31,17 @@ public class Create : EndpointBaseAsync
     CreateOrganisationRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (request.Name == null)
+    if (string.IsNullOrWhiteSpace(request.Name))
     {
       return BadRequest();
     }
-    
-    var user = HttpContext.User;
+
+    var spec = new OrganisationByNameSpec(request.Name);
+    var org = await _repository.GetBySpecAsync(spec, cancellationToken);
+    if (org != null)
+    {
+      return Conflict();
+    }
 
     var newOrganisation = new Organisation(request.Name);
     var createdOrganisation = await _repository.AddAsync(newOrganisation, cancellationToken);

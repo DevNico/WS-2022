@@ -62,7 +62,8 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<bool>("ServiceDelete")
                         .HasColumnType("boolean");
@@ -110,13 +111,18 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<DateTime>("LastSignIn")
+                    b.Property<DateTime?>("LastSignIn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("OrganisationId")
@@ -141,6 +147,266 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.ToTable("OrganisationUser");
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Locale", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Locale");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Release", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ApprovedById")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BuildNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("PublishedById")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApprovedById");
+
+                    b.HasIndex("PublishedById");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Release");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("RequiresApproval")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("ReleaseTarget");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTrigger", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int?>("ReleaseTargetId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReleaseTargetId");
+
+                    b.ToTable("ReleaseTrigger");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("OrganisationId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganisationId");
+
+                    b.ToTable("Service");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<bool>("ReleaseApprove")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ReleaseCreate")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ReleaseLocalizedMetadataEdit")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ReleaseMetadataEdit")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ReleasePublish")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ServiceRole");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.UserSevice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("OrganisationUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ServiceRoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganisationUserId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("ServiceRoleId");
+
+                    b.ToTable("UserSevice");
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", b =>
                 {
                     b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", null)
@@ -156,9 +422,100 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Locale", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
+                        .WithMany("Locales")
+                        .HasForeignKey("ServiceId");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Release", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", "ApprovedBy")
+                        .WithMany()
+                        .HasForeignKey("ApprovedById");
+
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", "PublishedBy")
+                        .WithMany()
+                        .HasForeignKey("PublishedById");
+
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
+                        .WithMany("Releases")
+                        .HasForeignKey("ServiceId");
+
+                    b.Navigation("ApprovedBy");
+
+                    b.Navigation("PublishedBy");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
+                        .WithMany("ReleaseTargets")
+                        .HasForeignKey("ServiceId");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTrigger", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", null)
+                        .WithMany("ReleaseTriggers")
+                        .HasForeignKey("ReleaseTargetId");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Service", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", null)
+                        .WithMany("Services")
+                        .HasForeignKey("OrganisationId");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.UserSevice", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", null)
+                        .WithMany("ServiceRoles")
+                        .HasForeignKey("OrganisationUserId");
+
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", "ServiceRole")
+                        .WithMany()
+                        .HasForeignKey("ServiceRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+
+                    b.Navigation("ServiceRole");
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", b =>
                 {
+                    b.Navigation("Services");
+
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", b =>
+                {
+                    b.Navigation("ServiceRoles");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
+                {
+                    b.Navigation("ReleaseTriggers");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Service", b =>
+                {
+                    b.Navigation("Locales");
+
+                    b.Navigation("ReleaseTargets");
+
+                    b.Navigation("Releases");
                 });
 #pragma warning restore 612, 618
         }

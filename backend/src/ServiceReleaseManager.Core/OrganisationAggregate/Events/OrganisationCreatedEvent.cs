@@ -4,7 +4,6 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate.Events;
 
 public class OrganisationCreatedEvent : DomainEventBase
 {
-  
   public OrganisationCreatedEvent(Organisation organisation)
   {
     Organisation = organisation;
