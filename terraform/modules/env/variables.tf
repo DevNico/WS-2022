@@ -3,6 +3,11 @@ variable "environment" {
   type        = string
 }
 
+variable "project_id" {
+  description = "The project ID to deploy to"
+  type        = string
+}
+
 variable "namespace" {
   description = "The Kubernetes namespace to use"
   type        = string

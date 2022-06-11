@@ -1,3 +1,13 @@
+data "google_secret_manager_secret" "sengrid_api_key" {
+  project   = var.project_id
+  secret_id = "sengrid_api_key"
+}
+
+data "google_secret_manager_secret_version" "sengrid_api_key" {
+  project = var.project_id
+  secret  = data.google_secret_manager_secret.sengrid_api_key.id
+}
+
 locals {
   backend_client_id = "backend-client"
   webapp_client_id  = "webapp-v1"
@@ -29,6 +39,17 @@ resource "keycloak_realm" "keycloak_env" {
       "de"
     ]
     default_locale = "de"
+  }
+
+  smtp_server {
+    host = "smtp.sendgrid.net"
+    from = "no-reply@srm.devnico.cloud"
+    ssl  = true
+    port = 465
+    auth {
+      username = "apikey"
+      password = data.google_secret_manager_secret_version.sengrid_api_key.secret_data
+    }
   }
 }
 

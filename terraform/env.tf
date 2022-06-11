@@ -2,6 +2,7 @@ module "env" {
   count  = var.deploy_env ? 1 : 0
   source = "./modules/env"
 
+  project_id  = var.project_id
   environment = var.environment
   namespace   = local.namespace
 
