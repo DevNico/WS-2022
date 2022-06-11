@@ -36,6 +36,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4"/>
     <PackageVersion Include="IdentityModel" Version="6.0.0"/>
     <PackageVersion Include="WebMotions.Fake.Authentication.JwtBearer" Version="6.0.0"/>
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1"/>
 
   </ItemGroup>
 </Project>

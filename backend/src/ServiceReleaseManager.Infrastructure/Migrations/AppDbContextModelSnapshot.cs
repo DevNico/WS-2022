@@ -333,19 +333,15 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("ReleaseApprove")
                         .HasColumnType("boolean");
@@ -365,12 +361,43 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("ServiceRole");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceTemplate", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LocalizedMetadata")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<string>("StaticMetadata")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("ServiceTemplates");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.UserSevice", b =>
@@ -390,8 +417,9 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<int>("ServiceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ServiceRoleId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ServiceRoleName")
+                        .IsRequired()
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -402,7 +430,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.HasIndex("ServiceRoleId");
+                    b.HasIndex("ServiceRoleName");
 
                     b.ToTable("UserSevice");
                 });
@@ -483,7 +511,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", "ServiceRole")
                         .WithMany()
-                        .HasForeignKey("ServiceRoleId")
+                        .HasForeignKey("ServiceRoleName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

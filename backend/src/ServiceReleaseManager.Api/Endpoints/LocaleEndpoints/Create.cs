@@ -1,4 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate;
@@ -21,6 +22,7 @@ public class Create : EndpointBaseAsync
     _serviceRepository = serviceRepository;
   }
 
+  [Authorize]
   [HttpPost(CreateLocaleRequest.Route)]
   [SwaggerOperation(
     Summary = "Create a new locale",
@@ -28,6 +30,10 @@ public class Create : EndpointBaseAsync
     OperationId = "Locale.Create",
     Tags = new[] { "LocaleEndpoints" }
   )]
+  [SwaggerResponse(200, "The locale was created", typeof(LocaleRecord))]
+  [SwaggerResponse(400, "The request was invalid")]
+  [SwaggerResponse(404, "The service was not found")]
+  [SwaggerResponse(409, "The locale already exists")]
   public override async Task<ActionResult<LocaleRecord>> HandleAsync(CreateLocaleRequest request,
     CancellationToken cancellationToken = new())
   {
