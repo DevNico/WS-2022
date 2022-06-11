@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.ReleaseAggregate;
 
-public class Locale : EntityBase
+public class Locale : EntityBase, IAggregateRoot
 {
   public Locale(string languageCode, string countryCode, bool isDefault = false)
   {
