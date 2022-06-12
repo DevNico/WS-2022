@@ -1,7 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -19,7 +19,7 @@ public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationByIdRequest>
     _repository = repository;
   }
 
-  [HttpGet(GetOrganisationByIdRequest.Route)]
+  [HttpGet(RouteHelper.Organizations_GetById)]
   [Authorize]
   [SwaggerOperation(
     Summary = "Gets a single Organisation",

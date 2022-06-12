@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "kubernetes://schema/v1@service": "file:///Users/devnico/code/ws2022/.deployment/deployment.tpl.yaml"
+  }
+}

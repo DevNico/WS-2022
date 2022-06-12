@@ -9,13 +9,13 @@ public interface IKeycloakClient
   public Task<KeycloakUserRecord> GetUserByEmail(string email);
 
   public Task UpdateUser(KeycloakUserRecord user);
-  
+
   public Task SetUserDisplayName(string userId, string firstname, string lastname);
-  
+
   public Task SetUserEmailVerified(string userId, bool emailVerified);
-  
+
   public Task SetUserPassword(string userId, string password);
-  
+
   public Task SetUserDisabled(string userId, bool disabled);
 }
 

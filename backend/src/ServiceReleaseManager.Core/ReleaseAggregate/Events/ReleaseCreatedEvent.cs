@@ -7,7 +7,7 @@ public class ReleaseCreatedEvent : DomainEventBase
   public ReleaseCreatedEvent(Release release)
   {
     Release = release;
-  } 
-  
+  }
+
   public Release Release { get; }
 }

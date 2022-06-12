@@ -4,6 +4,8 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -19,10 +21,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
 
-var connectionString = builder.Configuration.GetConnectionString("Default");
+var isDev = builder.Environment.EnvironmentName == "Development";
 
+var config = builder.Configuration
+  .AddJsonFile("appsettings.json")
+  .AddJsonFile("appsettings.Production.json", true)
+  .AddEnvironmentVariables()
+  .Build();
+
+var swaggerConfig = config.GetSection("Swagger");
+var kcConfig = config.GetSection("Keycloak");
+var kcBaseUrl = $"{kcConfig["Url"]}/realms/{kcConfig["Realm"]}";
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+  options.ForwardedHeaders = ForwardedHeaders.All;
+});
+
+var connectionString = config.GetConnectionString("Default");
 builder.Services.AddDbContext(connectionString);
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
 
 // Cors
 builder.Services.AddCors(options => options.AddDefaultPolicy(b =>
@@ -33,14 +52,13 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(b =>
     .AllowAnyHeader();
 }));
 
-
 // Authentication
 builder.Services
   .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
   .AddJwtBearer(o =>
   {
-    o.Authority = builder.Configuration["Jwt:Authority"];
-    o.Audience = builder.Configuration["Jwt:Audience"];
+    o.Authority = kcBaseUrl;
+    o.Audience = kcConfig["Audience"];
     o.TokenValidationParameters.NameClaimType = "preferred_username";
     o.TokenValidationParameters.RoleClaimType = "role";
   });
@@ -70,13 +88,8 @@ builder.Services.AddSwaggerGen(c =>
     {
       AuthorizationCode = new OpenApiOAuthFlow
       {
-        // TODO: Move to configuration
-        AuthorizationUrl =
-          new Uri(
-            "https://idp.srm.k3s.devnico.cloud/realms/dev/protocol/openid-connect/auth"),
-        TokenUrl =
-          new Uri(
-            "https://idp.srm.k3s.devnico.cloud/realms/dev/protocol/openid-connect/token")
+        AuthorizationUrl = new Uri($"{kcBaseUrl}/protocol/openid-connect/auth"),
+        TokenUrl = new Uri($"{kcBaseUrl}/protocol/openid-connect/token")
       }
     }
   };
@@ -84,32 +97,35 @@ builder.Services.AddSwaggerGen(c =>
   c.OperationFilter<AuthorizeOperationFilter>();
 });
 
-
 // add list services for diagnostic purposes - see https://github.com/ardalis/AspNetCoreStartupServices
-builder.Services.Configure<ServiceConfig>(config =>
+builder.Services.Configure<ServiceConfig>(serviceConfig =>
 {
-  config.Services = new List<ServiceDescriptor>(builder.Services);
+  serviceConfig.Services = new List<ServiceDescriptor>(builder.Services);
 
   // optional - default path to view services is /listallservices - recommended to choose your own path
-  config.Path = "/listservices";
+  serviceConfig.Path = "/listservices";
 });
 
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultCoreModule());
-  containerBuilder.RegisterModule(new DefaultInfrastructureModule(
-    builder.Environment.EnvironmentName == "Development", builder.Configuration));
+  containerBuilder.RegisterModule(new DefaultInfrastructureModule(isDev, config));
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
   // Show services diagnostic endpoint
   app.UseShowAllServicesMiddleware();
   app.UseDeveloperExceptionPage();
+}
 
+if (swaggerConfig["Enabled"] == "true")
+{
   // Enable middleware to serve generated Swagger as a JSON endpoint.
   app.UseSwagger();
 
@@ -117,19 +133,21 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI(c =>
   {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service Release Manager API V1");
-    c.OAuthClientId("webapp-v1");
+    c.OAuthClientId(swaggerConfig["ClientId"]);
     c.OAuthAppName("SRM API");
     c.OAuthScopeSeparator(" ");
     c.OAuthUsePkce();
   });
 }
 
-app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHealthChecks("/healthz")
+  .AllowAnonymous();
 
 app.UseEndpoints(endpoints =>
 {

@@ -1,5 +1,7 @@
 # WS-2022
 
+[![Backend Dev](https://github.com/DevNico/WS-2022/actions/workflows/backend-deploy-dev.yml/badge.svg?branch=develop)](https://github.com/DevNico/WS-2022/actions/workflows/backend-deploy-dev.yml) [![Frontend Dev](https://github.com/DevNico/WS-2022/actions/workflows/frontend-deploy-dev.yml/badge.svg?branch=develop)](https://github.com/DevNico/WS-2022/actions/workflows/frontend-deploy-dev.yml)
+
 ## Backend
 
 The backend application is based on: [Clean Architecture Template](https://github.com/ardalis/CleanArchitecture).
@@ -20,6 +22,15 @@ The frontend application is automatically deployed to Firebase Hosting.
 | ------- | ----------------------------- |
 | main    | https://srm.devnico.cloud     |
 | develop | https://dev.srm.devnico.cloud |
+
+## Backend
+
+The backend api is automatically deployed to a kubernetes cluster.
+
+| Branch  | Url                               | Swagger                                                                     |
+| ------- | --------------------------------- | --------------------------------------------------------------------------- |
+| main    | https://api.srm.devnico.cloud     | /                                                                           |
+| develop | https://api.dev.srm.devnico.cloud | [/swagger/index.html](https://api.dev.srm.devnico.cloud/swagger/index.html) |
 
 ## Terraform
 
