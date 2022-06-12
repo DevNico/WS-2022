@@ -37,6 +37,7 @@
     <PackageVersion Include="IdentityModel" Version="6.0.0"/>
     <PackageVersion Include="WebMotions.Fake.Authentication.JwtBearer" Version="6.0.0"/>
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1"/>
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0"/>
 
   </ItemGroup>
 </Project>

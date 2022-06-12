@@ -1,11 +1,13 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.ServiceAggregate;
+using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplateEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
 public class List : EndpointBaseAsync
   .WithoutRequest
@@ -18,7 +20,7 @@ public class List : EndpointBaseAsync
     _repository = repository;
   }
 
-  [HttpGet("/servicetemplates")]
+  [HttpGet(RouteHelper.BaseRoute)]
   [Authorize]
   [SwaggerOperation(
     Summary = "List all service templates",
@@ -30,7 +32,8 @@ public class List : EndpointBaseAsync
   public override async Task<ActionResult<List<ServiceTemplateRecord>>> HandleAsync(
     CancellationToken cancellationToken = new())
   {
-    var templates = await _repository.ListAsync(cancellationToken);
+    var spec = new ActiveServiceTemplatesSearchSpec();
+    var templates = await _repository.ListAsync(spec, cancellationToken);
     var response = templates.ConvertAll(ServiceTemplateRecord.FromEntity);
 
     return Ok(response);

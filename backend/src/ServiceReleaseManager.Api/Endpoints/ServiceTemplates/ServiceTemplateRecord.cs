@@ -1,6 +1,6 @@
 ﻿using ServiceReleaseManager.Core.ServiceAggregate;
 
-namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplateEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
 public record ServiceTemplateRecord(int Id, string name, string staticMetadata, string localizedMetadata)
 {

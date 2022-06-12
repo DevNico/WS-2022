@@ -2,6 +2,9 @@
 
 public static class RouteHelper
 {
+  public const string VersionBaseRoute = "/api/v{version:apiVersion}";
+  public const string BaseRoute = $"{VersionBaseRoute}/[namespace]";
+
   private const string _organisationNameAttr = "{OrganisationName}";
   private const string _roleIdAttr = "{RoleId:int}";
   private const string _orgUserIdAttr = "{OrgUserId:int}";

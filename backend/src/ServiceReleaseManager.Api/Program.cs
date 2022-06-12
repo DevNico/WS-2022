@@ -4,8 +4,8 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -38,9 +38,17 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
   options.ForwardedHeaders = ForwardedHeaders.All;
 });
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddApiVersioning(options =>
+{
+  options.DefaultApiVersion = new ApiVersion(1, 0);
+  options.AssumeDefaultVersionWhenUnspecified = true;
+  options.ReportApiVersions = true;
+});
+
 var connectionString = config.GetConnectionString("Default");
 builder.Services.AddDbContext(connectionString);
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.UseNamespaceRouteToken());
 builder.Services.AddHealthChecks();
 
 // Cors
@@ -95,6 +103,8 @@ builder.Services.AddSwaggerGen(c =>
   };
   c.AddSecurityDefinition("OAuth2", securityDefinition);
   c.OperationFilter<AuthorizeOperationFilter>();
+  c.OperationFilter<RemoveVersionParameterFilter>();
+  c.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
 });
 
 // add list services for diagnostic purposes - see https://github.com/ardalis/AspNetCoreStartupServices

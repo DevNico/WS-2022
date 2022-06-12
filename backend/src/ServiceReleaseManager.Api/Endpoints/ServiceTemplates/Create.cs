@@ -7,7 +7,7 @@ using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplateEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
 public class Create : EndpointBaseAsync
   .WithRequest<CreateServiceTemplate>
