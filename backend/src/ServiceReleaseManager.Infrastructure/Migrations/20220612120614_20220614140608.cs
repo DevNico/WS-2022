@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
-    public partial class _20220611175052 : Migration
+    public partial class _20220614140608 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,6 +52,12 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 oldClrType: typeof(string),
                 oldType: "text");
 
+            migrationBuilder.AddColumn<int>(
+                name: "OrganisationId",
+                table: "OrganisationRole",
+                type: "integer",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Service",
                 columns: table => new
@@ -95,17 +101,18 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 name: "ServiceTemplates",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     StaticMetadata = table.Column<string>(type: "json", nullable: false),
                     LocalizedMetadata = table.Column<string>(type: "json", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    Id = table.Column<int>(type: "integer", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceTemplates", x => x.Name);
+                    table.PrimaryKey("PK_ServiceTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -248,6 +255,11 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrganisationRole_OrganisationId",
+                table: "OrganisationRole",
+                column: "OrganisationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Locale_ServiceId",
                 table: "Locale",
                 column: "ServiceId");
@@ -289,6 +301,12 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ServiceTemplates_Name",
+                table: "ServiceTemplates",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserSevice_OrganisationUserId",
                 table: "UserSevice",
                 column: "OrganisationUserId");
@@ -302,10 +320,21 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 name: "IX_UserSevice_ServiceRoleName",
                 table: "UserSevice",
                 column: "ServiceRoleName");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_OrganisationRole_Organisations_OrganisationId",
+                table: "OrganisationRole",
+                column: "OrganisationId",
+                principalTable: "Organisations",
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_OrganisationRole_Organisations_OrganisationId",
+                table: "OrganisationRole");
+
             migrationBuilder.DropTable(
                 name: "Locale");
 
@@ -330,9 +359,17 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "Service");
 
+            migrationBuilder.DropIndex(
+                name: "IX_OrganisationRole_OrganisationId",
+                table: "OrganisationRole");
+
             migrationBuilder.DropColumn(
                 name: "IsActive",
                 table: "OrganisationUser");
+
+            migrationBuilder.DropColumn(
+                name: "OrganisationId",
+                table: "OrganisationRole");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "LastSignIn",

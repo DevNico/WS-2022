@@ -2,9 +2,14 @@
 
 public interface IMetadataFormatValidator
 {
-  public bool IsValidMetadataJson(string metadataJson);
-  
-  public string NormalizeMetadataJson(string metadataJson);
+  public string NormalizeMetadata(List<MetadataArrayElement> metadata);
+}
+
+public class MetadataFormatValidationError : Exception
+{
+  public MetadataFormatValidationError(string message) : base(message)
+  {
+  }
 }
 
 public record MetadataArrayElement(

@@ -4,7 +4,7 @@ using ServiceReleaseManager.Core.Interfaces;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class CreateServiceTemplate
+public class UpdateServiceTemplate
 {
   public const string Route = RouteHelper.BaseRoute;
 

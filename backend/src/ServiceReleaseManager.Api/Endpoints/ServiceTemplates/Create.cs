@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
+using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -31,38 +32,53 @@ public class Create : EndpointBaseAsync
     Tags = new[] { "ServiceTemplateEndpoints" }
   )]
   [SwaggerResponse(200, "The service template was created", typeof(ServiceTemplateRecord))]
-  [SwaggerResponse(400, "A parameter was null or invalid")]
+  [SwaggerResponse(400, "A parameter was null or invalid", typeof(ErrorResponse))]
   [SwaggerResponse(409, "A service template with the same name already exists")]
-  public override async Task<ActionResult<ServiceTemplateRecord>> HandleAsync(CreateServiceTemplate request,
+  public override async Task<ActionResult<ServiceTemplateRecord>> HandleAsync(
+    CreateServiceTemplate request,
     CancellationToken cancellationToken = new())
   {
     if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length is 0 or > 50 ||
-        string.IsNullOrWhiteSpace(request.LocalizedMetadata) ||
-        string.IsNullOrWhiteSpace(request.StaticMetadata))
+        request.LocalizedMetadata == null || request.StaticMetadata == null)
     {
-      return BadRequest();
+      return BadRequest(new ErrorResponse("A required parameter was null"));
     }
 
-    var nameSpec = new ServiceTemplateByNameSpec(request.Name);
+    var nameSpec = new ServiceTemplateByNameSpec(request.Name.Trim());
     if (await _repository.CountAsync(nameSpec, cancellationToken) > 0)
     {
       return Conflict();
     }
 
-    if (!_metadataValidator.IsValidMetadataJson(request.LocalizedMetadata) ||
-        !_metadataValidator.IsValidMetadataJson(request.StaticMetadata))
+    string staticMetadata, localizedMetadata;
+    try
     {
-      return BadRequest();
+      staticMetadata = _metadataValidator.NormalizeMetadata(request.StaticMetadata);
+      localizedMetadata = _metadataValidator.NormalizeMetadata(request.LocalizedMetadata);
+    }
+    catch (MetadataFormatValidationError e)
+    {
+      return BadRequest(ErrorResponse.FromException(e));
     }
 
-    var staticMetadata = _metadataValidator.NormalizeMetadataJson(request.StaticMetadata);
-    var localizedMetadata = _metadataValidator.NormalizeMetadataJson(request.LocalizedMetadata);
+    nameSpec = new ServiceTemplateByNameSpec(request.Name.Trim(), false);
+    var template = await _repository.GetBySpecAsync(nameSpec, cancellationToken);
 
-    var template = new ServiceTemplate(request.Name.Trim(), staticMetadata, localizedMetadata);
-    var created = await _repository.AddAsync(template, cancellationToken);
+    if (template != null)
+    {
+      template.IsActive = true;
+      template.LocalizedMetadata = localizedMetadata;
+      template.StaticMetadata = staticMetadata;
+      await _repository.UpdateAsync(template, cancellationToken);
+    }
+    else
+    {
+      template = new ServiceTemplate(request.Name.Trim(), staticMetadata, localizedMetadata);
+      template = await _repository.AddAsync(template, cancellationToken);
+    }
+
     await _repository.SaveChangesAsync(cancellationToken);
-
-    var result = ServiceTemplateRecord.FromEntity(created);
+    var result = ServiceTemplateRecord.FromEntity(template);
     return Ok(result);
   }
 }
