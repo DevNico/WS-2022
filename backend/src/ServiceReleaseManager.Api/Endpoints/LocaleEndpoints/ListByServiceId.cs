@@ -1,5 +1,4 @@
 ﻿using Ardalis.ApiEndpoints;
-using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
@@ -26,6 +25,8 @@ public class ListByServiceId : EndpointBaseAsync.WithRequest<ListLocalesByServic
     OperationId = "Locales.List",
     Tags = new[] { "Locale" }
   )]
+  [SwaggerResponse(200, "Locales found", typeof(List<LocaleRecord>))]
+  [SwaggerResponse(404, "The service was not found")]
   public override async Task<ActionResult<List<LocaleRecord>>> HandleAsync(
     [FromRoute] ListLocalesByServiceId request,
     CancellationToken cancellationToken = new())

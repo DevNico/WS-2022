@@ -15,6 +15,7 @@
     <PackageReference Include="Autofac" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="IdentityModel" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>

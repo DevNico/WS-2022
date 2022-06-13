@@ -24,6 +24,7 @@
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="NETStandard.Library" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" />
   </ItemGroup>
 
   <ItemGroup>

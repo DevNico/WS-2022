@@ -69,8 +69,11 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("OrganisationId")
+                    b.Property<int?>("OrganisationId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("ServiceDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("ServiceDelete")
                         .HasColumnType("boolean");
@@ -346,19 +349,15 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("ReleaseApprove")
                         .HasColumnType("boolean");
@@ -378,7 +377,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -386,7 +385,45 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.ToTable("ServiceRole");
                 });
 
-            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceUser", b =>
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LocalizedMetadata")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("StaticMetadata")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ServiceTemplates");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.UserSevice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -403,8 +440,9 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<int>("ServiceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ServiceRoleId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ServiceRoleName")
+                        .IsRequired()
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -415,7 +453,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.HasIndex("ServiceRoleId");
+                    b.HasIndex("ServiceRoleName");
 
                     b.ToTable("ServiceUser");
                 });
@@ -427,6 +465,13 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationRole", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("OrganisationId");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", b =>
@@ -517,7 +562,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", "ServiceRole")
                         .WithMany()
-                        .HasForeignKey("ServiceRoleId")
+                        .HasForeignKey("ServiceRoleName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

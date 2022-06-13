@@ -1,5 +1,4 @@
 ﻿using Ardalis.ApiEndpoints;
-using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
@@ -26,6 +25,8 @@ public class GetById : EndpointBaseAsync.WithRequest<GetLocaleByIdRequest>.WithA
     OperationId = "Locale.GetById",
     Tags = new[] { "Locale" }
   )]
+  [SwaggerResponse(200, "Locale found", typeof(LocaleRecord))]
+  [SwaggerResponse(404, "Locale not found")]
   public override async Task<ActionResult<LocaleRecord>> HandleAsync(
     [FromRoute] GetLocaleByIdRequest request,
     CancellationToken cancellationToken = new())

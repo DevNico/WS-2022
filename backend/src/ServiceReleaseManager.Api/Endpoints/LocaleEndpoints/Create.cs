@@ -1,5 +1,4 @@
 ﻿using Ardalis.ApiEndpoints;
-using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
@@ -27,8 +26,11 @@ public class Create : EndpointBaseAsync.WithRequest<CreateLocaleRequest>.WithAct
     OperationId = "Locale.Create",
     Tags = new[] { "Locale" }
   )]
-  public override async Task<ActionResult<LocaleRecord>> HandleAsync(
-    [FromBody] CreateLocaleRequest request,
+  [SwaggerResponse(200, "The locale was created", typeof(LocaleRecord))]
+  [SwaggerResponse(400, "The request was invalid")]
+  [SwaggerResponse(404, "The service was not found")]
+  [SwaggerResponse(409, "The locale already exists")]
+  public override async Task<ActionResult<LocaleRecord>> HandleAsync(CreateLocaleRequest request,
     CancellationToken cancellationToken = new())
   {
     if (request.LanguageCode == null || request.CountryCode == null)
