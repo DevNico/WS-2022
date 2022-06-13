@@ -4,18 +4,26 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
 public class CreateOrganisationRoleRequest
 {
-  [Required] public string? OrganisationName { get; set; }
-  [Required] [MaxLength(50)] public string? Name { get; set; }
+  public const string Route = "/organisation-roles";
 
-  [Required] public bool ServiceRead { get; set; }
+  [Required]
+  public int OrganisationId { get; set; } = default!;
 
-  [Required] public bool ServiceWrite { get; set; }
+  [Required, MinLength(5), MaxLength(50)]
+  public string Name { get; set; } = default!;
 
-  [Required] public bool ServiceDelete { get; set; }
+  [Required]
+  public bool ServiceWrite { get; set; } = default!;
 
-  [Required] public bool UserRead { get; set; }
+  [Required]
+  public bool ServiceDelete { get; set; } = default!;
 
-  [Required] public bool UserWrite { get; set; }
+  [Required]
+  public bool UserRead { get; set; } = default!;
 
-  [Required] public bool UserDelete { get; set; }
+  [Required]
+  public bool UserWrite { get; set; } = default!;
+
+  [Required]
+  public bool UserDelete { get; set; } = default!;
 }

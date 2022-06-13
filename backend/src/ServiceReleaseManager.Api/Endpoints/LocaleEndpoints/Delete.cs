@@ -1,56 +1,35 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Core.ReleaseAggregate;
-using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
-using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.LocaleEndpoints;
 
 public class Delete : EndpointBaseAsync.WithRequest<DeleteLocaleRequest>.WithoutResult
 {
-  private readonly IRepository<Service> _repository;
-  private readonly IRepository<Locale> _localeRepository;
+  private readonly ILocaleService _localeService;
 
-  public Delete(IRepository<Service> repository, IRepository<Locale> localeRepository)
+  public Delete(ILocaleService localeService)
   {
-    _repository = repository;
-    _localeRepository = localeRepository;
+    _localeService = localeService;
   }
 
+  [Authorize]
   [HttpDelete(DeleteLocaleRequest.Route)]
   [SwaggerOperation(
     Summary = "Delete a locale",
     Description = "Deletes a locale from the database",
     OperationId = "Locale.Delete",
-    Tags = new[] { "LocaleEndpoints" }
+    Tags = new[] { "Locale" }
   )]
-  public override async Task<ActionResult> HandleAsync([FromRoute] DeleteLocaleRequest request,
-    CancellationToken cancellationToken = new ())
+  public override async Task<ActionResult> HandleAsync(
+    [FromRoute] DeleteLocaleRequest request,
+    CancellationToken cancellationToken = new())
   {
-    var localeSpec = new LocaleByIdSpec(request.LocaleId);
-    var localeToDelete = await _localeRepository.GetBySpecAsync(localeSpec, cancellationToken);
-    if (localeToDelete == null)
-    {
-      return NotFound();
-    }
+    var result = await _localeService.Delete(request.LocaleId, cancellationToken);
 
-    var spec = new ServiceByLocaleIdSpec(request.LocaleId);
-    var service = await _repository.GetBySpecAsync(spec, cancellationToken);
-    if (service == null)
-    {
-      return NotFound();
-    }
-
-    service.Locales.Remove(localeToDelete);
-    await _repository.UpdateAsync(service, cancellationToken);
-    await _repository.SaveChangesAsync(cancellationToken);
-
-    await _localeRepository.DeleteAsync(localeToDelete, cancellationToken);
-    await _localeRepository.SaveChangesAsync(cancellationToken);
-
-    return NoContent();
+    return this.ToActionResult(result);
   }
 }

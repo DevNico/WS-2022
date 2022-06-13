@@ -2,13 +2,12 @@
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
-public record OrganisationUserRecord(string userId, string email, bool emailVerified,
-  string firstName, string lastName,
-  DateTime? lastSignIn)
+public record OrganisationUserRecord(string UserId, string Email, string FirstName, string LastName,
+  DateTime? LastSignIn)
 {
   public static OrganisationUserRecord FromEntity(OrganisationUser user)
   {
-    return new OrganisationUserRecord(user.UserId, user.Email, user.EmailVerified, user.FirstName,
+    return new OrganisationUserRecord(user.UserId, user.Email, user.FirstName,
       user.LastName, user.LastSignIn);
   }
 }

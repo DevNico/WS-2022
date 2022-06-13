@@ -5,15 +5,17 @@ namespace ServiceReleaseManager.Api.Endpoints.LocaleEndpoints;
 
 public class CreateLocaleRequest
 {
-  public const string Route = "/services/{ServiceId:int}/locales";
+  public const string Route = "/locales";
 
-  public int ServiceId { get; set; }
-  [DefaultValue(false)] public bool? IsDefault { get; set; }
-  [Required] [MaxLength(3)] public string? LanguageCode { get; set; }
-  [Required] [MaxLength(3)] public string? CountryCode { get; set; }
+  [Required]
+  public int ServiceId { get; set; } = default!;
 
-  public static string BuildRoute(int serviceId)
-  {
-    return Route.Replace("{ServiceId:int}", serviceId.ToString());
-  }
+  [Required, StringLength(2)]
+  public string? LanguageCode { get; set; } = default!;
+
+  [Required, StringLength(2)]
+  public string? CountryCode { get; set; } = default!;
+
+  [DefaultValue(false)]
+  public bool? IsDefault { get; set; } = default!;
 }

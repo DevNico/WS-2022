@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
-public class OrganisationRole : EntityBase
+public class OrganisationRole : EntityBase, IAggregateRoot
 {
   public static readonly OrganisationRole Administrator =
-    new("Administrator", true, true, true, true, true, true);
+    new("Administrator", true, true, true, true, true);
 
-  public OrganisationRole(string name, bool serviceRead, bool serviceWrite, bool serviceDelete,
+  public OrganisationRole(string name, bool serviceWrite, bool serviceDelete,
     bool userRead, bool userWrite, bool userDelete)
   {
     Name = name;
-    ServiceRead = serviceRead;
     ServiceWrite = serviceWrite;
     ServiceDelete = serviceDelete;
     UserRead = userRead;
@@ -21,17 +21,27 @@ public class OrganisationRole : EntityBase
   }
 
 
-  [Required] [MaxLength(50)] public String Name { get; set; }
+  [Required]
+  [MinLength(5)]
+  [MaxLength(50)]
+  public String Name { get; set; }
 
-  [Required] public bool ServiceRead { get; set; }
+  [Required]
+  public bool ServiceWrite { get; set; }
 
-  [Required] public bool ServiceWrite { get; set; }
+  [Required]
+  public bool ServiceDelete { get; set; }
 
-  [Required] public bool ServiceDelete { get; set; }
+  [Required]
+  public bool UserRead { get; set; }
 
-  [Required] public bool UserRead { get; set; }
+  [Required]
+  public bool UserWrite { get; set; }
 
-  [Required] public bool UserWrite { get; set; }
+  [Required]
+  public bool UserDelete { get; set; }
 
-  [Required] public bool UserDelete { get; set; }
+  public int OrganisationId { get; set; }
+
+  public List<OrganisationUser> Users { get; set; } = new();
 }

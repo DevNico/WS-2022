@@ -1,58 +1,36 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Routes;
-using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
 public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRoleRequest>.WithoutResult
 {
-  private readonly IRepository<Organisation> _repository;
-
-  public Delete(IRepository<Organisation> repository)
+  public Delete(IOrganisationRoleService organisationRoleService)
   {
-    _repository = repository;
+    _organisationRoleService = organisationRoleService;
   }
 
-  [HttpDelete(RouteHelper.OrganizationRoles_Delete)]
-  [Authorize(Roles = "superAdmin")]
+  private readonly IOrganisationRoleService _organisationRoleService;
+
+  [HttpDelete(DeleteOrganisationRoleRequest.Route)]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Deletes a OrganisationRole",
     Description = "Deletes a OrganisationRole",
     OperationId = "OrganisationRoles.Delete",
-    Tags = new[] { "OrganisationRoleEndpoints" })
+    Tags = new[] { "OrganisationRole" })
   ]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteOrganisationRoleRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.OrganisationName))
-    {
-      return BadRequest();
-    }
+    var result =
+      await _organisationRoleService.Delete(request.OrganisationRoleId, cancellationToken);
 
-    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
-    if (org == null)
-    {
-      return BadRequest();
-    }
-
-    var spec = new OrganisationRoleByIdSpec(request.RoleId);
-    var organisationRoleToDelete = spec.Evaluate(org.Roles).FirstOrDefault();
-    if (organisationRoleToDelete == null)
-    {
-      return NotFound();
-    }
-
-    org.Roles.Remove(organisationRoleToDelete);
-    await _repository.UpdateAsync(org);
-    await _repository.SaveChangesAsync();
-
-    return NoContent();
+    return result.IsSuccess ? NoContent() : this.ToActionResult(result);
   }
 }

@@ -1,10 +1,9 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Routes;
-using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
+using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
@@ -12,20 +11,20 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 public class Create : EndpointBaseAsync.WithRequest<CreateOrganisationRequest>.WithActionResult<
   OrganisationRecord>
 {
-  private readonly IRepository<Organisation> _repository;
-
-  public Create(IRepository<Organisation> repository)
+  public Create(IOrganisationService organisationService)
   {
-    _repository = repository;
+    _organisationService = organisationService;
   }
 
-  [HttpPost(RouteHelper.Organisations_Create)]
+  private readonly IOrganisationService _organisationService;
+
+  [HttpPost(CreateOrganisationRequest.Route)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Creates a new Organisation",
     Description = "Creates a new Organisation",
     OperationId = "Organisation.Create",
-    Tags = new[] { "OrganisationEndpoints" })
+    Tags = new[] { "Organisation" })
   ]
   public override async Task<ActionResult<OrganisationRecord>> HandleAsync(
     CreateOrganisationRequest request,
@@ -36,17 +35,7 @@ public class Create : EndpointBaseAsync.WithRequest<CreateOrganisationRequest>.W
       return BadRequest();
     }
 
-    var spec = new OrganisationByNameSpec(request.Name);
-    var org = await _repository.GetBySpecAsync(spec, cancellationToken);
-    if (org != null)
-    {
-      return Conflict();
-    }
-
-    var newOrganisation = new Organisation(request.Name);
-    var createdOrganisation = await _repository.AddAsync(newOrganisation, cancellationToken);
-    var response = OrganisationRecord.FromEntity(createdOrganisation);
-
-    return Ok(response);
+    var result = await _organisationService.Create(request.Name, cancellationToken);
+    return this.ToActionResult(result.MapValue(OrganisationRecord.FromEntity));
   }
 }

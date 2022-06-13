@@ -4,7 +4,6 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -21,8 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
 
-var isDev = builder.Environment.EnvironmentName == "Development";
-
 var config = builder.Configuration
   .AddJsonFile("appsettings.json")
   .AddJsonFile("appsettings.Production.json", true)
@@ -33,15 +30,16 @@ var swaggerConfig = config.GetSection("Swagger");
 var kcConfig = config.GetSection("Keycloak");
 var kcBaseUrl = $"{kcConfig["Url"]}/realms/{kcConfig["Realm"]}";
 
+var connectionString = config.GetConnectionString("Default");
+builder.Services.AddDbContext(connectionString);
+
+builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
+
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
   options.ForwardedHeaders = ForwardedHeaders.All;
 });
-
-var connectionString = config.GetConnectionString("Default");
-builder.Services.AddDbContext(connectionString);
-builder.Services.AddControllers();
-builder.Services.AddHealthChecks();
 
 // Cors
 builder.Services.AddCors(options => options.AddDefaultPolicy(b =>
@@ -53,17 +51,20 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(b =>
 }));
 
 // Authentication
-builder.Services
-  .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-  .AddJwtBearer(o =>
-  {
-    o.Authority = kcBaseUrl;
-    o.Audience = kcConfig["Audience"];
-    o.TokenValidationParameters.NameClaimType = "preferred_username";
-    o.TokenValidationParameters.RoleClaimType = "role";
-  });
-builder.Services.AddTransient<IClaimsTransformation>(_ =>
-  new KeycloakRolesClaimsTransformation("role"));
+if(builder.Environment.EnvironmentName != "Testing")
+{
+  builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+      o.Authority = kcBaseUrl;
+      o.Audience = kcConfig["Audience"];
+      o.TokenValidationParameters.NameClaimType = "preferred_username";
+      o.TokenValidationParameters.RoleClaimType = "role";
+    });
+  builder.Services.AddTransient<IClaimsTransformation>(_ =>
+    new KeycloakRolesClaimsTransformation("role"));
+}
 
 
 // Authorization
@@ -80,7 +81,6 @@ builder.Services.AddSwaggerGen(c =>
 {
   c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service Release Manager API", Version = "v1" });
   c.EnableAnnotations();
-  c.DescribeAllParametersInCamelCase();
   var securityDefinition = new OpenApiSecurityScheme
   {
     Type = SecuritySchemeType.OAuth2,
@@ -110,7 +110,8 @@ builder.Services.Configure<ServiceConfig>(serviceConfig =>
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultCoreModule());
-  containerBuilder.RegisterModule(new DefaultInfrastructureModule(isDev, config));
+  containerBuilder.RegisterModule(
+    new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development", config));
 });
 
 var app = builder.Build();
@@ -124,7 +125,7 @@ if (app.Environment.IsDevelopment())
   app.UseDeveloperExceptionPage();
 }
 
-if (swaggerConfig["Enabled"] == "true")
+if (swaggerConfig.GetValue<bool>("Enabled"))
 {
   // Enable middleware to serve generated Swagger as a JSON endpoint.
   app.UseSwagger();

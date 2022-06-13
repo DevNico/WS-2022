@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ServiceReleaseManager.FunctionalTests;
 
-public class ApiTokenHelper
+public static class ApiTokenHelper
 {
   public static readonly byte[] AuthorizationKey =
     Encoding.ASCII.GetBytes("SecretKeyOfDoomThatMustBeAMinimumNumberOfBytes");

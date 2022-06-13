@@ -8,6 +8,7 @@ public sealed class OrganisationUserByUserIdSpec : Specification<OrganisationUse
   public OrganisationUserByUserIdSpec(string userId)
   {
     Query
-      .Where(u => u.UserId.Equals(userId, StringComparison.OrdinalIgnoreCase));
+      .Where(user => user.IsActive)
+      .Where(user => user.UserId.Equals(userId, StringComparison.OrdinalIgnoreCase));
   }
 }

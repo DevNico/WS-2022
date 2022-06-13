@@ -1,46 +1,40 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.GuardClauses;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Routes;
-using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 
 public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationRequest>.WithoutResult
 {
-  private readonly IRepository<Organisation> _repository;
-
-  public Delete(IRepository<Organisation> repository)
+  public Delete(IOrganisationService organisationService)
   {
-    _repository = repository;
+    _organisationService = organisationService;
   }
 
-  [HttpDelete(RouteHelper.Organizations_Delete)]
+  private readonly IOrganisationService _organisationService;
+
+  [HttpDelete(DeleteOrganisationRequest.Route)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Deletes a Organisation",
     Description = "Deletes a Organisation",
     OperationId = "Organisations.Delete",
-    Tags = new[] { "OrganisationEndpoints" })
+    Tags = new[] { "Organisation" })
   ]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteOrganisationRequest request,
     CancellationToken cancellationToken = new())
   {
-    var spec = new OrganisationByNameSpec(request.OrganisationName);
-    var organisationToDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
-    if (organisationToDelete == null)
-    {
-      return NotFound();
-    }
+    Guard.Against.NullOrWhiteSpace(request.OrganisationRouteName);
 
-    organisationToDelete.Deactivate();
-    await _repository.UpdateAsync(organisationToDelete);
-    await _repository.SaveChangesAsync(cancellationToken);
+    var result =
+      await _organisationService.Delete(request.OrganisationRouteName,
+        cancellationToken);
 
-    return NoContent();
+    return result.IsSuccess ? NoContent() : this.ToActionResult(result);
   }
 }

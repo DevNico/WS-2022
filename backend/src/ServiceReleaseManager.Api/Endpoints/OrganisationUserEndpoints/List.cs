@@ -1,9 +1,9 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
+using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
@@ -11,43 +11,29 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 public class List : EndpointBaseAsync.WithRequest<ListOrganisationUserRequest>.WithActionResult<
   List<OrganisationUserRecord>>
 {
-  private readonly IRepository<Organisation> _repository;
-
-  public List(IRepository<Organisation> repository)
+  public List(IOrganisationUserService organisationUserService)
   {
-    _repository = repository;
+    _organisationUserService = organisationUserService;
   }
 
-  [HttpGet("/organisations/{OrganisationId:int}/users")]
-  [Authorize(Roles = "superAdmin")]
+  private readonly IOrganisationUserService _organisationUserService;
+
+  [HttpGet(ListOrganisationUserRequest.Route)]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Gets a list of all OrganisationUsers",
     OperationId = "OrganisationUser.List",
-    Tags = new[] { "OrganisationUserEndpoints" })
+    Tags = new[] { "OrganisationUser" })
   ]
   public override async Task<ActionResult<List<OrganisationUserRecord>>> HandleAsync(
-    ListOrganisationUserRequest request,
+    [FromRoute] ListOrganisationUserRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.OrganisationName))
-    {
-      return BadRequest();
-    }
+    var result = await
+      _organisationUserService.ListByOrganisationRouteName(request.OrganisationRouteName,
+        cancellationToken);
 
-    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
-    if (org == null)
-    {
-      return BadRequest();
-    }
-
-    var spec = new ActiveOrganisationUsersSearchSpec();
-    var activeOrganisations = spec.Evaluate(org.Users);
-
-    var response = activeOrganisations
-      .Select(OrganisationUserRecord.FromEntity)
-      .ToList();
-
-    return Ok(response);
+    return this.ToActionResult(result.MapValue(users =>
+      users.ConvertAll(OrganisationUserRecord.FromEntity)));
   }
 }

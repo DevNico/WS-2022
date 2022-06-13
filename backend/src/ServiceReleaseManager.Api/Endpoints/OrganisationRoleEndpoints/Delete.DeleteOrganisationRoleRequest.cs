@@ -4,6 +4,13 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoleEndpoints;
 
 public class DeleteOrganisationRoleRequest
 {
-  [Required] public string? OrganisationName { get; set; }
-  [Required] public int RoleId { get; set; }
+  public const string Route = "organisation-roles/{OrganisationRoleId}";
+
+  [Required]
+  public int OrganisationRoleId { get; set; } = default!;
+
+  static string BuildRoute(int organisationRoleId)
+  {
+    return Route.Replace("{OrganisationRoleId}", organisationRoleId.ToString());
+  }
 }

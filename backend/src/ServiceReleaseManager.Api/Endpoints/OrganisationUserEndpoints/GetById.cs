@@ -1,58 +1,38 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Routes;
-using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
+using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
-public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationUserByIdRequest>.
-  WithActionResult<
+public class GetById : EndpointBaseAsync.WithRequest<GetOrganisationUserByIdRequest>.WithActionResult<
     OrganisationUserRecord>
 {
-  private readonly IRepository<Organisation> _repository;
-
-  public GetById(IRepository<Organisation> repository)
+  public GetById(IOrganisationUserService organisationUserService)
   {
-    _repository = repository;
+    _organisationUserService = organisationUserService;
   }
 
-  [HttpGet(RouteHelper.OrganizationUsers_GetById)]
+  private readonly IOrganisationUserService _organisationUserService;
+
+  [HttpGet(GetOrganisationUserByIdRequest.Route)]
   [Authorize]
   [SwaggerOperation(
     Summary = "Gets a single OrganisationUser",
     Description = "Gets a single OrganisationUser by UserId",
     OperationId = "Organisations.GetByUserId",
-    Tags = new[] { "OrganisationUserEndpoints" })
+    Tags = new[] { "OrganisationUser" })
   ]
   public override async Task<ActionResult<OrganisationUserRecord>> HandleAsync(
     [FromRoute] GetOrganisationUserByIdRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.OrganisationName))
-    {
-      return BadRequest();
-    }
+    var result =
+      await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
 
-    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
-    if (org == null)
-    {
-      return Unauthorized();
-    }
-
-    var spec = new OrganisationUserByIdSpec(request.OrgUserId);
-    var user = spec.Evaluate(org.Users).FirstOrDefault();
-
-    if (user == null)
-    {
-      return NotFound();
-    }
-
-    var response = OrganisationUserRecord.FromEntity(user);
-    return Ok(response);
+    return this.ToActionResult(result.MapValue(OrganisationUserRecord.FromEntity));
   }
 }

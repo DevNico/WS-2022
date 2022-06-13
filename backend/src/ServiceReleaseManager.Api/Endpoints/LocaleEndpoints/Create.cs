@@ -1,34 +1,34 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Core.ReleaseAggregate;
+using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.LocaleEndpoints;
 
-public class Create : EndpointBaseAsync
-  .WithRequest<CreateLocaleRequest>
-  .WithActionResult<LocaleRecord>
+public class Create : EndpointBaseAsync.WithRequest<CreateLocaleRequest>.WithActionResult<
+  LocaleRecord>
 {
-  private readonly IRepository<Locale> _repository;
-  private readonly IRepository<Service> _serviceRepository;
+  private readonly ILocaleService _localeService;
 
-  public Create(IRepository<Locale> repository, IRepository<Service> serviceRepository)
+  public Create(ILocaleService localeService)
   {
-    _repository = repository;
-    _serviceRepository = serviceRepository;
+    _localeService = localeService;
   }
 
+  [Authorize]
   [HttpPost(CreateLocaleRequest.Route)]
   [SwaggerOperation(
     Summary = "Create a new locale",
     Description = "Create a new locale",
     OperationId = "Locale.Create",
-    Tags = new[] { "LocaleEndpoints" }
+    Tags = new[] { "Locale" }
   )]
-  public override async Task<ActionResult<LocaleRecord>> HandleAsync(CreateLocaleRequest request,
+  public override async Task<ActionResult<LocaleRecord>> HandleAsync(
+    [FromBody] CreateLocaleRequest request,
     CancellationToken cancellationToken = new())
   {
     if (request.LanguageCode == null || request.CountryCode == null)
@@ -36,27 +36,10 @@ public class Create : EndpointBaseAsync
       return BadRequest();
     }
 
-    var spec = new ServiceByIdSpec(request.ServiceId);
-    var service = await _serviceRepository.GetBySpecAsync(spec, cancellationToken);
-    if (service == null)
-    {
-      return NotFound();
-    }
+    var locale = await _localeService.Create(
+      new Locale(request.CountryCode, request.LanguageCode,
+        request.IsDefault.GetValueOrDefault(false), request.ServiceId), cancellationToken);
 
-    if (service.Locales.Any(l => l.LanguageCode == request.LanguageCode && l.CountryCode == request.CountryCode))
-    {
-      return Conflict();
-    }
-
-    var locale = new Locale(request.LanguageCode, request.CountryCode, request.IsDefault.GetValueOrDefault(false));
-    var createdLocale = await _repository.AddAsync(locale, cancellationToken);
-    await _repository.SaveChangesAsync(cancellationToken);
-    
-    service.Locales.Add(createdLocale);
-    await _serviceRepository.UpdateAsync(service, cancellationToken);
-    await _serviceRepository.SaveChangesAsync(cancellationToken);
-
-    var response = LocaleRecord.FromEntity(createdLocale);
-    return Ok(response);
+    return this.ToActionResult(locale.MapValue(LocaleRecord.FromEntity));
   }
 }

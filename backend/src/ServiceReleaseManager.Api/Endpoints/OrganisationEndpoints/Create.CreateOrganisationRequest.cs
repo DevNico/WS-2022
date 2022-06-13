@@ -4,5 +4,8 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 
 public class CreateOrganisationRequest
 {
-  [Required] public string? Name { get; set; }
+  public const string Route = "organisations";
+
+  [Required]
+  public string Name { get; set; } = default!;
 }

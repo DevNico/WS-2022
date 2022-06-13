@@ -4,6 +4,13 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
 public class DeleteOrganisationUserRequest
 {
-  [Required] public string? OrganisationName { get; set; }
-  [Required] public int OrgUserId { get; set; }
+  public const string Route = "users/{OrganisationUserId}";
+
+  [Required]
+  public int OrganisationUserId { get; set; } = default!;
+
+  public static string BuildRoute(int organisationUserId)
+  {
+    return Route.Replace("{OrganisationUserId}", organisationUserId.ToString());
+  }
 }

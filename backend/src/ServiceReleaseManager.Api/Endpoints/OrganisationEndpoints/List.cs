@@ -1,41 +1,37 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Routes;
-using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
+using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationEndpoints;
 
-public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<OrganisationRecord>>
+public class List : EndpointBaseAsync.WithRequest<ListOrganisationsRequest>.WithActionResult<
+  List<OrganisationRecord>>
 {
-  private readonly IRepository<Organisation> _repository;
-
-  public List(IRepository<Organisation> repository)
+  public List(IOrganisationService organisationService)
   {
-    _repository = repository;
+    _organisationService = organisationService;
   }
 
-  [HttpGet(RouteHelper.Organizations_List)]
+  private readonly IOrganisationService _organisationService;
+
+  [HttpGet(ListOrganisationsRequest.Route)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
     Summary = "Gets a list of all Organisations",
     OperationId = "Organisations.List",
-    Tags = new[] { "OrganisationEndpoints" })
+    Tags = new[] { "Organisation" })
   ]
   public override async Task<ActionResult<List<OrganisationRecord>>> HandleAsync(
+    [FromQuery] ListOrganisationsRequest request,
     CancellationToken cancellationToken = new())
   {
-    var organisations = await _repository.ListAsync(cancellationToken);
-    var spec = new ActiveOrganisationsSearchSpec();
-    var activeOrganisations = spec.Evaluate(organisations);
+    var result = await _organisationService.List(request.IncludeDeactivated, cancellationToken);
 
-    var response = activeOrganisations
-      .Select(OrganisationRecord.FromEntity)
-      .ToList();
-
-    return Ok(response);
+    return this.ToActionResult(result.MapValue(organisations =>
+      organisations.ConvertAll(OrganisationRecord.FromEntity)));
   }
 }

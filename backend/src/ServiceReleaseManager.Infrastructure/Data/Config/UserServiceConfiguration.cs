@@ -4,11 +4,20 @@ using ServiceReleaseManager.Core.ServiceAggregate;
 
 namespace ServiceReleaseManager.Infrastructure.Data.Config;
 
-public class UserServiceConfiguration : IEntityTypeConfiguration<UserSevice>
+public class UserServiceConfiguration : IEntityTypeConfiguration<ServiceUser>
 {
-  public void Configure(EntityTypeBuilder<UserSevice> builder)
+  public void Configure(EntityTypeBuilder<ServiceUser> builder)
   {
-    builder.HasOne(p => p.Service).WithMany().IsRequired();
-    builder.HasOne(p => p.ServiceRole).WithMany().IsRequired();
+    builder
+      .HasOne(serviceUser => serviceUser.OrganisationUser)
+      .WithMany(organisationUser => organisationUser.ServiceUser)
+      .HasForeignKey(serviceUser => serviceUser.OrganisationUserId)
+      .IsRequired();
+
+    builder
+      .HasOne(serviceUser => serviceUser.ServiceRole)
+      .WithMany()
+      .HasForeignKey(serviceUser => serviceUser.ServiceRoleId)
+      .IsRequired();
   }
 }

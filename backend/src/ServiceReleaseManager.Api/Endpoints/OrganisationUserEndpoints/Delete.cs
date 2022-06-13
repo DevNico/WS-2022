@@ -1,59 +1,36 @@
 ﻿using Ardalis.ApiEndpoints;
+using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Routes;
-using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUserEndpoints;
 
 public class Delete : EndpointBaseAsync.WithRequest<DeleteOrganisationUserRequest>.WithoutResult
 {
-  private readonly IRepository<Organisation> _repository;
-
-  public Delete(IRepository<Organisation> repository)
+  public Delete(IOrganisationUserService organisationUserService)
   {
-    _repository = repository;
+    _organisationUserService = organisationUserService;
   }
 
-  [HttpDelete(RouteHelper.OrganizationUsers_Delete)]
-  [Authorize(Roles = "superAdmin")]
+  private readonly IOrganisationUserService _organisationUserService;
+
+  [HttpDelete(DeleteOrganisationUserRequest.Route)]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Deletes a OrganisationUser",
     Description = "Deletes a OrganisationUser",
     OperationId = "OrganisationUser.Delete",
-    Tags = new[] { "OrganisationUserEndpoints" })
+    Tags = new[] { "OrganisationUser" })
   ]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteOrganisationUserRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request?.OrganisationName))
-    {
-      return BadRequest();
-    }
+    var result =
+      await _organisationUserService.Delete(request.OrganisationUserId, cancellationToken);
 
-    var orgSpec = new OrganisationByNameSpec(request.OrganisationName);
-    var org = await _repository.GetBySpecAsync(orgSpec, cancellationToken);
-    if (org == null)
-    {
-      return Unauthorized();
-    }
-
-    var spec = new OrganisationUserByIdSpec(request.OrgUserId);
-    var organisationUserToDelete = spec.Evaluate(org.Users).FirstOrDefault();
-    if (organisationUserToDelete == null)
-    {
-      return NotFound();
-    }
-
-
-    organisationUserToDelete.Deactivate();
-    await _repository.UpdateAsync(org);
-    await _repository.SaveChangesAsync(cancellationToken);
-
-    return NoContent();
+    return result.IsSuccess ? NoContent() : this.ToActionResult(result);
   }
 }

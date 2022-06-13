@@ -16,15 +16,23 @@ public class ServiceRole : EntityBase
     ReleaseLocalizedMetadataEdit = releaseLocalizedMetadataEdit;
   }
 
-  [Required] [MaxLength(50)] public string Name { get; set; }
+  [Required]
+  [MinLength(5)]
+  [MaxLength(50)]
+  public string Name { get; set; }
 
-  [Required] public bool ReleaseCreate { get; set; }
+  [Required]
+  public bool ReleaseCreate { get; set; }
 
-  [Required] public bool ReleaseApprove { get; set; }
+  [Required]
+  public bool ReleaseApprove { get; set; }
 
-  [Required] public bool ReleasePublish { get; set; }
+  [Required]
+  public bool ReleasePublish { get; set; }
 
-  [Required] public bool ReleaseMetadataEdit { get; set; }
+  [Required]
+  public bool ReleaseMetadataEdit { get; set; }
 
-  [Required] public bool ReleaseLocalizedMetadataEdit { get; set; }
+  [Required]
+  public bool ReleaseLocalizedMetadataEdit { get; set; }
 }

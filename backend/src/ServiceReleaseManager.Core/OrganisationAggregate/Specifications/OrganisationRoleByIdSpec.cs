@@ -2,7 +2,8 @@
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 
-public class OrganisationRoleByIdSpec : Specification<OrganisationRole>, ISingleResultSpecification
+public sealed class OrganisationRoleByIdSpec : Specification<OrganisationRole>,
+  ISingleResultSpecification
 {
   public OrganisationRoleByIdSpec(int id)
   {
