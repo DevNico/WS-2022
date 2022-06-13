@@ -21,7 +21,7 @@ public class Create : EndpointBaseAsync
 
 
   [HttpPost(CreateReleaseRequest.Route)]
-  [Authorize(Roles = "superAdmin")]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Creates a new Release",
     Description = "Creates a new Release",

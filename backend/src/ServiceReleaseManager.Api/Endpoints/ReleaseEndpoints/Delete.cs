@@ -18,7 +18,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteReleaseReqest>.Without
   }
 
   [HttpDelete(DeleteReleaseReqest.Route)]
-  [Authorize(Roles = "superAdmin")]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Deletes a release",
     Description = "Deletes a release",

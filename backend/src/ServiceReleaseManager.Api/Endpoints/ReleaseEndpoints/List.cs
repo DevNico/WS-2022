@@ -18,7 +18,7 @@ public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<Relea
   }
 
   [HttpGet("/releases")]
-  [Authorize(Roles = "superAdmin")]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Gets a list of all Releases",
     OperationId = "Releases.List",
