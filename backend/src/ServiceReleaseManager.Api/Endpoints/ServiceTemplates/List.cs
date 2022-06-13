@@ -1,7 +1,5 @@
-﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Routes;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -9,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class List : EndpointBaseAsync
+public class List : AuthorizedEndpointBase
   .WithoutRequest
   .WithActionResult<List<ServiceTemplateRecord>>
 {
@@ -20,7 +18,7 @@ public class List : EndpointBaseAsync
     _repository = repository;
   }
 
-  [HttpGet(RouteHelper.BaseRoute)]
+  [HttpGet]
   [Authorize]
   [SwaggerOperation(
     Summary = "List all service templates",

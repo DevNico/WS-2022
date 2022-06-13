@@ -1,5 +1,4 @@
-﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
@@ -10,7 +9,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Create : EndpointBaseAsync
+public class Create : AuthorizedEndpointBase
   .WithRequest<CreateServiceTemplate>
   .WithActionResult<ServiceTemplateRecord>
 {
@@ -23,8 +22,8 @@ public class Create : EndpointBaseAsync
     _metadataValidator = metadataValidator;
   }
 
+  [HttpPost]
   [Authorize]
-  [HttpPost(CreateServiceTemplate.Route)]
   [SwaggerOperation(
     Summary = "Add a new service template",
     Description = "Create a new service template",

@@ -1,5 +1,4 @@
-﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
@@ -8,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Delete : EndpointBaseAsync
+public class Delete : AuthorizedEndpointBase
   .WithRequest<DeleteServiceTemplate>
   .WithoutResult
 {
@@ -20,7 +19,7 @@ public class Delete : EndpointBaseAsync
   }
 
   [Authorize]
-  [HttpDelete(DeleteServiceTemplate.Route)]
+  [HttpDelete]
   [SwaggerOperation(
     Description = "Deletes a service template by its id",
     Summary = "Deletes a service template",

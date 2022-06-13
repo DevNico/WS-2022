@@ -1,5 +1,4 @@
-﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
@@ -10,7 +9,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Update : EndpointBaseAsync
+public class Update : AuthorizedEndpointBase
   .WithRequest<UpdateServiceTemplate>
   .WithActionResult<ServiceTemplateRecord>
 {
@@ -23,8 +22,8 @@ public class Update : EndpointBaseAsync
     _metadataValidator = metadataValidator;
   }
 
+  [HttpPut]
   [Authorize]
-  [HttpPut(UpdateServiceTemplate.Route)]
   [SwaggerOperation(
     Summary = "Update a service template",
     Description = "Update a service template",

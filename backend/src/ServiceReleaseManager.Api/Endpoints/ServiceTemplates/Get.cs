@@ -1,6 +1,4 @@
-﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -8,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Get : EndpointBaseAsync
+public class Get : AuthorizedEndpointBase
   .WithRequest<GetServiceTemplate>
   .WithActionResult<ServiceTemplateRecord>
 {
@@ -19,8 +17,7 @@ public class Get : EndpointBaseAsync
     _repository = repository;
   }
 
-  [Authorize]
-  [HttpGet(GetServiceTemplate.Route)]
+  [HttpGet("{serviceName}")]
   [SwaggerOperation(
     Summary = "Get a service template",
     Description = "Get a service template by its name",
