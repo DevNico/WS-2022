@@ -9,7 +9,7 @@ public class ApiTokenHelper
 {
   public static readonly byte[] AuthorizationKey =
     Encoding.ASCII.GetBytes("SecretKeyOfDoomThatMustBeAMinimumNumberOfBytes");
-  
+
   public static string GetAdminUserToken()
   {
     const string userName = "admin@example.com";

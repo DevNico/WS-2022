@@ -11,8 +11,8 @@ public class KeycloakClient : IKeycloakClient
 {
   private static readonly HttpClient _httpClient = new();
   private readonly KeycloakOAuthClient _keycloakOAuthClient;
-  private readonly string _url;
   private readonly string _realm;
+  private readonly string _url;
 
   public KeycloakClient(IConfiguration config)
   {
@@ -20,39 +20,6 @@ public class KeycloakClient : IKeycloakClient
 
     _url = config["Keycloak:Url"];
     _realm = config["Keycloak:Realm"];
-  }
-
-  private async Task<T> _request<T>(string url, HttpMethod method, object? body = null,
-    HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
-  {
-    var token = await _keycloakOAuthClient.getToken();
-    using (var requestMessage = new HttpRequestMessage(method, $"{_url}/admin/realms/{_realm}{url}"))
-    {
-      if (body != null)
-      {
-        requestMessage.Content = new StringContent(JsonSerializer.Serialize(body));
-      }
-
-      requestMessage.Headers.Add("Authentication", $"Bearer {token}");
-      var response = await _httpClient.SendAsync(requestMessage);
-      if (response.StatusCode != expectedStatusCode)
-      {
-        throw new HttpRequestException("Could not POST to keycloak", null, response.StatusCode);
-      }
-
-      if (typeof(T) == typeof(string))
-      {
-        return (T)Convert.ChangeType(await response.Content.ReadAsStringAsync(), typeof(T));
-      }
-
-      var parsed = await response.Content.ReadFromJsonAsync<T>();
-      if (parsed == null)
-      {
-        throw new ApplicationException("Could not decode the response");
-      }
-
-      return parsed;
-    }
   }
 
   public Task<KeycloakUserRecord> CreateUser(KeycloakUserCreation userCreation)
@@ -90,7 +57,8 @@ public class KeycloakClient : IKeycloakClient
 
   public async Task SetUserPassword(string userId, string password)
   {
-    await _request<string>($"/users/{userId}/reset-password", HttpMethod.Put, new PasswordChangeRecord(password),
+    await _request<string>($"/users/{userId}/reset-password", HttpMethod.Put,
+      new PasswordChangeRecord(password),
       HttpStatusCode.NoContent);
   }
 
@@ -99,9 +67,43 @@ public class KeycloakClient : IKeycloakClient
     var user = await GetUser(userId);
     await UpdateUser(user with { Enabled = !disabled });
   }
+
+  private async Task<T> _request<T>(string url, HttpMethod method, object? body = null,
+    HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+  {
+    var token = await _keycloakOAuthClient.getToken();
+    using (var requestMessage =
+           new HttpRequestMessage(method, $"{_url}/admin/realms/{_realm}{url}"))
+    {
+      if (body != null)
+      {
+        requestMessage.Content = new StringContent(JsonSerializer.Serialize(body));
+      }
+
+      requestMessage.Headers.Add("Authentication", $"Bearer {token}");
+      var response = await _httpClient.SendAsync(requestMessage);
+      if (response.StatusCode != expectedStatusCode)
+      {
+        throw new HttpRequestException("Could not POST to keycloak", null, response.StatusCode);
+      }
+
+      if (typeof(T) == typeof(string))
+      {
+        return (T)Convert.ChangeType(await response.Content.ReadAsStringAsync(), typeof(T));
+      }
+
+      var parsed = await response.Content.ReadFromJsonAsync<T>();
+      if (parsed == null)
+      {
+        throw new ApplicationException("Could not decode the response");
+      }
+
+      return parsed;
+    }
+  }
 }
 
-record PasswordChangeRecord(
+internal record PasswordChangeRecord(
   string value,
   string type = "awPassword",
   bool temporary = false

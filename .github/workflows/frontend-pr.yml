@@ -5,8 +5,11 @@ name: Frontend PR
       - "frontend/**"
 
 jobs:
-  build_and_deploy:
+  lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "frontend"
     steps:
       - uses: actions/checkout@v3
 
@@ -17,7 +20,5 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - run: npm ci
-        working-directory: "frontend"
 
       - run: npm run prettier
-        working-directory: "frontend"

@@ -28,19 +28,14 @@ public class Release : EntityBase, IAggregateRoot
   public DateTime? ApprovedAt { get; set; }
 
   public OrganisationUser? PublishedBy { get; set; }
-  
+
   public DateTime? PublishedAt { get; set; }
-  
-  [Required]
-  [MaxLength(30)]
-  public string Version { get; set; }
-  
-  [Required]
-  public int BuildNumber { get; set; }
-  
-  [Required]
-  [Column(TypeName = "json")]
-  public string Metadata { get; set; }
+
+  [Required] [MaxLength(30)] public string Version { get; set; }
+
+  [Required] public int BuildNumber { get; set; }
+
+  [Required] [Column(TypeName = "json")] public string Metadata { get; set; }
 
   public void Approve(OrganisationUser user)
   {

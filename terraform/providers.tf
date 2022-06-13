@@ -37,6 +37,11 @@ terraform {
   }
 }
 
+provider "github" {
+  owner = "DevNico"
+  token = var.github_token
+}
+
 provider "google" {
   project = var.project_id
 
@@ -61,12 +66,11 @@ provider "helm" {
   }
 }
 
-
 provider "keycloak" {
   client_id     = "admin-cli"
   username      = var.keycloak_username
   password      = var.keycloak_password
-  url           = "https://${var.keycloak_url}"
+  url           = "https://idp.${var.domain}"
   initial_login = false
   base_path     = ""
 }

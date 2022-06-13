@@ -2,10 +2,11 @@
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Events;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.ServiceAggregate;
 
-public class Service : EntityBase
+public class Service : EntityBase, IAggregateRoot
 {
   public Service()
   {
@@ -17,12 +18,9 @@ public class Service : EntityBase
     RegisterDomainEvent(serviceCreatedEvent);
   }
 
-  [Required]
-  public List<Release> Releases { get; set; }
-  
-  [Required]
-  public List<Locale> Locales { get; set; }
-  
-  [Required]
-  public List<ReleaseTarget> ReleaseTargets { get; set; }
+  [Required] public List<Release> Releases { get; set; }
+
+  [Required] public List<Locale> Locales { get; set; }
+
+  [Required] public List<ReleaseTarget> ReleaseTargets { get; set; }
 }

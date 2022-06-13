@@ -11,6 +11,7 @@ public class Organisation : EntityBase, IAggregateRoot
   {
     Name = name;
     IsActive = true;
+    Roles = new List<OrganisationRole>();
     Users = new List<OrganisationUser>();
     Services = new List<Service>();
 
@@ -22,8 +23,9 @@ public class Organisation : EntityBase, IAggregateRoot
 
   public bool IsActive { get; set; }
 
+  public List<OrganisationRole> Roles { get; set; }
   public List<OrganisationUser> Users { get; set; }
-  
+
   public List<Service> Services { get; set; }
 
   public void Deactivate()

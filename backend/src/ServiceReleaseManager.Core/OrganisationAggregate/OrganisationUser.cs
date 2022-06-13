@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.Core.OrganisationAggregate.Events;
 using ServiceReleaseManager.Core.ServiceAggregate;
@@ -8,7 +8,8 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationUser : EntityBase
 {
-  public OrganisationUser(string userId, string email, bool emailVerified, string firstName, string lastName,
+  public OrganisationUser(string userId, string email, bool emailVerified, string firstName,
+    string lastName,
     DateTime? lastSignIn)
   {
     UserId = userId;
@@ -40,10 +41,8 @@ public class OrganisationUser : EntityBase
   [Required] public OrganisationRole Role { get; set; }
 
   public List<UserSevice> ServiceRoles { get; set; }
-  
-  [Required]
-  [DefaultValue(true)]
-  public bool IsActive { get; set; }
+
+  [Required] [DefaultValue(true)] public bool IsActive { get; set; }
 
   public void Deactivate()
   {

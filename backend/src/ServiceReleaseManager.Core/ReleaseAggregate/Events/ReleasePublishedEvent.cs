@@ -5,7 +5,8 @@ namespace ServiceReleaseManager.Core.ReleaseAggregate.Events;
 
 public class ReleasePublishedEvent : DomainEventBase
 {
-  public ReleasePublishedEvent(Release release, OrganisationUser organisationUser, DateTime publishedAt)
+  public ReleasePublishedEvent(Release release, OrganisationUser organisationUser,
+    DateTime publishedAt)
   {
     Release = release;
     OrganisationUser = organisationUser;
