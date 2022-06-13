@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ReleaseAggregate;
-// using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
+using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -27,16 +27,14 @@ public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<Relea
   public override async Task<ActionResult<List<ReleaseRecord>>> HandleAsync(
     CancellationToken cancellationToken = new())
   {
-    //var releases = await _repository.ListAsync(cancellationToken);
-    //var spec = new ActiveReleasesSearchSpec();
-    //var activeOrganisations = spec.Evaluate(releases);
+    // ToDo: Auf Service Ebene bauen
 
-    //var response = activeOrganisations
-    //  .Select(ReleaseRecord.FromEntity)
-    //  .ToList();
+    var releases = await _repository.ListAsync(cancellationToken);
 
-    //return Ok(response);
+    var response = releases
+      .Select(ReleaseRecord.FromEntity)
+      .ToList();
 
-    return NoContent();
+    return Ok(response);
   }
 }

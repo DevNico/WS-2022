@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ReleaseAggregate;
-// using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
+using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -29,18 +29,14 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteReleaseReqest>.Without
     [FromRoute] DeleteReleaseReqest request,
     CancellationToken cancellationToken = new())
   {
-    //var spec = new ReleaseByIdSpec(request.ReleaseId);
-    //var releaseToDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
-    //if (releaseToDelete == null)
-    //{
-    //  return NotFound();
-    //}
+    var spec = new ReleaseByIdSpec(request.ReleaseId);
+    var releaseToDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
+    if (releaseToDelete == null)
+    {
+      return NotFound();
+    }
 
-    //releaseToDelete.Deactivate();
-    //await _repository.SaveChangesAsync(cancellationToken);
-
-    // ToDo: Implement / Add Release Specification / Add Release IsActive flag
-
+    await _repository.DeleteAsync(releaseToDelete, cancellationToken);
     return NoContent();
   }
 }
