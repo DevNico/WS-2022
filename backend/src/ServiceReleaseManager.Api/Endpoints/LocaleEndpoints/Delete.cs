@@ -1,4 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
@@ -20,6 +21,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteLocaleRequest>.Without
     _localeRepository = localeRepository;
   }
 
+  [Authorize]
   [HttpDelete(DeleteLocaleRequest.Route)]
   [SwaggerOperation(
     Summary = "Delete a locale",
@@ -27,8 +29,11 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteLocaleRequest>.Without
     OperationId = "Locale.Delete",
     Tags = new[] { "LocaleEndpoints" }
   )]
-  public override async Task<ActionResult> HandleAsync([FromRoute] DeleteLocaleRequest request,
-    CancellationToken cancellationToken = new ())
+  [SwaggerResponse(201, "Locale deleted")]
+  [SwaggerResponse(404, "The locale or service was not found")]
+  public override async Task<ActionResult> HandleAsync(
+    [FromRoute] DeleteLocaleRequest request,
+    CancellationToken cancellationToken = new())
   {
     var localeSpec = new LocaleByIdSpec(request.LocaleId);
     var localeToDelete = await _localeRepository.GetBySpecAsync(localeSpec, cancellationToken);

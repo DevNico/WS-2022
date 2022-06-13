@@ -8,13 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.GuardClauses"/>
-    <PackageReference Include="Ardalis.Result"/>
-    <PackageReference Include="Ardalis.SmartEnum"/>
-    <PackageReference Include="Ardalis.Specification"/>
-    <PackageReference Include="Autofac"/>
-    <PackageReference Include="MediatR"/>
-    <PackageReference Include="IdentityModel"/>
+    <PackageReference Include="Ardalis.GuardClauses" />
+    <PackageReference Include="Ardalis.Result" />
+    <PackageReference Include="Ardalis.SmartEnum" />
+    <PackageReference Include="Ardalis.Specification" />
+    <PackageReference Include="Autofac" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>

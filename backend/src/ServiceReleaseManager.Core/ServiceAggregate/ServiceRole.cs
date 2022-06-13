@@ -16,7 +16,7 @@ public class ServiceRole : EntityBase
     ReleaseLocalizedMetadataEdit = releaseLocalizedMetadataEdit;
   }
 
-  [Required] [MaxLength(50)] public string Name { get; set; }
+  [Required] [MaxLength(50)] [Key] public string Name { get; set; }
 
   [Required] public bool ReleaseCreate { get; set; }
 
