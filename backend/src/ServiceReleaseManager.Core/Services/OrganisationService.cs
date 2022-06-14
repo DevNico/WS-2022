@@ -9,12 +9,12 @@ namespace ServiceReleaseManager.Core.Services;
 
 public class OrganisationService : IOrganisationService
 {
+  private readonly IRepository<Organisation> _organisationRepository;
+
   public OrganisationService(IRepository<Organisation> organisationRepository)
   {
     _organisationRepository = organisationRepository;
   }
-
-  private readonly IRepository<Organisation> _organisationRepository;
 
   public async Task<Result<Organisation>> GetByRouteName(string routeName,
     CancellationToken cancellationToken)

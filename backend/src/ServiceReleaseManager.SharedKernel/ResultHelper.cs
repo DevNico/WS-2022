@@ -21,7 +21,19 @@ public static class ResultHelper
       ResultStatus.Unauthorized => Result.Unauthorized(),
       ResultStatus.Invalid => Result.Invalid(result.ValidationErrors),
       ResultStatus.NotFound => Result.NotFound(),
-      _ => throw new ArgumentOutOfRangeException()
+      _ => throw new NotSupportedException()
     };
+  }
+
+  public static bool IsError<T>(this Result<T> result)
+  {
+    return result.Status == ResultStatus.Error;
+  }
+
+  public static async Task<Result<TR>> MapValue<T, TR>(this Task<Result<T>> resultTask,
+    Func<T, TR> map)
+  {
+    var result = await resultTask;
+    return result.MapValue(map);
   }
 }

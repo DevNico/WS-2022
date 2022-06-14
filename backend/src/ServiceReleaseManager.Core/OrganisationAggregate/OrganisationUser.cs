@@ -9,14 +9,15 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationUser : EntityBase, IAggregateRoot
 {
-  public OrganisationUser(string userId, string email, string firstName, string lastName)
+  public OrganisationUser(string userId, string email, string firstName, string lastName,
+    int roleId)
   {
     UserId = userId;
     Email = email;
     FirstName = firstName;
     LastName = lastName;
     LastSignIn = null;
-    Role = OrganisationRole.Administrator;
+    RoleId = roleId;
     IsActive = true;
 
     var organisationUserCreatedEvent = new OrganisationUserCreatedEvent(this);
@@ -26,13 +27,16 @@ public class OrganisationUser : EntityBase, IAggregateRoot
   [Required]
   public String UserId { get; set; }
 
-  [Required, EmailAddress]
+  [Required]
+  [EmailAddress]
   public String Email { get; set; }
 
-  [Required, MaxLength(50)]
+  [Required]
+  [MaxLength(50)]
   public String FirstName { get; set; }
 
-  [Required, MaxLength(50)]
+  [Required]
+  [MaxLength(50)]
   public String LastName { get; set; }
 
   public DateTime? LastSignIn { get; set; }

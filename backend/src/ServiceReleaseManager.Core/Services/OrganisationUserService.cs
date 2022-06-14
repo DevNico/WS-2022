@@ -9,15 +9,16 @@ namespace ServiceReleaseManager.Core.Services;
 
 public class OrganisationUserService : IOrganisationUserService
 {
+  private readonly IOrganisationService _organisationService;
+
+  private readonly IRepository<OrganisationUser> _organisationUserRepository;
+
   public OrganisationUserService(IRepository<OrganisationUser> organisationUserRepository,
     IOrganisationService organisationService)
   {
     _organisationUserRepository = organisationUserRepository;
     _organisationService = organisationService;
   }
-
-  private readonly IRepository<OrganisationUser> _organisationUserRepository;
-  private readonly IOrganisationService _organisationService;
 
   public async Task<Result<OrganisationUser>> Create(OrganisationUser organisationUser,
     CancellationToken cancellationToken)

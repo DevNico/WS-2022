@@ -10,6 +10,6 @@ public class ServiceUser : EntityBase
 
   public OrganisationUser OrganisationUser { get; set; }
   public int OrganisationUserId { get; set; }
-  
+
   public int ServiceId { get; set; }
 }

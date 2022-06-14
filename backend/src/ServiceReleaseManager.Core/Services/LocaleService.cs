@@ -9,8 +9,8 @@ namespace ServiceReleaseManager.Core.Services;
 
 public class LocaleService : ILocaleService
 {
-  private readonly IServiceService _serviceService;
   private readonly IRepository<Locale> _localeRepository;
+  private readonly IServiceService _serviceService;
 
   public LocaleService(IServiceService serviceService, IRepository<Locale> localeRepository)
   {

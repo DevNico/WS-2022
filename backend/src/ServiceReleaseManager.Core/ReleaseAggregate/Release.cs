@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate.Events;
-using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
 
 namespace ServiceReleaseManager.Core.ReleaseAggregate;
@@ -37,7 +36,7 @@ public class Release : EntityBase
   [Required]
   [Column(TypeName = "json")]
   public string Metadata { get; set; }
-  
+
   public int ServiceId { get; set; }
 
   public void Approve(OrganisationUser user)

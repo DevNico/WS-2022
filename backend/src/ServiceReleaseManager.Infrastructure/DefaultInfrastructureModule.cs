@@ -97,7 +97,7 @@ public class DefaultInfrastructureModule : Module
 
     builder.Register(_ => new KeycloakClient(_configuration)).As<IKeycloakClient>()
       .InstancePerLifetimeScope();
-    
+
     builder.RegisterType<MetadataFormatValidator>()
       .As<IMetadataFormatValidator>()
       .InstancePerLifetimeScope();

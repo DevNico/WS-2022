@@ -6,12 +6,13 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationRole : EntityBase, IAggregateRoot
 {
-  public static readonly OrganisationRole Administrator =
-    new("Administrator", true, true, true, true, true);
+  public static OrganisationRole Administrator(int organisationId) =>
+    new(organisationId, "Administrator", true, true, true, true, true);
 
-  public OrganisationRole(string name, bool serviceWrite, bool serviceDelete,
+  public OrganisationRole(int organisationId, string name, bool serviceWrite, bool serviceDelete,
     bool userRead, bool userWrite, bool userDelete)
   {
+    OrganisationId = organisationId;
     Name = name;
     ServiceWrite = serviceWrite;
     ServiceDelete = serviceDelete;

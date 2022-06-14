@@ -19,10 +19,13 @@ public class Organisation : EntityBase, IAggregateRoot
     RegisterDomainEvent(organisationCreatedEvent);
   }
 
-  [Required, MinLength(5), MaxLength(50), RegularExpression("^(?:[a-zA-Z0-9] ?)+$")]
+  [Required]
+  [MinLength(5)]
+  [MaxLength(50)]
+  [RegularExpression("^(?:[a-zA-Z0-9] ?)+$")]
   public String Name { get; set; }
 
-  public String RouteName { get; private set; }
+  public String RouteName { get; }
 
   public bool IsActive { get; set; }
 

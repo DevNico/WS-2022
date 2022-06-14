@@ -1,8 +1,9 @@
 ﻿using Ardalis.Specification;
 
-namespace ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
+namespace ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 
-public sealed class ServiceTemplateByNameSpec : Specification<ServiceTemplate>, ISingleResultSpecification
+public sealed class ServiceTemplateByNameSpec : Specification<ServiceTemplate>,
+  ISingleResultSpecification
 {
   public ServiceTemplateByNameSpec(string name, bool active = true)
   {

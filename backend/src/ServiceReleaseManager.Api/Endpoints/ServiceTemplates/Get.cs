@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
+using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Get : AuthorizedEndpointBase
-  .WithRequest<GetServiceTemplate>
-  .WithActionResult<ServiceTemplateRecord>
+public class Get : EndpointBase.WithRequest<GetServiceTemplate>.WithActionResult<
+  ServiceTemplateRecord>
 {
   private readonly IRepository<ServiceTemplate> _repository;
 
@@ -17,7 +16,7 @@ public class Get : AuthorizedEndpointBase
     _repository = repository;
   }
 
-  [HttpGet("{serviceName}")]
+  [HttpGet(GetServiceTemplate.Route)]
   [SwaggerOperation(
     Summary = "Get a service template",
     Description = "Get a service template by its name",
@@ -30,7 +29,7 @@ public class Get : AuthorizedEndpointBase
     [FromRoute] GetServiceTemplate request,
     CancellationToken cancellationToken = new())
   {
-    var spec = new ServiceTemplateByNameSpec(request.ServiceName);
+    var spec = new ServiceTemplateByNameSpec(request.ServiceTemplateName);
     var template = await _repository.GetBySpecAsync(spec, cancellationToken);
     if (template == null)
     {

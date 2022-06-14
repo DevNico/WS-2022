@@ -8,12 +8,12 @@ namespace ServiceReleaseManager.Core.Services;
 
 public class OrganisationRoleService : IOrganisationRoleService
 {
+  private readonly IRepository<Organisation> _organisationRepository;
+
   public OrganisationRoleService(IRepository<Organisation> organisationRepository)
   {
     _organisationRepository = organisationRepository;
   }
-
-  private readonly IRepository<Organisation> _organisationRepository;
 
   public async Task<Result<List<OrganisationRole>>> ListByOrganisationRouteName(
     string organisationRouteName,

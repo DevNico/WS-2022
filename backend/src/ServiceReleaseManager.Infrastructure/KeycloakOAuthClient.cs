@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace ServiceReleaseManager.Core;
+namespace ServiceReleaseManager.Infrastructure;
 
 public class KeycloakOAuthClient
 {

@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using ServiceReleaseManager.Api;
 using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Endpoints;
 using ServiceReleaseManager.Api.OpenApi;
 using ServiceReleaseManager.Core;
 using ServiceReleaseManager.Infrastructure;
@@ -31,9 +32,6 @@ var swaggerConfig = config.GetSection("Swagger");
 var kcConfig = config.GetSection("Keycloak");
 var kcBaseUrl = $"{kcConfig["Url"]}/realms/{kcConfig["Realm"]}";
 
-var connectionString = config.GetConnectionString("Default");
-builder.Services.AddDbContext(connectionString);
-
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
@@ -42,7 +40,10 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
   options.ForwardedHeaders = ForwardedHeaders.All;
 });
 
-builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddRouting(options =>
+{
+  options.LowercaseUrls = true;
+});
 builder.Services.AddApiVersioning(options =>
 {
   options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -52,7 +53,7 @@ builder.Services.AddApiVersioning(options =>
 
 var connectionString = config.GetConnectionString("Default");
 builder.Services.AddDbContext(connectionString);
-builder.Services.AddControllers(options => options.UseNamespaceRouteToken());
+builder.Services.AddControllers(options => options.UseKebabCaseNamespaceRouteToken());
 builder.Services.AddHealthChecks();
 
 // Cors
@@ -65,7 +66,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(b =>
 }));
 
 // Authentication
-if(builder.Environment.EnvironmentName != "Testing")
+if (builder.Environment.EnvironmentName != "Testing")
 {
   builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
