@@ -1,4 +1,5 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './Router';
@@ -11,15 +12,17 @@ const queryClient = new QueryClient();
 
 export const Root: React.FC = () => {
 	return (
-		<BrowserRouter>
-			<ThemeProvider theme={theme}>
+		<ReactKeycloakProvider authClient={keycloak}>
 				<QueryClientProvider client={queryClient}>
+			<BrowserRouter>
+				<ThemeProvider theme={theme}>
 					{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 					<CssBaseline />
 					<Router />
 					<ReactQueryDevtools initialIsOpen={false} />
+				</ThemeProvider>
+			</BrowserRouter>
 				</QueryClientProvider>
-			</ThemeProvider>
-		</BrowserRouter>
+		</ReactKeycloakProvider>
 	);
 };

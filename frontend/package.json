@@ -28,15 +28,20 @@
 		"i18next": "^21.8.1",
 		"i18next-browser-languagedetector": "^6.1.4",
 		"orval": "^6.8.1",
+		"react-query": "^3.39.1",
+		"@mui/lab": "^5.0.0-alpha.81",
+		"@react-keycloak/web": "^3.4.0",
+		"formik": "^2.2.9",
 		"prettier": "^2.6.2",
 		"react": "^18.1.0",
 		"react-div-100vh": "^0.7.0",
 		"react-dom": "^18.1.0",
 		"react-i18next": "^11.16.9",
-		"react-query": "^3.39.1",
 		"react-router-dom": "^6.3.0",
 		"react-scripts": "^5.0.1",
-		"typescript": "^4.6.4"
+		"typescript": "^4.6.4",
+		"zod": "^3.16.0",
+		"zod-formik-adapter": "^1.1.1"
 	},
 	"browserslist": {
 		"production": [
