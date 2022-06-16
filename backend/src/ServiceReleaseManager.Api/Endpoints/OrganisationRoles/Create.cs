@@ -19,7 +19,6 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.Wi
   }
 
   [HttpPost]
-  [Authorize]
   [SwaggerOperation(
     Summary = "Creates a new OrganisationRole",
     Description = "Creates a new OrganisationRole",

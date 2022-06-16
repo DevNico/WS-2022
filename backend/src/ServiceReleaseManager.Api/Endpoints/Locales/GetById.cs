@@ -18,7 +18,6 @@ public class GetById : EndpointBase.WithRequest<GetLocaleByIdRequest>.WithAction
     _localeService = localeService;
   }
 
-  [Authorize]
   [HttpGet(GetLocaleByIdRequest.Route)]
   [SwaggerOperation(
     Summary = "Get a locale by id",

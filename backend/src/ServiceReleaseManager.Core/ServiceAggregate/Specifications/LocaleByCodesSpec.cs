@@ -6,6 +6,8 @@ public sealed class LocaleByCodesSpec : Specification<Locale>, ISingleResultSpec
 {
   public LocaleByCodesSpec(string countryCode, string languageCode)
   {
-    Query.Where(locale => locale.CountryCode == countryCode && locale.LanguageCode == languageCode);
+    Query
+      .Where(locale => locale.CountryCode == countryCode)
+      .Where(locale => locale.LanguageCode == languageCode);
   }
 }
