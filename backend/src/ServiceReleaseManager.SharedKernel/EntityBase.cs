@@ -11,7 +11,8 @@ public abstract class EntityBase
 
   public DateTime CreatedAt { get; set; }
 
-  [NotMapped] public IEnumerable<DomainEventBase> DomainEvents => _domainEvents.AsReadOnly();
+  [NotMapped]
+  public IEnumerable<DomainEventBase> DomainEvents => _domainEvents.AsReadOnly();
 
   protected void RegisterDomainEvent(DomainEventBase domainEvent)
   {

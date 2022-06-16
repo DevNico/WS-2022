@@ -11,6 +11,7 @@ public record ServiceTemplateRecord(int Id, string name, List<MetadataArrayEleme
   {
     return new ServiceTemplateRecord(serviceTemplate.Id, serviceTemplate.Name,
       JsonConvert.DeserializeObject<List<MetadataArrayElement>>(serviceTemplate.StaticMetadata)!,
-      JsonConvert.DeserializeObject<List<MetadataArrayElement>>(serviceTemplate.LocalizedMetadata)!);
+      JsonConvert.DeserializeObject<List<MetadataArrayElement>>(serviceTemplate
+        .LocalizedMetadata)!);
   }
 }

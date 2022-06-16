@@ -17,10 +17,21 @@ public class ServiceTemplate : EntityBase, IAggregateRoot
     IsActive = true;
   }
 
-  [Required] [MaxLength(50)] public string Name { get; set; }
-  [Required] [Column(TypeName = "json")] public string StaticMetadata { get; set; }
-  [Required] [Column(TypeName = "json")] public string LocalizedMetadata { get; set; }
-  [Required] [DefaultValue(true)] public bool IsActive { get; set; }
+  [Required]
+  [MaxLength(50)]
+  public string Name { get; set; }
+
+  [Required]
+  [Column(TypeName = "json")]
+  public string StaticMetadata { get; set; }
+
+  [Required]
+  [Column(TypeName = "json")]
+  public string LocalizedMetadata { get; set; }
+
+  [Required]
+  [DefaultValue(true)]
+  public bool IsActive { get; set; }
 
   public void Deactivate()
   {

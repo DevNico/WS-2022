@@ -9,6 +9,6 @@ public class ServiceTemplateDeactivatedEvent : DomainEventBase
   {
     ServiceTemplate = serviceTemplate;
   }
-  
+
   public ServiceTemplate ServiceTemplate { get; }
 }

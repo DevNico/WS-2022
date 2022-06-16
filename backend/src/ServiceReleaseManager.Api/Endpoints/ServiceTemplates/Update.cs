@@ -1,20 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
+using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Update : AuthorizedEndpointBase
-  .WithRequest<UpdateServiceTemplate>
-  .WithActionResult<ServiceTemplateRecord>
+public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithActionResult<
+  ServiceTemplateRecord>
 {
-  private readonly IRepository<ServiceTemplate> _repository;
   private readonly IMetadataFormatValidator _metadataValidator;
+  private readonly IRepository<ServiceTemplate> _repository;
 
   public Update(IRepository<ServiceTemplate> repository, IMetadataFormatValidator metadataValidator)
   {
@@ -22,8 +20,7 @@ public class Update : AuthorizedEndpointBase
     _metadataValidator = metadataValidator;
   }
 
-  [HttpPut]
-  [Authorize]
+  [HttpPatch]
   [SwaggerOperation(
     Summary = "Update a service template",
     Description = "Update a service template",
@@ -37,7 +34,8 @@ public class Update : AuthorizedEndpointBase
     UpdateServiceTemplate request,
     CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length > 50 || request.LocalizedMetadata == null ||
+    if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length > 50 ||
+        request.LocalizedMetadata == null ||
         request.StaticMetadata == null)
     {
       return BadRequest(new ErrorResponse("A required parameter was null"));

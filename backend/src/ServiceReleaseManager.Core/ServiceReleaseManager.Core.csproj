@@ -8,14 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.GuardClauses" />
-    <PackageReference Include="Ardalis.Result" />
-    <PackageReference Include="Ardalis.SmartEnum" />
-    <PackageReference Include="Ardalis.Specification" />
-    <PackageReference Include="Autofac" />
-    <PackageReference Include="MediatR" />
-    <PackageReference Include="IdentityModel" />
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Ardalis.GuardClauses"/>
+    <PackageReference Include="Ardalis.Result"/>
+    <PackageReference Include="Ardalis.SmartEnum"/>
+    <PackageReference Include="Ardalis.Specification"/>
+    <PackageReference Include="Autofac"/>
+    <PackageReference Include="MediatR"/>
+    <PackageReference Include="IdentityModel"/>
+    <PackageReference Include="Newtonsoft.Json"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -23,9 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Aggregates"/>
     <Folder Include="OrganisationAggregate\Handlers"/>
     <Folder Include="OrganisationAggregate\Services"/>
-    <Folder Include="Services"/>
+    <Folder Include="ReleaseAggregate\Specifications"/>
+    <Folder Include="ServiceAggregate\Events"/>
   </ItemGroup>
 
 </Project>

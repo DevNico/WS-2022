@@ -2,11 +2,13 @@
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 
-public class OrganisationUserByIdSpec : Specification<OrganisationUser>, ISingleResultSpecification
+public sealed class OrganisationUserByIdSpec : Specification<OrganisationUser>,
+  ISingleResultSpecification
 {
   public OrganisationUserByIdSpec(int id)
   {
     Query
-      .Where(r => r.Id == id);
+      .Where(user => user.IsActive)
+      .Where(organisationUser => organisationUser.Id == id);
   }
 }

@@ -1,20 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
+using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Create : AuthorizedEndpointBase
-  .WithRequest<CreateServiceTemplate>
-  .WithActionResult<ServiceTemplateRecord>
+public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithActionResult<
+  ServiceTemplateRecord>
 {
-  private readonly IRepository<ServiceTemplate> _repository;
   private readonly IMetadataFormatValidator _metadataValidator;
+  private readonly IRepository<ServiceTemplate> _repository;
 
   public Create(IRepository<ServiceTemplate> repository, IMetadataFormatValidator metadataValidator)
   {
@@ -23,7 +21,6 @@ public class Create : AuthorizedEndpointBase
   }
 
   [HttpPost]
-  [Authorize]
   [SwaggerOperation(
     Summary = "Add a new service template",
     Description = "Create a new service template",
