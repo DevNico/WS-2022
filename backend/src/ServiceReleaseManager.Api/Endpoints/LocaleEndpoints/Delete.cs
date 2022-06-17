@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
 using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
+using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 

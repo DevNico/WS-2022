@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 
-namespace ServiceReleaseManager.Core.ServiceAggregate.Sepcifications;
+namespace ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 
 public sealed class ServiceRoleByNameSpec : Specification<ServiceRole>, ISingleResultSpecification
 {
