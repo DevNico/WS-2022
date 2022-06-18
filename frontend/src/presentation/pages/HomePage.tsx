@@ -1,9 +1,8 @@
-import Typography from '@mui/material/Typography/Typography';
+import Box from '@mui/material/Box/Box';
 import React from 'react';
-import CustomAppBar from '../components/CustomAppBar';
 
 const HomePage: React.FC = () => {
-	return <CustomAppBar />;
+	return <h1>Home</h1>;
 };
 
 export default HomePage;
