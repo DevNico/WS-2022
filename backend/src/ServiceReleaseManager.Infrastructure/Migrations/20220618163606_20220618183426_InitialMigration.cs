@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class _20220618183426_InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

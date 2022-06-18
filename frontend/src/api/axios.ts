@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import keycloak from '../keycloak';
+import keycloak from '../Keycloak';
 
 export const AXIOS_INSTANCE = Axios.create({
 	baseURL: 'https://localhost:7024',

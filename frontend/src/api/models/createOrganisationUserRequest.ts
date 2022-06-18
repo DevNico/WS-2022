@@ -6,9 +6,9 @@
  */
 
 export interface CreateOrganisationUserRequest {
-  organisationId: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  roleId: number;
+	organisationId: number;
+	email: string;
+	firstName: string;
+	lastName: string;
+	roleId: number;
 }

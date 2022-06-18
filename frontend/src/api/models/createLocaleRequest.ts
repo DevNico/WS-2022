@@ -6,8 +6,8 @@
  */
 
 export interface CreateLocaleRequest {
-  serviceId: number;
-  languageCode: string;
-  countryCode: string;
-  isDefault?: boolean | null;
+	serviceId: number;
+	languageCode: string;
+	countryCode: string;
+	isDefault?: boolean | null;
 }

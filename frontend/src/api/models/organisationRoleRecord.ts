@@ -6,10 +6,11 @@
  */
 
 export interface OrganisationRoleRecord {
-  name?: string | null;
-  serviceWrite?: boolean;
-  serviceDelete?: boolean;
-  userRead?: boolean;
-  userWrite?: boolean;
-  userDelete?: boolean;
+	name?: string | null;
+	id?: number;
+	serviceWrite?: boolean;
+	serviceDelete?: boolean;
+	userRead?: boolean;
+	userWrite?: boolean;
+	userDelete?: boolean;
 }

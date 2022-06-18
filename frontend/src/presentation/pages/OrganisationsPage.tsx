@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { OrganisationRecord } from '../../api/models';

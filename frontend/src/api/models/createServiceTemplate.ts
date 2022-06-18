@@ -7,7 +7,7 @@
 import type { MetadataArrayElement } from './metadataArrayElement';
 
 export interface CreateServiceTemplate {
-  name: string;
-  staticMetadata: MetadataArrayElement[];
-  localizedMetadata: MetadataArrayElement[];
+	name: string;
+	staticMetadata: MetadataArrayElement[];
+	localizedMetadata: MetadataArrayElement[];
 }

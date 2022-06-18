@@ -7,8 +7,8 @@
 import type { MetadataArrayElement } from './metadataArrayElement';
 
 export interface ServiceTemplateRecord {
-  id?: number;
-  name?: string | null;
-  staticMetadata?: MetadataArrayElement[] | null;
-  localizedMetadata?: MetadataArrayElement[] | null;
+	id?: number;
+	name?: string | null;
+	staticMetadata?: MetadataArrayElement[] | null;
+	localizedMetadata?: MetadataArrayElement[] | null;
 }

@@ -16,6 +16,14 @@ public class OrganisationService : IOrganisationService
     _organisationRepository = organisationRepository;
   }
 
+  public async Task<Result<Organisation>> GetById(int id, CancellationToken cancellationToken)
+  {
+    var spec = new OrganisationByIdSpec(id);
+    var organisation = await _organisationRepository.GetBySpecAsync(spec, cancellationToken);
+
+    return ResultHelper.NullableSuccessNotFound(organisation);
+  }
+
   public async Task<Result<Organisation>> GetByRouteName(string routeName,
     CancellationToken cancellationToken)
   {
@@ -47,6 +55,14 @@ public class OrganisationService : IOrganisationService
     var createdOrganisation =
       await _organisationRepository.AddAsync(newOrganisation, cancellationToken);
     return Result.Success(createdOrganisation);
+  }
+
+  public async Task<Result> Update(Organisation organisation, CancellationToken cancellationToken)
+  {
+    await _organisationRepository.UpdateAsync(organisation, cancellationToken);
+    await _organisationRepository.SaveChangesAsync(cancellationToken);
+
+    return Result.Success();
   }
 
   public async Task<Result> Delete(string routeName,

@@ -1,7 +1,41 @@
 {
+	"common": {
+		"submit": "Submit"
+	},
 	"notFoundPage.goToHome": "Go To Home",
 	"notFoundPage.subtitle": "Sorry, we couldn't find the page you're looking for. Perhaps you've mistyped the URL? Be sure to check your spelling.",
 	"notFoundPage.title": "Sorry, page not found!",
+	"unauthorizedPage": {
+		"title": "Unauthorized",
+		"subtitle": "You are not authorized to access this page."
+	},
 	"login": "Login",
-	"logout": "Logout"
+	"logout": "Logout",
+	"homeLayout": {
+		"organisations": "Organisations",
+		"users": "Users",
+		"roles": "Roles"
+	},
+	"users.create": {
+		"title": "Create a new User",
+		"organisation": "Organisation",
+		"role": "Role",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"submit": "Submit",
+		"success": "User created successfully",
+		"error": "Could not create a new user"
+	},
+	"roles.create": {
+		"title": "Create a new Role",
+		"name": "Name",
+		"organisation": "Organisation",
+		"serviceWrite": "Create Services",
+		"serviceDelete": "Delete Services",
+		"userRead": "Read Users",
+		"userWrite": "Create Users",
+		"userDelete": "Delete Users",
+		"success": "Role created successfully",
+		"error": "Could not create a new role"
+	}
 }

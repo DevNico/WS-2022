@@ -7,7 +7,7 @@ import theme from './theme';
 import './i18n';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import keycloak from '../keycloak';
+import keycloak from '../Keycloak';
 import { RecoilRoot } from 'recoil';
 
 const queryClient = new QueryClient();
