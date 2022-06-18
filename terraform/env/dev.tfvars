@@ -24,8 +24,10 @@ keycloak_users = {
 }
 
 webapp_redirect_urls = [
-  "https://localhost:*",
-  "https://localhost:*/*",
+  "http://localhost:3000",
+  "http://localhost:3000/*",
+  "https://localhost:7024",
+  "https://localhost:7024/*",
   "https://dev.srm.devnico.cloud",
   "https://dev.srm.devnico.cloud/*",
   "https://api.dev.srm.devnico.cloud/swagger/oauth2-redirect.html"

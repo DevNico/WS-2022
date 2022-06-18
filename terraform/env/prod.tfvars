@@ -24,10 +24,7 @@ keycloak_users = {
 }
 
 webapp_redirect_urls = [
-  "https://localhost:*",
-  "https://localhost:*/*",
   "https://srm.devnico.cloud",
   "https://srm.devnico.cloud/*",
-  "https://api.srm.devnico.cloud/swagger/oauth2-redirect.html"
 ]
 backend_redirect_urls = ["*"]
