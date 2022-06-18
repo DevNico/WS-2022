@@ -16,7 +16,6 @@ public class Delete : EndpointBase.WithRequest<DeleteOrganisationRoleRequest>.Wi
   }
 
   [HttpDelete(DeleteOrganisationRoleRequest.Route)]
-  [Authorize]
   [SwaggerOperation(
     Summary = "Deletes a OrganisationRole",
     Description = "Deletes a OrganisationRole",

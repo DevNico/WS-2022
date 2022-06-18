@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace ServiceReleaseManager.Api.Endpoints;
 
-public static class KebabNamspace
+public static class KebabNamespace
 {
   public static MvcOptions UseKebabCaseNamespaceRouteToken(this MvcOptions options)
   {
