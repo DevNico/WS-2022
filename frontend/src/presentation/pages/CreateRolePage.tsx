@@ -50,7 +50,7 @@ const CreateRolePage: React.FC = () => {
 	);
 
 	const validationSchema = yup.object({
-		name: yup.string().min(2).max(50).required('Name is required'),
+		name: yup.string().min(5).max(50).required('Name is required'),
 		organisationId: yup.number().required('Organisation is required'),
 		serviceWrite: yup.boolean().required('Service write is required'),
 		serviceDelete: yup.boolean().required('Service delete is required'),

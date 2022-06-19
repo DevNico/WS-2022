@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { LinearProgress } from '@mui/material';
+import {DataGrid, GridColDef} from '@mui/x-data-grid';
+import {Button, LinearProgress, Grid} from '@mui/material';
 import { checkUserIsSuperAdminEffect } from '../../util';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
@@ -10,8 +10,10 @@ import { organisationsList } from '../../api/organisation/organisation';
 import AlertContainer from '../components/AlertContainer';
 import CustomAlert from '../components/CustomAlert';
 import { organisationRolesList } from '../../api/organisation-role/organisation-role';
+import EmptyTableOverlay from '../components/EmptyTableOverlay';
 
 interface ColumnData {
+	id: number;
 	organisationName?: string;
 	name?: string;
 	serviceWrite?: boolean;
@@ -92,6 +94,7 @@ const UsersPage: React.FC = () => {
 							.mutateAsync(o.routeName!)
 							.then((roles) =>
 								roles.map((r) => ({
+									id: r.id!,
 									organisationName: o.name!,
 									name: r.name!,
 									serviceWrite: r.serviceWrite!,
@@ -119,12 +122,22 @@ const UsersPage: React.FC = () => {
 	);
 
 	return (
-		<>
+		<Grid container rowGap={2} direction='column' height='100%'>
+			<Button variant='text' onClick={() => navigate('/roles/create')} sx={{width: 'max-content'}}>
+				{t('roles.list.create')}
+			</Button>
 			<DataGrid
 				columns={columns}
 				rows={data}
 				components={{
 					LoadingOverlay: LinearProgress,
+					NoRowsOverlay: () => (
+						<EmptyTableOverlay
+							text={t('roles.list.noData')}
+							buttonText={t('roles.list.create')}
+							target='/roles/create'
+						/>
+					),
 				}}
 				loading={loading}
 				disableColumnMenu
@@ -138,7 +151,7 @@ const UsersPage: React.FC = () => {
 					{t('users.list.error')}
 				</CustomAlert>
 			</AlertContainer>
-		</>
+		</Grid>
 	);
 };
 

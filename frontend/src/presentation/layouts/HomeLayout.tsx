@@ -1,4 +1,4 @@
-import { AccountCircle } from '@mui/icons-material';
+import { AccountCircle, CorporateFare } from '@mui/icons-material';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
@@ -23,9 +23,7 @@ import Div100vh from 'react-div-100vh';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { atom, useRecoilState, useSetRecoilState } from 'recoil';
-import UsersListItem from './UsersListItem';
-import RolesListItem from './RolesListItem';
-import OrganisationsListItem from './OrganisationsListItem';
+import PersonIcon from '@mui/icons-material/Person';
 
 const Root = styled(Div100vh)`
 	display: flex;
@@ -124,6 +122,10 @@ const Drawer = () => {
 	const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
 	const { keycloak } = useKeycloak();
 
+	const navigate = useNavigate();
+	const { t } = useTranslation();
+	const location = useLocation();
+
 	useEffect(() => {
 		if (keycloak.authenticated) {
 			keycloak.loadUserInfo().then(() => {
@@ -136,14 +138,46 @@ const Drawer = () => {
 		setDrawerOpen((v) => !v);
 	};
 
-	const location = useLocation();
+	const isRolesPage = location.pathname === '/roles';
+	const isUsersPage = location.pathname === '/users';
+	const isOrganisationsPage = location.pathname === '/organisations';
 
 	const drawer = (
 		<div>
 			<List>
-				<OrganisationsListItem isSuperAdmin={isSuperAdmin} />
-				<UsersListItem isSuperAdmin={isSuperAdmin} />
-				<RolesListItem isSuperAdmin={isSuperAdmin} />
+				{isSuperAdmin && (
+					<ListItemButton
+						selected={isOrganisationsPage}
+						onClick={() => navigate('/organisations')}
+					>
+						<ListItemIcon>
+							<CorporateFare />
+						</ListItemIcon>
+						<ListItemText primary={t('homeLayout.organisations')} />
+					</ListItemButton>
+				)}
+				{isSuperAdmin && (
+					<ListItemButton
+						selected={isUsersPage}
+						onClick={() => navigate('/users')}
+					>
+						<ListItemIcon>
+							<PersonIcon />
+						</ListItemIcon>
+						<ListItemText primary={t('homeLayout.users')} />
+					</ListItemButton>
+				)}
+				{isSuperAdmin && (
+					<ListItemButton
+						selected={isRolesPage}
+						onClick={() => navigate('/roles')}
+					>
+						<ListItemIcon>
+							<PersonIcon />
+						</ListItemIcon>
+						<ListItemText primary={t('homeLayout.roles')} />
+					</ListItemButton>
+				)}
 			</List>
 			<Divider />
 			<List>

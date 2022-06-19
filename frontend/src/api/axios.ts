@@ -12,11 +12,13 @@ export const customInstance = <T>(
 ): Promise<T> => {
 	const source = Axios.CancelToken.source();
 	const promise = AXIOS_INSTANCE({
-		headers: {
-			Authorization: `Bearer ${keycloak.token}`,
-		},
 		...config,
 		...options,
+		headers: {
+			Authorization: `Bearer ${keycloak.token}`,
+			...config.headers,
+			...options?.headers,
+		},
 		cancelToken: source.token,
 	}).then(({ data }) => data);
 

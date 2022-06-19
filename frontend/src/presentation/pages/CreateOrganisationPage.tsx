@@ -37,7 +37,7 @@ const CreateOrganisationPage: React.FC = () => {
 	);
 
 	const validationSchema = yup.object({
-		name: yup.string().min(2).max(50).required('Name is required'),
+		name: yup.string().min(5).max(50).required('Name is required'),
 	});
 
 	const formik = useFormik({

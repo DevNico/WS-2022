@@ -13,14 +13,15 @@
 	"logout": "Logout",
 	"homeLayout": {
 		"organisations": "Organisations",
-		"listOrganisations": "List Organisations",
-		"createOrganisation": "Create Organisation",
 		"users": "Users",
-		"listUsers": "List Users",
-		"createUser": "Create User",
-		"roles": "Roles",
-		"listRoles": "List Roles",
-		"createRole": "Create Role"
+		"roles": "Roles"
+	},
+	"organisations.list": {
+		"name": "Name",
+		"description": "Description",
+		"createdAt": "Created At",
+		"create": "Create a new organisation",
+		"noData": "No organisations found, click the button below to create a new one"
 	},
 	"organisations.create": {
 		"title": "Create a new Organisation",
@@ -35,7 +36,9 @@
 		"firstName": "First Name",
 		"lastName": "Last Name",
 		"lastSignIn": "Last Sign In",
-		"error": "Could not load the users"
+		"error": "Could not load the users",
+		"create": "Create a new user",
+		"noData": "No users found, click the button below to create a new one"
 	},
 	"users.create": {
 		"title": "Create a new User",
@@ -46,6 +49,10 @@
 		"submit": "Submit",
 		"success": "User created successfully",
 		"error": "Could not create a new user: {{error}}"
+	},
+	"roles.list": {
+		"noData": "No roles found, click the button below to create a new one",
+		"create": "Create a new role"
 	},
 	"roles.create": {
 		"title": "Create a new Role",

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 
@@ -36,7 +37,7 @@ public class KeycloakOAuthClient
              { "grant_type", "client_credentials" }
            }))
     {
-      content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+      content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
       var response =
         await _httpClient.PostAsync($"{_url}/realms/{_realm}/protocol/openid-connect/token",
           content);

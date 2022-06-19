@@ -53,8 +53,8 @@ const CreateUsersPage: React.FC = () => {
 
 	const validationSchema = yup.object({
 		email: yup.string().email().required(),
-		firstName: yup.string().required('Name is required'),
-		lastName: yup.string().required('Name is required'),
+		firstName: yup.string().min(5).max(50).required('First name is required'),
+		lastName: yup.string().min(5).max(50).required('Last name is required'),
 		organisationId: yup.number().required('Organisation is required'),
 		roleId: yup.number().required('Role is required'),
 	});
@@ -86,10 +86,15 @@ const CreateUsersPage: React.FC = () => {
 
 	const onOrganisationIdChange = async (e: SelectChangeEvent) => {
 		formik.handleChange(e);
-		setRoles([]);
+		formik.values.roleId = '' as unknown as number;
 		if (e.target.value) {
-			setRoles(await rolesMutation.mutateAsync(e.target.value));
+			const route = organisationsListMutation.data?.find(o => o.id === Number(e.target.value))?.routeName;
+			if (route) {
+				setRoles(await rolesMutation.mutateAsync(route));
+				return;
+			}
 		}
+		//setRoles([]);
 	};
 
 	return (
@@ -194,14 +199,14 @@ const CreateUsersPage: React.FC = () => {
 								name='roleId'
 								disabled={roles.length === 0}
 								value={formik.values.roleId + ''}
-								onChange={onOrganisationIdChange}
+								onChange={formik.handleChange}
 								error={
 									formik.touched.roleId &&
 									Boolean(formik.errors.roleId)
 								}
 								label={t('users.create.role')}
 							>
-								{roles?.map((role) => (
+								{roles.map((role) => (
 									<MenuItem value={role.id} key={role.id}>
 										{role.name}
 									</MenuItem>

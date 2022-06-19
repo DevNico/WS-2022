@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { LinearProgress } from '@mui/material';
+import {Button, Grid, LinearProgress} from '@mui/material';
 import { checkUserIsSuperAdminEffect } from '../../util';
 import { useTranslation } from 'react-i18next';
 import { useKeycloak } from '@react-keycloak/web';
@@ -10,6 +10,7 @@ import { organisationUserList } from '../../api/organisation-user/organisation-u
 import { organisationsList } from '../../api/organisation/organisation';
 import AlertContainer from '../components/AlertContainer';
 import CustomAlert from '../components/CustomAlert';
+import EmptyTableOverlay from "../components/EmptyTableOverlay";
 
 interface ColumnData {
 	organisationName?: string;
@@ -103,12 +104,22 @@ const UsersPage: React.FC = () => {
 	);
 
 	return (
-		<>
+		<Grid container rowGap={2} direction='column' height='100%'>
+			<Button variant='text' onClick={() => navigate('/users/create')} sx={{width: 'max-content'}}>
+				{t('users.list.create')}
+			</Button>
 			<DataGrid
 				columns={columns}
 				rows={data}
 				components={{
 					LoadingOverlay: LinearProgress,
+					NoRowsOverlay: () => (
+						<EmptyTableOverlay
+							text={t('users.list.noData')}
+							buttonText={t('users.list.create')}
+							target='/users/create'
+						/>
+					),
 				}}
 				loading={loading}
 				disableColumnMenu
@@ -122,7 +133,7 @@ const UsersPage: React.FC = () => {
 					{t('users.list.error')}
 				</CustomAlert>
 			</AlertContainer>
-		</>
+		</Grid>
 	);
 };
 
