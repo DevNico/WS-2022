@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import keycloak from '../keycloak';
+import keycloak from '../Keycloak';
 
 export const AXIOS_INSTANCE = Axios.create({
 	baseURL: 'https://localhost:7024',
@@ -12,11 +12,13 @@ export const customInstance = <T>(
 ): Promise<T> => {
 	const source = Axios.CancelToken.source();
 	const promise = AXIOS_INSTANCE({
-		headers: {
-			Authorization: `Bearer ${keycloak.token}`,
-		},
 		...config,
 		...options,
+		headers: {
+			Authorization: `Bearer ${keycloak.token}`,
+			...config.headers,
+			...options?.headers,
+		},
 		cancelToken: source.token,
 	}).then(({ data }) => data);
 

@@ -7,8 +7,9 @@ import theme from './theme';
 import './i18n';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import keycloak from '../keycloak';
+import keycloak from '../Keycloak';
 import { RecoilRoot } from 'recoil';
+import { Toaster } from 'react-hot-toast';
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ export const Root: React.FC = () => {
 							{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 							<CssBaseline />
 							<Router />
+							<Toaster />
 							<ReactQueryDevtools initialIsOpen={false} />
 						</ThemeProvider>
 					</BrowserRouter>

@@ -280,7 +280,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Success",
+						"description": "User created",
 						"content": {
 							"text/plain": {
 								"schema": {
@@ -298,6 +298,15 @@
 								}
 							}
 						}
+					},
+					"400": {
+						"description": "Invalid request"
+					},
+					"404": {
+						"description": "Organisation or email not found"
+					},
+					"424": {
+						"description": "The keycloak request failed"
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -435,67 +444,25 @@
 				"summary": "Creates a new OrganisationRole",
 				"description": "Creates a new OrganisationRole",
 				"operationId": "OrganisationRole.Create",
-				"parameters": [
-					{
-						"name": "OrganisationId",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "integer",
-							"format": "int32"
-						}
-					},
-					{
-						"name": "Name",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"maxLength": 50,
-							"minLength": 5,
-							"type": "string"
-						}
-					},
-					{
-						"name": "ServiceWrite",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"name": "ServiceDelete",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"name": "UserRead",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"name": "UserWrite",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "boolean"
-						}
-					},
-					{
-						"name": "UserDelete",
-						"in": "path",
-						"required": true,
-						"schema": {
-							"type": "boolean"
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRoleRequest"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRoleRequest"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRoleRequest"
+							}
 						}
 					}
-				],
+				},
 				"responses": {
 					"200": {
 						"description": "Success",
@@ -1168,6 +1135,45 @@
 				},
 				"additionalProperties": false
 			},
+			"CreateOrganisationRoleRequest": {
+				"required": [
+					"name",
+					"organisationId",
+					"serviceDelete",
+					"serviceWrite",
+					"userDelete",
+					"userRead",
+					"userWrite"
+				],
+				"type": "object",
+				"properties": {
+					"organisationId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"maxLength": 50,
+						"minLength": 5,
+						"type": "string"
+					},
+					"serviceWrite": {
+						"type": "boolean"
+					},
+					"serviceDelete": {
+						"type": "boolean"
+					},
+					"userRead": {
+						"type": "boolean"
+					},
+					"userWrite": {
+						"type": "boolean"
+					},
+					"userDelete": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
 			"CreateOrganisationUserRequest": {
 				"required": [
 					"email",
@@ -1323,6 +1329,10 @@
 					"name": {
 						"type": "string",
 						"nullable": true
+					},
+					"id": {
+						"type": "integer",
+						"format": "int32"
 					},
 					"serviceWrite": {
 						"type": "boolean"

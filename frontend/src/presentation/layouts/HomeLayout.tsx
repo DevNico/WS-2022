@@ -1,5 +1,4 @@
-import { AccountCircle } from '@mui/icons-material';
-import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import { AccountCircle, CorporateFare } from '@mui/icons-material';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
@@ -19,11 +18,20 @@ import styled from '@mui/material/styles/styled';
 import Toolbar from '@mui/material/Toolbar/Toolbar';
 import Typography from '@mui/material/Typography/Typography';
 import { useKeycloak } from '@react-keycloak/web';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Div100vh from 'react-div-100vh';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useLocation } from 'react-router-dom';
-import { atom, useRecoilState, useSetRecoilState } from 'recoil';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import {
+	atom,
+	useRecoilState,
+	useRecoilValue,
+	useSetRecoilState,
+} from 'recoil';
+import PersonIcon from '@mui/icons-material/Person';
+import { isSuperAdminState } from '../../util';
+import { useOrganisationsList } from '../../api/organisation/organisation';
+import DrawerOrganisationItem from './DrawerOrganisationItem';
 
 const Root = styled(Div100vh)`
 	display: flex;
@@ -119,24 +127,48 @@ const AppBar: React.FC = () => {
 
 const Drawer = () => {
 	const [drawerOpen, setDrawerOpen] = useRecoilState(drawerOpenState);
+	const { keycloak } = useKeycloak();
+
+	const navigate = useNavigate();
+	const { t } = useTranslation();
+	const location = useLocation();
+	const setIsSuperAdmin = useSetRecoilState(isSuperAdminState);
+	const isSuperAdmin = useRecoilValue(isSuperAdminState);
+	const organisationsList = useOrganisationsList();
+
+	useEffect(() => {
+		if (keycloak.authenticated) {
+			keycloak
+				.loadUserInfo()
+				.then(() => {
+					setIsSuperAdmin(keycloak.hasRealmRole('superAdmin'));
+				})
+				.catch(() => setIsSuperAdmin(false));
+		} else {
+			setIsSuperAdmin(false);
+		}
+	}, [keycloak.authenticated]);
+
 	const handleDrawerToggle = () => {
 		setDrawerOpen((v) => !v);
 	};
 
-	const location = useLocation();
-	const isOrganisationsPage = location.pathname === '/organisations';
+	const isOrganisationsPage = location.pathname === '/organisation';
 
 	const drawer = (
 		<div>
 			<List>
-				<ListItem selected={isOrganisationsPage} disablePadding>
-					<ListItemButton>
+				{isSuperAdmin && (
+					<ListItemButton
+						selected={isOrganisationsPage}
+						onClick={() => navigate('/organisation')}
+					>
 						<ListItemIcon>
-							<CorporateFareIcon />
+							<CorporateFare />
 						</ListItemIcon>
-						<ListItemText primary={'Organisationen'} />
+						<ListItemText primary={t('homeLayout.organisations')} />
 					</ListItemButton>
-				</ListItem>
+				)}
 			</List>
 			<Divider />
 			<List>
@@ -152,6 +184,19 @@ const Drawer = () => {
 							<ListItemText primary={text} />
 						</ListItemButton>
 					</ListItem>
+				))}
+			</List>
+			<Divider />
+			<List>
+				<Typography variant='h6' mx={2}>
+					Organisations
+				</Typography>
+				{organisationsList.data?.map((o) => (
+					<DrawerOrganisationItem
+						key={o.id!}
+						organisationName={o.name!}
+						organisationRouteName={o.routeName!}
+					/>
 				))}
 			</List>
 		</div>

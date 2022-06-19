@@ -6,5 +6,5 @@
  */
 
 export interface CreateOrganisationRequest {
-  name: string;
+	name: string;
 }

@@ -6,5 +6,5 @@
  */
 
 export interface ErrorResponse {
-  message?: string | null;
+	message?: string | null;
 }

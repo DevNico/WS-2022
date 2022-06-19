@@ -6,9 +6,9 @@
  */
 
 export interface OrganisationRecord {
-  id?: number;
-  name?: string | null;
-  routeName?: string | null;
-  updatedAt?: string;
-  createdAt?: string;
+	id?: number;
+	name?: string | null;
+	routeName?: string | null;
+	updatedAt?: string;
+	createdAt?: string;
 }

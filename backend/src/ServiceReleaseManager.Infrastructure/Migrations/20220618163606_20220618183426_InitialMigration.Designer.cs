@@ -12,8 +12,8 @@ using ServiceReleaseManager.Infrastructure.Data;
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220614113513_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220618163606_20220618183426_InitialMigration")]
+    partial class _20220618183426_InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

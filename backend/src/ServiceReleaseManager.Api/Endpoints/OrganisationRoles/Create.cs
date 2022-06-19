@@ -26,7 +26,7 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.Wi
     Tags = new[] { "OrganisationRole" })
   ]
   public override async Task<ActionResult<OrganisationRoleRecord>> HandleAsync(
-    [FromRoute] CreateOrganisationRoleRequest request,
+    [FromBody] CreateOrganisationRoleRequest request,
     CancellationToken cancellationToken = new())
   {
     var newRole = new OrganisationRole(request.OrganisationId, request.Name, request.ServiceWrite,

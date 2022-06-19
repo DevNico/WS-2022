@@ -6,11 +6,11 @@
  */
 
 export interface MetadataArrayElement {
-  index?: number;
-  name?: string | null;
-  type?: string | null;
-  label?: string | null;
-  minLength?: number | null;
-  maxLength?: number | null;
-  required?: boolean;
+	index?: number;
+	name?: string | null;
+	type?: string | null;
+	label?: string | null;
+	minLength?: number | null;
+	maxLength?: number | null;
+	required?: boolean;
 }

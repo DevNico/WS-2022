@@ -11,3 +11,4 @@ export * from './errorResponse';
 export * from './localeRecord';
 export * from './createServiceTemplate';
 export * from './serviceTemplateRecord';
+export * from './createOrganisationRoleRequest';

@@ -6,8 +6,8 @@
  */
 
 export interface LocaleRecord {
-  id?: number;
-  languageCode?: string | null;
-  countryCode?: string | null;
-  isDefault?: boolean;
+	id?: number;
+	languageCode?: string | null;
+	countryCode?: string | null;
+	isDefault?: boolean;
 }
