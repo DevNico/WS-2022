@@ -54,23 +54,25 @@ const CreateRolePage: React.FC = () => {
 			userDelete: false,
 		},
 		validationSchema,
-		onSubmit: async (values) => {
-			try {
-				await createRole.mutateAsync({
+		onSubmit: (values) => {
+			return toast.promise(
+				createRole.mutateAsync({
 					...values,
 					organisationId: organisationByName.data?.id!,
-				});
-				toast.success(t('roles.create.success'));
-			} catch (e) {
-				toast.error(
-					t('roles.create.error', {
+				}),
+				{
+					loading: t('common.loading'),
+					success: () => {
+						formik.resetForm();
+						return t('roles.create.success');
+					},
+					error: t('roles.create.error', {
 						error:
 							(createRole.error as any)?.message ||
 							'No message available',
-					})
-				);
-				throw e;
-			}
+					}),
+				}
+			);
 		},
 	});
 

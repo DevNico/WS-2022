@@ -65,26 +65,25 @@ const CreateUserPage: React.FC = () => {
 			roleId: '' as any,
 		},
 		validationSchema,
-		onSubmit: async (values, { setSubmitting }) => {
-			try {
-				await createUser.mutateAsync({
+		onSubmit: async (values) => {
+			return toast.promise(
+				createUser.mutateAsync({
 					...values,
 					organisationId: organisationByName.data?.id!,
-				});
-				formik.resetForm();
-				toast.success(t('users.create.success'));
-			} catch (e) {
-				toast.error(
-					t('users.create.error', {
+				}),
+				{
+					loading: t('common.loading'),
+					success: () => {
+						formik.resetForm();
+						return t('users.create.success');
+					},
+					error: t('users.create.error', {
 						error:
 							(createUser.error as any)?.message ||
 							'No message available',
-					})
-				);
-				throw e;
-			} finally {
-				setSubmitting(false);
-			}
+					}),
+				}
+			);
 		},
 	});
 

@@ -33,23 +33,19 @@ const CreateOrganisationPage: React.FC = () => {
 			name: '',
 		},
 		validationSchema,
-		onSubmit: async (values, { setSubmitting }) => {
-			try {
-				await createOrganisation.mutateAsync(values);
-				formik.resetForm();
-				toast.success(t('organisations.create.success'));
-			} catch (e) {
-				toast.error(
-					t('organisations.create.error', {
-						error:
-							(createOrganisation.error as any)?.message ||
-							'No message available',
-					})
-				);
-				throw e;
-			} finally {
-				setSubmitting(false);
-			}
+		onSubmit: (values) => {
+			return toast.promise(createOrganisation.mutateAsync(values), {
+				loading: t('common.loading'),
+				success: () => {
+					formik.resetForm();
+					return t('organisations.create.success');
+				},
+				error: t('organisations.create.error', {
+					error:
+						(createOrganisation.error as any)?.message ||
+						'No message available',
+				}),
+			});
 		},
 	});
 
