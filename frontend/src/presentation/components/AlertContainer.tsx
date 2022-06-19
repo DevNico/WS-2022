@@ -9,7 +9,7 @@ const AlertContainer: React.FC<{ children: any }> = ({ children }) => {
 				bottom: 0,
 				left: 0,
 				right: 0,
-				zIndex: 9999,
+				zIndex: (theme) => theme.zIndex.drawer + 1,
 				pointerEvents: 'none',
 				display: 'grid',
 			}}

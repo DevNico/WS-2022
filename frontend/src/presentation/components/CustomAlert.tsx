@@ -29,10 +29,12 @@ export default class CustomAlert extends React.Component<
 	}
 
 	private _show() {
-		this.closeTimeout = setTimeout(
-			this.hide.bind(this),
-			this.props.closeTimeout || 10000
-		);
+		if (!this.props.closeTimeout || this.props.closeTimeout > -1) {
+			this.closeTimeout = setTimeout(
+				this.hide.bind(this),
+				this.props.closeTimeout || 10000
+			);
+		}
 		this.setState({ open: true });
 	}
 

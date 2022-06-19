@@ -2,10 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Center from '../components/Center';
 import { useFormik } from 'formik';
 import {
-	Backdrop,
-	Button,
 	Checkbox,
-	CircularProgress,
 	FormControl,
 	FormControlLabel,
 	InputLabel,
@@ -24,9 +21,11 @@ import { useKeycloak } from '@react-keycloak/web';
 import { useNavigate } from 'react-router-dom';
 import CustomAlert from '../components/CustomAlert';
 import AlertContainer from '../components/AlertContainer';
+import { LoadingButton } from '@mui/lab';
+import { checkUserIsSuperAdminEffect } from '../../util';
 
 const CreateRolePage: React.FC = () => {
-	const [backdropOpen, setBackdropOpen] = React.useState(true);
+	const [loading, setLoading] = React.useState(true);
 	const createRole = useMutation(organisationRoleCreate);
 	const organisationsListMutation = useMutation(organisationsList);
 	const successAlert = useRef<CustomAlert>(null);
@@ -36,22 +35,19 @@ const CreateRolePage: React.FC = () => {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
 
-	useEffect(() => {
-		if (!keycloak.authenticated) {
-			navigate('/unauthorized');
-			return;
-		}
+	const errorMessage =
+		(createRole.error as any)?.message || 'No message available';
 
-		keycloak.loadUserInfo().then(async () => {
-			if (!keycloak.hasRealmRole('superAdmin')) {
-				navigate('/unauthorized');
-				return;
-			}
-
-			await organisationsListMutation.mutateAsync(undefined);
-			setBackdropOpen(false);
-		});
-	}, []);
+	useEffect(
+		checkUserIsSuperAdminEffect.bind(
+			null,
+			keycloak,
+			navigate,
+			setLoading,
+			() => organisationsListMutation.mutateAsync(undefined)
+		),
+		[]
+	);
 
 	const validationSchema = yup.object({
 		name: yup.string().min(2).max(50).required('Name is required'),
@@ -75,7 +71,7 @@ const CreateRolePage: React.FC = () => {
 		},
 		validationSchema,
 		onSubmit: async (values) => {
-			setBackdropOpen(true);
+			setLoading(true);
 			try {
 				await createRole.mutateAsync(values);
 				successAlert.current?.show();
@@ -83,7 +79,7 @@ const CreateRolePage: React.FC = () => {
 				errorAlert.current?.show();
 				throw e;
 			} finally {
-				setBackdropOpen(false);
+				setLoading(false);
 			}
 		},
 	});
@@ -114,8 +110,9 @@ const CreateRolePage: React.FC = () => {
 							helperText={
 								formik.touched.name && formik.errors.name
 							}
+							disabled={loading}
 						/>
-						<FormControl fullWidth>
+						<FormControl fullWidth disabled={loading}>
 							<InputLabel id='organisation-select-label'>
 								{t('roles.create.organisation')}
 							</InputLabel>
@@ -143,8 +140,12 @@ const CreateRolePage: React.FC = () => {
 								)}
 							</Select>
 						</FormControl>
+						<Typography variant='h6'>
+							{t('roles.create.permissions')}
+						</Typography>
 						<FormControl>
 							<FormControlLabel
+								disabled={loading}
 								control={
 									<Checkbox
 										id='serviceWrite'
@@ -155,6 +156,7 @@ const CreateRolePage: React.FC = () => {
 								label={t('roles.create.serviceWrite')}
 							/>
 							<FormControlLabel
+								disabled={loading}
 								control={
 									<Checkbox
 										id='serviceDelete'
@@ -165,6 +167,7 @@ const CreateRolePage: React.FC = () => {
 								label={t('roles.create.serviceDelete')}
 							/>
 							<FormControlLabel
+								disabled={loading}
 								control={
 									<Checkbox
 										id='userRead'
@@ -175,6 +178,7 @@ const CreateRolePage: React.FC = () => {
 								label={t('roles.create.userRead')}
 							/>
 							<FormControlLabel
+								disabled={loading}
 								control={
 									<Checkbox
 										id='userWrite'
@@ -185,6 +189,7 @@ const CreateRolePage: React.FC = () => {
 								label={t('roles.create.userWrite')}
 							/>
 							<FormControlLabel
+								disabled={loading}
 								control={
 									<Checkbox
 										id='userDelete'
@@ -195,26 +200,25 @@ const CreateRolePage: React.FC = () => {
 								label={t('roles.create.userDelete')}
 							/>
 						</FormControl>
-						<Button type='submit'>{t('common.submit')}</Button>
+						<LoadingButton
+							loading={loading}
+							type='submit'
+							variant='contained'
+						>
+							{t('common.submit')}
+						</LoadingButton>
 					</Stack>
 				</form>
 			</Center>
-			<Backdrop
-				open={backdropOpen}
-				sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			>
-				<CircularProgress color='inherit' />
-			</Backdrop>
 			<AlertContainer>
 				<CustomAlert severity='success' ref={successAlert}>
 					{t('roles.create.success')}
 				</CustomAlert>
 				<CustomAlert severity='error' ref={errorAlert}>
-					{t('roles.create.error')}
+					{t('roles.create.error', { error: errorMessage })}
 				</CustomAlert>
 			</AlertContainer>
 		</>
 	);
 };
-
 export default CreateRolePage;

@@ -13,8 +13,29 @@
 	"logout": "Logout",
 	"homeLayout": {
 		"organisations": "Organisations",
+		"listOrganisations": "List Organisations",
+		"createOrganisation": "Create Organisation",
 		"users": "Users",
-		"roles": "Roles"
+		"listUsers": "List Users",
+		"createUser": "Create User",
+		"roles": "Roles",
+		"listRoles": "List Roles",
+		"createRole": "Create Role"
+	},
+	"organisations.create": {
+		"title": "Create a new Organisation",
+		"name": "Name",
+		"submit": "Create",
+		"success": "Organisation created successfully",
+		"error": "Could not create a new organisation: {{error}}"
+	},
+	"users.list": {
+		"organisation": "Organisation",
+		"email": "Email",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"lastSignIn": "Last Sign In",
+		"error": "Could not load the users"
 	},
 	"users.create": {
 		"title": "Create a new User",
@@ -24,7 +45,7 @@
 		"lastName": "Last Name",
 		"submit": "Submit",
 		"success": "User created successfully",
-		"error": "Could not create a new user"
+		"error": "Could not create a new user: {{error}}"
 	},
 	"roles.create": {
 		"title": "Create a new Role",
@@ -36,6 +57,7 @@
 		"userWrite": "Create Users",
 		"userDelete": "Delete Users",
 		"success": "Role created successfully",
-		"error": "Could not create a new role"
+		"error": "Could not create a new role: {{error}}",
+		"permissions": "Select role permissions"
 	}
 }

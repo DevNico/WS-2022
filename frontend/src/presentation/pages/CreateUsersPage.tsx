@@ -2,9 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { organisationsList } from '../../api/organisation/organisation';
 import Center from '../components/Center';
 import {
-	Backdrop,
-	Button,
-	CircularProgress,
 	FormControl,
 	InputLabel,
 	MenuItem,
@@ -25,34 +22,34 @@ import AlertContainer from '../components/AlertContainer';
 import CustomAlert from '../components/CustomAlert';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@mui/lab';
+import { checkUserIsSuperAdminEffect } from '../../util';
 
 const CreateUsersPage: React.FC = () => {
-	const [backdropOpen, setBackdropOpen] = React.useState(true);
+	const [loading, setLoading] = React.useState(true);
 	const [roles, setRoles] = React.useState<OrganisationRoleRecord[]>([]);
 	const successAlert = useRef<CustomAlert>(null);
 	const errorAlert = useRef<CustomAlert>(null);
 	const organisationsListMutation = useMutation(organisationsList);
 	const rolesMutation = useMutation(organisationRolesList);
+	const createUser = useMutation(organisationUserCreate);
 	const { t } = useTranslation();
 	const { keycloak } = useKeycloak();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (!keycloak.authenticated) {
-			navigate('/unauthorized');
-			return;
-		}
+	const errorMessage =
+		(createUser.error as any)?.message || 'No message available';
 
-		keycloak.loadUserInfo().then(async () => {
-			if (!keycloak.hasRealmRole('superAdmin')) {
-				navigate('/unauthorized');
-				return;
-			}
-
-			await organisationsListMutation.mutateAsync(undefined);
-			setBackdropOpen(false);
-		});
-	}, []);
+	useEffect(
+		checkUserIsSuperAdminEffect.bind(
+			null,
+			keycloak,
+			navigate,
+			setLoading,
+			() => organisationsListMutation.mutateAsync(undefined)
+		),
+		[]
+	);
 
 	const validationSchema = yup.object({
 		email: yup.string().email().required(),
@@ -73,8 +70,8 @@ const CreateUsersPage: React.FC = () => {
 		validationSchema,
 		onSubmit: async (values, { setSubmitting }) => {
 			try {
-				setBackdropOpen(true);
-				await organisationUserCreate(values);
+				setLoading(true);
+				await createUser.mutateAsync(values);
 				formik.resetForm();
 				successAlert.current?.show();
 			} catch (e) {
@@ -82,7 +79,7 @@ const CreateUsersPage: React.FC = () => {
 				throw e;
 			} finally {
 				setSubmitting(false);
-				setBackdropOpen(false);
+				setLoading(false);
 			}
 		},
 	});
@@ -121,6 +118,7 @@ const CreateUsersPage: React.FC = () => {
 							helperText={
 								formik.touched.email && formik.errors.email
 							}
+							disabled={loading}
 						/>
 						<Stack direction='row' spacing={2}>
 							<TextField
@@ -138,6 +136,7 @@ const CreateUsersPage: React.FC = () => {
 									formik.touched.firstName &&
 									formik.errors.firstName
 								}
+								disabled={loading}
 							/>
 							<TextField
 								fullWidth
@@ -154,9 +153,10 @@ const CreateUsersPage: React.FC = () => {
 									formik.touched.lastName &&
 									formik.errors.lastName
 								}
+								disabled={loading}
 							/>
 						</Stack>
-						<FormControl fullWidth>
+						<FormControl fullWidth disabled={loading}>
 							<InputLabel id='organisation-select-label'>
 								{t('users.create.organisation')}
 							</InputLabel>
@@ -184,7 +184,7 @@ const CreateUsersPage: React.FC = () => {
 								)}
 							</Select>
 						</FormControl>
-						<FormControl fullWidth>
+						<FormControl fullWidth disabled={loading}>
 							<InputLabel id='role-select-label'>
 								{t('users.create.role')}
 							</InputLabel>
@@ -208,24 +208,22 @@ const CreateUsersPage: React.FC = () => {
 								))}
 							</Select>
 						</FormControl>
-						<Button type='submit'>
+						<LoadingButton
+							type='submit'
+							loading={loading}
+							variant='contained'
+						>
 							{t('users.create.submit')}
-						</Button>
+						</LoadingButton>
 					</Stack>
 				</form>
 			</Center>
-			<Backdrop
-				open={backdropOpen}
-				sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			>
-				<CircularProgress color='inherit' />
-			</Backdrop>
 			<AlertContainer>
 				<CustomAlert severity='success' ref={successAlert}>
 					{t('users.create.success')}
 				</CustomAlert>
 				<CustomAlert severity='error' ref={errorAlert}>
-					{t('users.create.error')}
+					{t('users.create.error', { error: errorMessage })}
 				</CustomAlert>
 			</AlertContainer>
 		</>

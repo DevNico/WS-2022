@@ -1,8 +1,6 @@
 import { AccountCircle } from '@mui/icons-material';
-import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MuiAppBar from '@mui/material/AppBar/AppBar';
 import Box from '@mui/material/Box/Box';
@@ -25,6 +23,9 @@ import Div100vh from 'react-div-100vh';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { atom, useRecoilState, useSetRecoilState } from 'recoil';
+import UsersListItem from './UsersListItem';
+import RolesListItem from './RolesListItem';
+import OrganisationsListItem from './OrganisationsListItem';
 
 const Root = styled(Div100vh)`
 	display: flex;
@@ -135,54 +136,14 @@ const Drawer = () => {
 		setDrawerOpen((v) => !v);
 	};
 
-	const navigate = useNavigate();
-	const { t } = useTranslation();
-
 	const location = useLocation();
-	const isOrganisationsPage = location.pathname === '/organisations';
-	const isUsersCreatePage = location.pathname === '/users/create';
-	const isRolesCreatePage = location.pathname === '/roles/create';
 
 	const drawer = (
 		<div>
 			<List>
-				<ListItem disablePadding>
-					<ListItemButton
-						selected={isOrganisationsPage}
-						onClick={() => navigate('/organisations')}
-					>
-						<ListItemIcon>
-							<CorporateFareIcon />
-						</ListItemIcon>
-						<ListItemText primary={t('homeLayout.organisations')} />
-					</ListItemButton>
-				</ListItem>
-				{isSuperAdmin && (
-					<ListItem disablePadding>
-						<ListItemButton
-							selected={isUsersCreatePage}
-							onClick={() => navigate('/users/create')}
-						>
-							<ListItemIcon>
-								<PersonAddIcon />
-							</ListItemIcon>
-							<ListItemText primary={t('homeLayout.users')} />
-						</ListItemButton>
-					</ListItem>
-				)}
-				{isSuperAdmin && (
-					<ListItem disablePadding>
-						<ListItemButton
-							selected={isRolesCreatePage}
-							onClick={() => navigate('/roles/create')}
-						>
-							<ListItemIcon>
-								<PersonAddIcon />
-							</ListItemIcon>
-							<ListItemText primary={t('homeLayout.roles')} />
-						</ListItemButton>
-					</ListItem>
-				)}
+				<OrganisationsListItem isSuperAdmin={isSuperAdmin} />
+				<UsersListItem isSuperAdmin={isSuperAdmin} />
+				<RolesListItem isSuperAdmin={isSuperAdmin} />
 			</List>
 			<Divider />
 			<List>

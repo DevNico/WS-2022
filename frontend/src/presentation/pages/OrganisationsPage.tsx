@@ -1,22 +1,36 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { OrganisationRecord } from '../../api/models';
 import { useOrganisationsList } from '../../api/organisation/organisation';
+import { dateValueFormatter } from '../../util';
+import { LinearProgress } from '@mui/material';
+import AlertContainer from '../components/AlertContainer';
+import CustomAlert from '../components/CustomAlert';
+import { useKeycloak } from '@react-keycloak/web';
+import { useNavigate } from 'react-router-dom';
 
 const OrganisationsPage: React.FC = () => {
 	const { data, isLoading, isError, error } = useOrganisationsList();
+	const errorAlert = useRef<CustomAlert>(null);
+	const { keycloak } = useKeycloak();
+	const navigate = useNavigate();
 
-	if (isLoading) {
-		return <span>Loading...</span>;
-	}
+	useEffect(() => {
+		if (!keycloak.authenticated) {
+			navigate('/unauthorized');
+			return;
+		}
+
+		keycloak.loadUserInfo().then(async () => {
+			if (!keycloak.hasRealmRole('superAdmin')) {
+				navigate('/unauthorized');
+			}
+		});
+	});
 
 	if (isError) {
-		return <span>Error: {error.message}</span>;
+		errorAlert.current?.show();
 	}
-
-	const dateValueFormatter = (params: any) => {
-		return new Date(params.value).toLocaleDateString();
-	};
 
 	const columns: GridColDef<OrganisationRecord>[] = [
 		{
@@ -40,7 +54,28 @@ const OrganisationsPage: React.FC = () => {
 		},
 	];
 
-	return <DataGrid columns={columns} rows={data ?? []} disableColumnMenu />;
+	return (
+		<>
+			<DataGrid
+				columns={columns}
+				rows={data ?? []}
+				components={{
+					LoadingOverlay: LinearProgress,
+				}}
+				loading={isLoading}
+				disableColumnMenu
+			/>
+			<AlertContainer>
+				<CustomAlert
+					closeTimeout={-1}
+					ref={errorAlert}
+					severity='error'
+				>
+					{error?.message}
+				</CustomAlert>
+			</AlertContainer>
+		</>
+	);
 };
 
 export default OrganisationsPage;
