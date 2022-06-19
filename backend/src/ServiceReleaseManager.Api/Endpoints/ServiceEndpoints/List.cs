@@ -25,7 +25,7 @@ public class List : AuthorizedEndpointBase
     Tags = new[] { "ServiceEndpoints" }
   )]
   [SwaggerResponse(200, "Success", typeof(List<ServiceRecord>))]
-  public override async Task<ActionResult<List<ServiceRecord>>> HandleAsync(CancellationToken cancellationToken = new CancellationToken())
+  public override async Task<ActionResult<List<ServiceRecord>>> HandleAsync(CancellationToken cancellationToken = new())
   {
     var services = await _repository.ListAsync(new ActiveServiceSearchSpec(), cancellationToken);
     var response = services.ConvertAll(ServiceRecord.FromEntity);

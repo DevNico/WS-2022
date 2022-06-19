@@ -18,7 +18,7 @@ public class Create : AuthorizedEndpointBase.WithRequest<CreateServiceRequest>.W
   [HttpPost]
   [SwaggerOperation(
     Summary = "Create a service",
-    Description = "Get a service by its id",
+    Description = "Create a service by its id",
     OperationId = "Service.Create",
     Tags = new[] { "ServiceEndpoints" }
   )]

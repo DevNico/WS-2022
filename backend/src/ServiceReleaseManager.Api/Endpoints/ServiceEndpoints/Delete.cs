@@ -17,18 +17,18 @@ public class Delete : AuthorizedEndpointBase
     _repository = repository;
   }
   
-  [HttpDelete("{serviceId}")]
+  [HttpDelete(DeleteServiceRequest.Route)]
   [SwaggerOperation(
     Description = "Deletes a service",
     Summary = "Deletes a service by its id",
     OperationId = "Service.Delete",
     Tags = new[] { "ServiceEndpoints" }
   )]
-  [SwaggerResponse(201, "The service was deleted")]
+  [SwaggerResponse(204, "The service was deleted")]
   [SwaggerResponse(404, "A service with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteServiceRequest request, 
-    CancellationToken cancellationToken = new CancellationToken())
+    CancellationToken cancellationToken = new())
   {
     var spec = new ServiceByIdSpec(request.ServiceId);
     var service = await _repository.GetBySpecAsync(spec, cancellationToken);

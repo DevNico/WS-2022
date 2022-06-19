@@ -17,7 +17,7 @@ public class GetById : AuthorizedEndpointBase
     _repository = repository;
   }
 
-  [HttpGet("{serviceId}")]
+  [HttpGet(GetServiceByIdRequest.Route)]
   [SwaggerOperation(
     Summary = "Get a service",
     Description = "Get a service by its id",
@@ -28,7 +28,7 @@ public class GetById : AuthorizedEndpointBase
   [SwaggerResponse(404, "The service was not found")]
   public override async Task<ActionResult<ServiceRecord>> HandleAsync(
     [FromRoute] GetServiceByIdRequest request,
-    CancellationToken cancellationToken = new CancellationToken())
+    CancellationToken cancellationToken = new())
   {
     var spec = new ServiceByIdSpec(request.ServiceId);
     var service = await _repository.GetBySpecAsync(spec, cancellationToken);
