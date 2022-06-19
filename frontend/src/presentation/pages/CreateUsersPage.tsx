@@ -53,7 +53,11 @@ const CreateUsersPage: React.FC = () => {
 
 	const validationSchema = yup.object({
 		email: yup.string().email().required(),
-		firstName: yup.string().min(5).max(50).required('First name is required'),
+		firstName: yup
+			.string()
+			.min(5)
+			.max(50)
+			.required('First name is required'),
 		lastName: yup.string().min(5).max(50).required('Last name is required'),
 		organisationId: yup.number().required('Organisation is required'),
 		roleId: yup.number().required('Role is required'),
@@ -88,7 +92,9 @@ const CreateUsersPage: React.FC = () => {
 		formik.handleChange(e);
 		formik.values.roleId = '' as unknown as number;
 		if (e.target.value) {
-			const route = organisationsListMutation.data?.find(o => o.id === Number(e.target.value))?.routeName;
+			const route = organisationsListMutation.data?.find(
+				(o) => o.id === Number(e.target.value)
+			)?.routeName;
 			if (route) {
 				setRoles(await rolesMutation.mutateAsync(route));
 				return;

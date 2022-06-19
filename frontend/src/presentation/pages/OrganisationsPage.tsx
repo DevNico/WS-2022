@@ -3,13 +3,13 @@ import React, { useEffect, useRef } from 'react';
 import { OrganisationRecord } from '../../api/models';
 import { useOrganisationsList } from '../../api/organisation/organisation';
 import { dateValueFormatter } from '../../util';
-import {Button, Grid, LinearProgress} from '@mui/material';
+import { Button, Grid, LinearProgress } from '@mui/material';
 import AlertContainer from '../components/AlertContainer';
 import CustomAlert from '../components/CustomAlert';
 import { useKeycloak } from '@react-keycloak/web';
 import { useNavigate } from 'react-router-dom';
-import EmptyTableOverlay from "../components/EmptyTableOverlay";
-import {useTranslation} from "react-i18next";
+import EmptyTableOverlay from '../components/EmptyTableOverlay';
+import { useTranslation } from 'react-i18next';
 
 const OrganisationsPage: React.FC = () => {
 	const { data, isLoading, isError, error } = useOrganisationsList();
@@ -59,7 +59,11 @@ const OrganisationsPage: React.FC = () => {
 
 	return (
 		<Grid container rowGap={2} direction='column' height='100%'>
-			<Button variant='text' onClick={() => navigate('/organisations/create')} sx={{width: 'max-content'}}>
+			<Button
+				variant='text'
+				onClick={() => navigate('/organisations/create')}
+				sx={{ width: 'max-content' }}
+			>
 				{t('organisations.list.create')}
 			</Button>
 			<DataGrid

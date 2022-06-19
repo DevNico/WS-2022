@@ -32,7 +32,11 @@ const EmptyTableOverlay: React.FC<EmptyTableOverlayProps> = ({
 				<Typography textAlign='center'>{text}</Typography>
 				<Button
 					onClick={() => navigate(target)}
-					sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, width: 'max-content', alignSelf: 'center' }}
+					sx={{
+						zIndex: (theme) => theme.zIndex.drawer + 1,
+						width: 'max-content',
+						alignSelf: 'center',
+					}}
 				>
 					{buttonText}
 				</Button>
