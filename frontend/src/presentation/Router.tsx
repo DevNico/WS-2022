@@ -5,7 +5,6 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import OrganisationsPage from './pages/OrganisationsPage';
 import CreateUserPage from './pages/CreateUserPage';
-import UnauthorizedPage from './pages/UnauthorizedPage';
 import CreateRolePage from './pages/CreateRolePage';
 import UsersPage from './pages/UsersPage';
 import RolesPage from './pages/RolesPage';
@@ -33,8 +32,6 @@ const Router: React.FC = () => {
 						</Route>
 					</Route>
 				</Route>
-
-				<Route path='/unauthorized' element={<UnauthorizedPage />} />
 			</Route>
 			<Route path='*' element={<NotFoundPage />} />
 		</Routes>
