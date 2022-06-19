@@ -44,8 +44,9 @@ public class KeycloakOAuthClient
 
       if (response.StatusCode != HttpStatusCode.OK)
       {
-        throw new HttpRequestException("Could not get the keycloak oauth token", null,
-          response.StatusCode);
+        throw new HttpRequestException(
+          string.Format("Could not get the keycloak oauth token. Message from keycloak: {0}",
+            await response.Content.ReadAsStringAsync()), null, response.StatusCode);
       }
 
       var token = await response.Content.ReadFromJsonAsync<TokenResponse>();

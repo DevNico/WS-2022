@@ -22,8 +22,16 @@ import React, { useCallback, useEffect } from 'react';
 import Div100vh from 'react-div-100vh';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { atom, useRecoilState, useSetRecoilState } from 'recoil';
+import {
+	atom,
+	useRecoilState,
+	useRecoilValue,
+	useSetRecoilState,
+} from 'recoil';
 import PersonIcon from '@mui/icons-material/Person';
+import { isSuperAdminState } from '../../util';
+import { useOrganisationsList } from '../../api/organisation/organisation';
+import DrawerOrganisationItem from './DrawerOrganisationItem';
 
 const Root = styled(Div100vh)`
 	display: flex;
@@ -119,18 +127,25 @@ const AppBar: React.FC = () => {
 
 const Drawer = () => {
 	const [drawerOpen, setDrawerOpen] = useRecoilState(drawerOpenState);
-	const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
 	const { keycloak } = useKeycloak();
 
 	const navigate = useNavigate();
 	const { t } = useTranslation();
 	const location = useLocation();
+	const setIsSuperAdmin = useSetRecoilState(isSuperAdminState);
+	const isSuperAdmin = useRecoilValue(isSuperAdminState);
+	const organisationsList = useOrganisationsList();
 
 	useEffect(() => {
 		if (keycloak.authenticated) {
-			keycloak.loadUserInfo().then(() => {
-				setIsSuperAdmin(keycloak.hasRealmRole('superAdmin'));
-			});
+			keycloak
+				.loadUserInfo()
+				.then(() => {
+					setIsSuperAdmin(keycloak.hasRealmRole('superAdmin'));
+				})
+				.catch(() => setIsSuperAdmin(false));
+		} else {
+			setIsSuperAdmin(false);
 		}
 	}, [keycloak.authenticated]);
 
@@ -138,9 +153,7 @@ const Drawer = () => {
 		setDrawerOpen((v) => !v);
 	};
 
-	const isRolesPage = location.pathname === '/roles';
-	const isUsersPage = location.pathname === '/users';
-	const isOrganisationsPage = location.pathname === '/organisations';
+	const isOrganisationsPage = location.pathname === '/organisation';
 
 	const drawer = (
 		<div>
@@ -148,34 +161,12 @@ const Drawer = () => {
 				{isSuperAdmin && (
 					<ListItemButton
 						selected={isOrganisationsPage}
-						onClick={() => navigate('/organisations')}
+						onClick={() => navigate('/organisation')}
 					>
 						<ListItemIcon>
 							<CorporateFare />
 						</ListItemIcon>
 						<ListItemText primary={t('homeLayout.organisations')} />
-					</ListItemButton>
-				)}
-				{isSuperAdmin && (
-					<ListItemButton
-						selected={isUsersPage}
-						onClick={() => navigate('/users')}
-					>
-						<ListItemIcon>
-							<PersonIcon />
-						</ListItemIcon>
-						<ListItemText primary={t('homeLayout.users')} />
-					</ListItemButton>
-				)}
-				{isSuperAdmin && (
-					<ListItemButton
-						selected={isRolesPage}
-						onClick={() => navigate('/roles')}
-					>
-						<ListItemIcon>
-							<PersonIcon />
-						</ListItemIcon>
-						<ListItemText primary={t('homeLayout.roles')} />
 					</ListItemButton>
 				)}
 			</List>
@@ -193,6 +184,19 @@ const Drawer = () => {
 							<ListItemText primary={text} />
 						</ListItemButton>
 					</ListItem>
+				))}
+			</List>
+			<Divider />
+			<List>
+				<Typography variant='h6' mx={2}>
+					Organisations
+				</Typography>
+				{organisationsList.data?.map((o) => (
+					<DrawerOrganisationItem
+						key={o.id!}
+						organisationName={o.name!}
+						organisationRouteName={o.routeName!}
+					/>
 				))}
 			</List>
 		</div>

@@ -4,7 +4,7 @@ import HomeLayout from './layouts/HomeLayout';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import OrganisationsPage from './pages/OrganisationsPage';
-import CreateUsersPage from './pages/CreateUsersPage';
+import CreateUserPage from './pages/CreateUserPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 import CreateRolePage from './pages/CreateRolePage';
 import UsersPage from './pages/UsersPage';
@@ -16,15 +16,24 @@ const Router: React.FC = () => {
 		<Routes>
 			<Route path='/' element={<HomeLayout />}>
 				<Route index element={<HomePage />} />
-				<Route path='/organisations' element={<OrganisationsPage />} />
-				<Route
-					path='/organisations/create'
-					element={<CreateOrganisationPage />}
-				/>
-				<Route path='/users' element={<UsersPage />} />
-				<Route path='/users/create' element={<CreateUsersPage />} />
-				<Route path='/roles' element={<RolesPage />} />
-				<Route path='/roles/create' element={<CreateRolePage />} />
+				<Route path='/organisation'>
+					<Route index element={<OrganisationsPage />} />
+					<Route path='create' element={<CreateOrganisationPage />} />
+					<Route path=':name'>
+						<Route path='user'>
+							<Route index element={<UsersPage />} />
+							<Route
+								path=':create'
+								element={<CreateUserPage />}
+							/>
+						</Route>
+						<Route path='role'>
+							<Route index element={<RolesPage />} />
+							<Route path='create' element={<CreateRolePage />} />
+						</Route>
+					</Route>
+				</Route>
+
 				<Route path='/unauthorized' element={<UnauthorizedPage />} />
 			</Route>
 			<Route path='*' element={<NotFoundPage />} />

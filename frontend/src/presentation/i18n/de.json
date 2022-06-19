@@ -7,12 +7,5 @@
 	"homeLayout": {
 		"organisations": "Organisationen",
 		"users": "Benutzer"
-	},
-	"users.create": {
-		"title": "Create User",
-		"organisation": "Organisation",
-		"firstName": "First Name",
-		"lastName": "Last Name",
-		"submit": "Submit"
 	}
 }

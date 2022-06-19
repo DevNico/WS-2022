@@ -54,14 +54,25 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     }
     catch (HttpRequestException e)
     {
-      if (e.StatusCode == HttpStatusCode.NotFound)
+      if (e.StatusCode != HttpStatusCode.NotFound)
       {
-        return NotFound();
+        _logger.LogError("The request to the keycloak client failed with code {Status} and message {Message}",
+          e.StatusCode.ToString(), e.Message);
+        return StatusCode(StatusCodes.Status424FailedDependency, "Keycloak client request failed");
       }
 
-      _logger.LogError("The request to the keycloak client failed with code {} and message {}",
-        e.StatusCode.ToString(), e.Message);
-      return StatusCode(StatusCodes.Status424FailedDependency, "Keycloak client request failed");
+      try
+      {
+        keycloakUser = await _keycloakClient.CreateUser(new KeycloakUserCreation(request.Email,
+          request.FirstName, request.LastName, request.Email));
+      }
+      catch (HttpRequestException e1)
+      {
+        _logger.LogError("Keycloak user creation failed with code {Status} and message {Message}",
+          e1.StatusCode.ToString(), e1.Message);
+        return StatusCode(StatusCodes.Status424FailedDependency,
+          "Keycloak client create request failed");
+      }
     }
 
     var newUser = new OrganisationUser(
@@ -71,11 +82,12 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
       request.LastName,
       request.RoleId
     );
+    newUser.OrganisationId = request.OrganisationId;
     var result = await _organisationUserService.Create(newUser, cancellationToken);
 
-    var organisation = organisationResult.Value;
-    organisation.Users.Add(result);
-    await _organisationService.Update(organisation, cancellationToken);
+    //var organisation = organisationResult.Value;
+    //organisation.Users.Add(result);
+    //await _organisationService.Update(organisation, cancellationToken);
 
     return this.ToActionResult(result.MapValue(OrganisationUserRecord.FromEntity));
   }

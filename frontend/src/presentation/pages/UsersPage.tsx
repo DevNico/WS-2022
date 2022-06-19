@@ -1,19 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Button, Grid, LinearProgress } from '@mui/material';
-import { checkUserIsSuperAdminEffect } from '../../util';
+import { isSuperAdminState } from '../../util';
 import { useTranslation } from 'react-i18next';
-import { useKeycloak } from '@react-keycloak/web';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from 'react-query';
-import { organisationUserList } from '../../api/organisation-user/organisation-user';
-import { organisationsList } from '../../api/organisation/organisation';
-import AlertContainer from '../components/AlertContainer';
-import CustomAlert from '../components/CustomAlert';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useOrganisationUserList } from '../../api/organisation-user/organisation-user';
 import EmptyTableOverlay from '../components/EmptyTableOverlay';
+import { toast } from 'react-hot-toast';
+import { useRecoilValue } from 'recoil';
 
 interface ColumnData {
-	organisationName?: string;
 	email?: string;
 	firstName?: string;
 	lastName?: string;
@@ -21,23 +17,23 @@ interface ColumnData {
 }
 
 const UsersPage: React.FC = () => {
-	const [loading, setLoading] = React.useState(true);
-	const [data, setData] = React.useState<ColumnData[]>([]);
-	const errorAlert = useRef<CustomAlert>(null);
-
 	const { t } = useTranslation();
-	const { keycloak } = useKeycloak();
+	const { name } = useParams();
 	const navigate = useNavigate();
-	const organisationsMutation = useMutation(organisationsList);
-	const organisationUsersMutation = useMutation(organisationUserList);
+
+	const users = useOrganisationUserList(name!);
+	const isSuperAdmin = useRecoilValue(isSuperAdminState);
+
+	if (!isSuperAdmin) {
+		navigate('/notFound');
+		return <></>;
+	} else if (users.isError) {
+		toast.error(t('users.list.error'));
+		navigate('/notFound');
+		return <></>;
+	}
 
 	const columns: GridColDef<ColumnData>[] = [
-		{
-			field: 'organisationName',
-			headerName: t('users.list.organisation'),
-			hideable: false,
-			flex: 1,
-		},
 		{
 			field: 'email',
 			headerName: t('users.list.email'),
@@ -64,79 +60,40 @@ const UsersPage: React.FC = () => {
 		},
 	];
 
-	useEffect(
-		checkUserIsSuperAdminEffect.bind(
-			null,
-			keycloak,
-			navigate,
-			setLoading,
-			async () => {
-				try {
-					const organisations =
-						await organisationsMutation.mutateAsync(undefined);
-					const promises = organisations.map((o) =>
-						organisationUsersMutation
-							.mutateAsync(o.routeName!)
-							.then((users) =>
-								users.map((u) => ({
-									organisationName: o.name!,
-									email: u.email!,
-									firstName: u.firstName!,
-									lastName: u.lastName!,
-									lastSignIn: u.lastSignIn!,
-								}))
-							)
-					);
-
-					const dt = await Promise.all(promises).then((results) =>
-						results.flat()
-					);
-					setData(dt);
-				} catch (e) {
-					errorAlert.current?.show();
-					throw e;
-				} finally {
-					setLoading(false);
-				}
-			}
-		),
-		[]
-	);
+	const createRoute = `/organisation/${name}/user/create`;
 
 	return (
 		<Grid container rowGap={2} direction='column' height='100%'>
 			<Button
 				variant='text'
-				onClick={() => navigate('/users/create')}
+				onClick={() => navigate(createRoute)}
 				sx={{ width: 'max-content' }}
 			>
 				{t('users.list.create')}
 			</Button>
 			<DataGrid
 				columns={columns}
-				rows={data}
+				rows={
+					users.data?.map((u) => ({
+						email: u.email!,
+						firstName: u.firstName!,
+						lastName: u.lastName!,
+						lastSignIn: u.lastSignIn!,
+					})) ?? []
+				}
 				components={{
 					LoadingOverlay: LinearProgress,
 					NoRowsOverlay: () => (
 						<EmptyTableOverlay
 							text={t('users.list.noData')}
 							buttonText={t('users.list.create')}
-							target='/users/create'
+							target={createRoute}
 						/>
 					),
 				}}
-				loading={loading}
+				loading={users.isLoading}
 				disableColumnMenu
 			/>
-			<AlertContainer>
-				<CustomAlert
-					closeTimeout={-1}
-					ref={errorAlert}
-					severity='error'
-				>
-					{t('users.list.error')}
-				</CustomAlert>
-			</AlertContainer>
 		</Grid>
 	);
 };

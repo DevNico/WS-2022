@@ -343,5 +343,4 @@ $RECYCLE.BIN/
 
 ## Exceptions to above rules
 !.vscode/*.code-snippets
-.vscode/
 build/

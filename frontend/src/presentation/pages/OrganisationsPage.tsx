@@ -1,38 +1,28 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { OrganisationRecord } from '../../api/models';
 import { useOrganisationsList } from '../../api/organisation/organisation';
-import { dateValueFormatter } from '../../util';
+import { dateValueFormatter, isSuperAdminState } from '../../util';
 import { Button, Grid, LinearProgress } from '@mui/material';
-import AlertContainer from '../components/AlertContainer';
-import CustomAlert from '../components/CustomAlert';
-import { useKeycloak } from '@react-keycloak/web';
 import { useNavigate } from 'react-router-dom';
 import EmptyTableOverlay from '../components/EmptyTableOverlay';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-hot-toast';
+import { useRecoilValue } from 'recoil';
 
 const OrganisationsPage: React.FC = () => {
 	const { data, isLoading, isError, error } = useOrganisationsList();
-	const errorAlert = useRef<CustomAlert>(null);
-	const { keycloak } = useKeycloak();
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (!keycloak.authenticated) {
-			navigate('/unauthorized');
-			return;
-		}
-
-		keycloak.loadUserInfo().then(async () => {
-			if (!keycloak.hasRealmRole('superAdmin')) {
-				navigate('/unauthorized');
-			}
-		});
-	});
+	const isSuperAdmin = useRecoilValue(isSuperAdminState);
+	if (!isSuperAdmin) {
+		navigate('/notFound');
+		return <></>;
+	}
 
 	if (isError) {
-		errorAlert.current?.show();
+		toast.error(error?.message);
 	}
 
 	const columns: GridColDef<OrganisationRecord>[] = [
@@ -57,11 +47,13 @@ const OrganisationsPage: React.FC = () => {
 		},
 	];
 
+	const createRoute = '/organisation/create';
+
 	return (
 		<Grid container rowGap={2} direction='column' height='100%'>
 			<Button
 				variant='text'
-				onClick={() => navigate('/organisations/create')}
+				onClick={() => navigate(createRoute)}
 				sx={{ width: 'max-content' }}
 			>
 				{t('organisations.list.create')}
@@ -75,22 +67,13 @@ const OrganisationsPage: React.FC = () => {
 						<EmptyTableOverlay
 							text={t('organisations.list.noData')}
 							buttonText={t('organisations.list.create')}
-							target='/organisations/create'
+							target={createRoute}
 						/>
 					),
 				}}
 				loading={isLoading}
 				disableColumnMenu
 			/>
-			<AlertContainer>
-				<CustomAlert
-					closeTimeout={-1}
-					ref={errorAlert}
-					severity='error'
-				>
-					{error?.message}
-				</CustomAlert>
-			</AlertContainer>
 		</Grid>
 	);
 };
