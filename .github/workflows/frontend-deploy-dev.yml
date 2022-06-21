@@ -1,11 +1,8 @@
 name: Frontend Dev
 on:
-  workflow_dispatch:
   push:
     branches:
       - develop
-    paths:
-      - "frontend/**"
 
 jobs:
   build_and_deploy:
