@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - develop
-      - ci/deployment
-    # paths:
-    #   - "backend/**"
+    paths:
+      - "backend/**"
 
 jobs:
   build_and_deploy:
