@@ -1,8 +1,10 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ServiceReleaseManager.Core.Interfaces;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ServiceReleaseManager.Infrastructure;
 
@@ -21,10 +23,12 @@ public class KeycloakClient : IKeycloakClient
     _realm = config["Keycloak:Realm"];
   }
 
-  public Task<KeycloakUserRecord> CreateUser(KeycloakUserCreation userCreation)
+  public async Task<KeycloakUserRecord?> CreateUser(KeycloakUserCreation userCreation)
   {
-    return _request<KeycloakUserRecord>("/users", HttpMethod.Post, userCreation,
+    var res = await _request<List<KeycloakUserRecord>>("/users", HttpMethod.Post, userCreation,
       HttpStatusCode.Created);
+
+    return res.Count > 0 ? res[0] : null;
   }
 
   public Task<KeycloakUserRecord> GetUser(string userId)
@@ -32,9 +36,11 @@ public class KeycloakClient : IKeycloakClient
     return _request<KeycloakUserRecord>($"/users/{userId}", HttpMethod.Get);
   }
 
-  public Task<KeycloakUserRecord> GetUserByEmail(string email)
+  public async Task<KeycloakUserRecord?> GetUserByEmail(string email)
   {
-    return _request<KeycloakUserRecord>($"/users?email={email}&exact=true", HttpMethod.Get);
+    var res = await _request<List<KeycloakUserRecord>>($"/users?email={email}&exact=true",
+      HttpMethod.Get);
+    return res.Count > 0 ? res[0] : null;
   }
 
   public async Task UpdateUser(KeycloakUserRecord user)
@@ -77,24 +83,39 @@ public class KeycloakClient : IKeycloakClient
       if (body != null)
       {
         requestMessage.Content = new StringContent(JsonSerializer.Serialize(body));
+        requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
       }
 
-      requestMessage.Headers.Add("Authentication", $"Bearer {token}");
+      requestMessage.Headers.Add("Authorization", $"Bearer {token}");
       var response = await _httpClient.SendAsync(requestMessage);
+      var responseContent = await response.Content.ReadAsStringAsync();
       if (response.StatusCode != expectedStatusCode)
       {
-        throw new HttpRequestException("Could not POST to keycloak", null, response.StatusCode);
+        throw new HttpRequestException(
+          string.Format("Could not POST to keycloak, error: {0}", responseContent), null,
+          response.StatusCode);
       }
 
       if (typeof(T) == typeof(string))
       {
-        return (T)Convert.ChangeType(await response.Content.ReadAsStringAsync(), typeof(T));
+        return (T)Convert.ChangeType(responseContent, typeof(T));
       }
 
-      var parsed = await response.Content.ReadFromJsonAsync<T>();
+      T? parsed;
+      try
+      {
+        parsed = JsonConvert.DeserializeObject<T>(responseContent);
+      }
+      catch (Exception e)
+      {
+        throw new ApplicationException(
+          string.Format("Could not decode json message: {0}", responseContent), e);
+      }
+
       if (parsed == null)
       {
-        throw new ApplicationException("Could not decode the response");
+        throw new ApplicationException(string.Format("Could not decode the response: {0}",
+          responseContent));
       }
 
       return parsed;

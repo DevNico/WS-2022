@@ -1,12 +1,15 @@
-﻿namespace ServiceReleaseManager.Core.Interfaces;
+﻿using Newtonsoft.Json;
+using ServiceReleaseManager.SharedKernel;
+
+namespace ServiceReleaseManager.Core.Interfaces;
 
 public interface IKeycloakClient
 {
-  public Task<KeycloakUserRecord> CreateUser(KeycloakUserCreation userCreation);
+  public Task<KeycloakUserRecord?> CreateUser(KeycloakUserCreation userCreation);
 
   public Task<KeycloakUserRecord> GetUser(string userId);
 
-  public Task<KeycloakUserRecord> GetUserByEmail(string email);
+  public Task<KeycloakUserRecord?> GetUserByEmail(string email);
 
   public Task UpdateUser(KeycloakUserRecord user);
 
@@ -29,7 +32,9 @@ public record KeycloakUserRecord(
   bool Enabled,
   bool Totp,
   List<string> RequiredActions,
+  [JsonConverter(typeof(UnixEpochTimeToDateTimeConverter))]
   DateTime NotBefore,
+  [JsonConverter(typeof(UnixEpochTimeToDateTimeConverter))]
   DateTime CreatedTimestamp
 );
 

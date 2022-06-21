@@ -47,7 +47,7 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
       return NotFound();
     }
 
-    KeycloakUserRecord keycloakUser;
+    KeycloakUserRecord? keycloakUser = null;
     try
     {
       keycloakUser = await _keycloakClient.GetUserByEmail(request.Email);
@@ -56,23 +56,37 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     {
       if (e.StatusCode != HttpStatusCode.NotFound)
       {
-        _logger.LogError("The request to the keycloak client failed with code {Status} and message {Message}",
+        _logger.LogError(
+          "The request to the keycloak client failed with code {Status} and message {Message}",
           e.StatusCode.ToString(), e.Message);
+        if (e.InnerException != null)
+          _logger.LogError("Inner exception message: {Message}", e.InnerException.Message);
         return StatusCode(StatusCodes.Status424FailedDependency, "Keycloak client request failed");
       }
+    }
 
+    if (keycloakUser == null)
+    {
       try
       {
         keycloakUser = await _keycloakClient.CreateUser(new KeycloakUserCreation(request.Email,
           request.FirstName, request.LastName, request.Email));
       }
-      catch (HttpRequestException e1)
+      catch (HttpRequestException e)
       {
         _logger.LogError("Keycloak user creation failed with code {Status} and message {Message}",
-          e1.StatusCode.ToString(), e1.Message);
+          e.StatusCode.ToString(), e.Message);
+        
         return StatusCode(StatusCodes.Status424FailedDependency,
           "Keycloak client create request failed");
       }
+    }
+
+    if (keycloakUser == null)
+    {
+      _logger.LogError("Keycloak did not return a user record");
+      return StatusCode(StatusCodes.Status424FailedDependency,
+        "Keycloak client create request failed");
     }
 
     var newUser = new OrganisationUser(

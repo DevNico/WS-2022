@@ -75,6 +75,7 @@ const UsersPage: React.FC = () => {
 				columns={columns}
 				rows={
 					users.data?.map((u) => ({
+						id: u.userId!,
 						email: u.email!,
 						firstName: u.firstName!,
 						lastName: u.lastName!,
