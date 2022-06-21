@@ -1,8 +1,8 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import keycloak from '../Keycloak';
+import keycloak from '../kc';
 
 export const AXIOS_INSTANCE = Axios.create({
-	baseURL: 'https://localhost:7024',
+	baseURL: process.env.REACT_APP_API_BASE_URL,
 }); // use your own URL here or environment variable
 
 // add a second `options` argument here if you want to pass extra options to each generated query

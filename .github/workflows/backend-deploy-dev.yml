@@ -1,11 +1,8 @@
 name: Backend Dev
 on:
-  workflow_dispatch:
   push:
     branches:
       - develop
-    paths:
-      - "backend/**"
 
 jobs:
   build_and_deploy:
