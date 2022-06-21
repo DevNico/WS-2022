@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,7 +24,9 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
   /// <returns></returns>
   protected override IHost CreateHost(IHostBuilder builder)
   {
-    var host = builder.Build();
+    var host = builder
+      .UseEnvironment("Testing")
+      .Build();
 
     host.Start();
 
@@ -47,11 +48,10 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
     try
     {
       // Can also skip creating the items
-      //if (!db.Organisations.Any())
-      //{
-      // Seed the database with test data.
-      SeedData.PopulateTestData(db);
-      //}
+      if (!db.Organisations.Any())
+      {
+        SeedData.PopulateTestData(db);
+      }
     }
     catch (Exception ex)
     {
@@ -88,22 +88,21 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         });
 
         services.AddScoped<IMediator, NoOpMediator>();
-      });
 
-    builder.ConfigureTestServices(services =>
-    {
-      services.PostConfigure<JwtBearerOptions>(config =>
-      {
-        config.RequireHttpsMetadata = false;
-        config.SaveToken = true;
-        config.TokenValidationParameters = new TokenValidationParameters
-        {
-          ValidateIssuerSigningKey = true,
-          IssuerSigningKey = new SymmetricSecurityKey(ApiTokenHelper.AuthorizationKey),
-          ValidateIssuer = false,
-          ValidateAudience = false
-        };
+        services
+          .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+          .AddJwtBearer(config =>
+          {
+            config.RequireHttpsMetadata = false;
+            config.SaveToken = true;
+            config.TokenValidationParameters = new TokenValidationParameters
+            {
+              ValidateIssuerSigningKey = true,
+              IssuerSigningKey = new SymmetricSecurityKey(ApiTokenHelper.AuthorizationKey),
+              ValidateIssuer = false,
+              ValidateAudience = false
+            };
+          });
       });
-    });
   }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using ServiceReleaseManager.Core.OrganisationAggregate;
+using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 
@@ -17,6 +18,8 @@ public class AppDbContext : DbContext
   }
 
   public DbSet<Organisation> Organisations => Set<Organisation>();
+  public DbSet<Service> Services => Set<Service>();
+  public DbSet<ServiceTemplate> ServiceTemplates => Set<ServiceTemplate>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

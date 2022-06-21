@@ -8,8 +8,26 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 {
   public void Configure(EntityTypeBuilder<Organisation> builder)
   {
-    builder.Property(p => p.Name)
-      .HasMaxLength(100)
+    builder
+      .HasIndex(organisation => organisation.RouteName)
+      .IsUnique();
+
+    builder
+      .HasMany(organisation => organisation.Roles)
+      .WithOne()
+      .HasForeignKey(role => role.OrganisationId)
+      .IsRequired();
+
+    builder
+      .HasMany(organisation => organisation.Users)
+      .WithOne()
+      .HasForeignKey(user => user.OrganisationId)
+      .IsRequired();
+
+    builder
+      .HasMany(organisation => organisation.Services)
+      .WithOne()
+      .HasForeignKey(service => service.OrganisationId)
       .IsRequired();
   }
 }

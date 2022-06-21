@@ -1,0 +1,1446 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "Service Release Manager API",
+		"version": "v1"
+	},
+	"paths": {
+		"/api/v1/service-templates": {
+			"post": {
+				"tags": ["ServiceTemplateEndpoints"],
+				"summary": "Add a new service template",
+				"description": "Create a new service template",
+				"operationId": "ServiceTemplate.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceTemplate"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceTemplate"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceTemplate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The service template was created",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "A parameter was null or invalid",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "A service template with the same name already exists"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"delete": {
+				"tags": ["ServiceTemplateEndpoints"],
+				"summary": "Deletes a service template",
+				"description": "Deletes a service template by its id",
+				"operationId": "ServiceTemplate.Delete",
+				"parameters": [
+					{
+						"name": "ServiceTemplateId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "The service template was deleted"
+					},
+					"404": {
+						"description": "A service template with the given name was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["ServiceTemplateEndpoints"],
+				"summary": "List all service templates",
+				"description": "List all service templates",
+				"operationId": "ServiceTemplate.List",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceTemplateRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceTemplateRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceTemplateRecord"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"patch": {
+				"tags": ["ServiceTemplateEndpoints"],
+				"summary": "Update a service template",
+				"description": "Update a service template",
+				"operationId": "ServiceTemplate.Update",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateServiceTemplate"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateServiceTemplate"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateServiceTemplate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The service template was updated",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request was invalid",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "A service template with the specified name was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisation-users": {
+			"post": {
+				"tags": ["OrganisationUser"],
+				"summary": "Creates a new OrganisationUser",
+				"description": "Creates a new OrganisationUser",
+				"operationId": "OrganisationUser.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationUserRequest"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationUserRequest"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationUserRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User created",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationUserRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationUserRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationUserRecord"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request"
+					},
+					"404": {
+						"description": "Organisation or email not found"
+					},
+					"424": {
+						"description": "The keycloak request failed"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisations": {
+			"post": {
+				"tags": ["Organisation"],
+				"summary": "Creates a new Organisation",
+				"description": "Creates a new Organisation",
+				"operationId": "Organisation.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRequest"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRequest"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["Organisation"],
+				"summary": "Gets a list of all Organisations",
+				"operationId": "Organisations.List",
+				"parameters": [
+					{
+						"name": "includeDeactivated",
+						"in": "query",
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRecord"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisation-roles": {
+			"post": {
+				"tags": ["OrganisationRole"],
+				"summary": "Creates a new OrganisationRole",
+				"description": "Creates a new OrganisationRole",
+				"operationId": "OrganisationRole.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRoleRequest"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRoleRequest"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrganisationRoleRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRoleRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRoleRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRoleRecord"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/locales": {
+			"post": {
+				"tags": ["Locale"],
+				"summary": "Create a new locale",
+				"description": "Create a new locale",
+				"operationId": "Locale.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateLocaleRequest"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateLocaleRequest"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateLocaleRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The locale was created",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/LocaleRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LocaleRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LocaleRecord"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "The request was invalid"
+					},
+					"404": {
+						"description": "The service was not found"
+					},
+					"409": {
+						"description": "The locale already exists"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisation-users/{OrganisationUserId}": {
+			"delete": {
+				"tags": ["OrganisationUser"],
+				"summary": "Deletes a OrganisationUser",
+				"description": "Deletes a OrganisationUser",
+				"operationId": "OrganisationUser.Delete",
+				"parameters": [
+					{
+						"name": "OrganisationUserId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["OrganisationUser"],
+				"summary": "Gets a single OrganisationUser",
+				"description": "Gets a single OrganisationUser by UserId",
+				"operationId": "Organisations.GetByUserId",
+				"parameters": [
+					{
+						"name": "OrganisationUserId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationUserRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationUserRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationUserRecord"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisations/{OrganisationRouteName}": {
+			"delete": {
+				"tags": ["Organisation"],
+				"summary": "Deletes a Organisation",
+				"description": "Deletes a Organisation",
+				"operationId": "Organisations.Delete",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["Organisation"],
+				"summary": "Gets a single Organisation",
+				"description": "Gets a single Organisation by its route name",
+				"operationId": "Organisations.GetByName",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisation-roles/{OrganisationRoleId}": {
+			"delete": {
+				"tags": ["OrganisationRole"],
+				"summary": "Deletes a OrganisationRole",
+				"description": "Deletes a OrganisationRole",
+				"operationId": "OrganisationRoles.Delete",
+				"parameters": [
+					{
+						"name": "OrganisationRoleId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/locales/{LocaleId}": {
+			"delete": {
+				"tags": ["Locale"],
+				"summary": "Delete a locale",
+				"description": "Deletes a locale from the database",
+				"operationId": "Locale.Delete",
+				"parameters": [
+					{
+						"name": "LocaleId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Locale deleted"
+					},
+					"404": {
+						"description": "The locale or service was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["Locale"],
+				"summary": "Get a locale by id",
+				"description": "Get a locale by id",
+				"operationId": "Locale.GetById",
+				"parameters": [
+					{
+						"name": "LocaleId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Locale found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/LocaleRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LocaleRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LocaleRecord"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Locale not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/service-templates/{ServiceTemplateName}": {
+			"get": {
+				"tags": ["ServiceTemplateEndpoints"],
+				"summary": "Get a service template",
+				"description": "Get a service template by its name",
+				"operationId": "ServiceTemplate.Get",
+				"parameters": [
+					{
+						"name": "ServiceTemplateName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The service template was found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The service template was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/services/{ServiceId}/locales": {
+			"get": {
+				"tags": ["Locale"],
+				"summary": "List all locales",
+				"operationId": "Locales.List",
+				"parameters": [
+					{
+						"name": "ServiceId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Locales found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/LocaleRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/LocaleRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/LocaleRecord"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The service was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisations/{OrganisationRouteName}/roles": {
+			"get": {
+				"tags": ["OrganisationRole"],
+				"summary": "Gets a list of all OrganisationRoles",
+				"operationId": "OrganisationRoles.List",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRoleRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRoleRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRoleRecord"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisations/{OrganisationRouteName}/users": {
+			"get": {
+				"tags": ["OrganisationUser"],
+				"summary": "Gets a list of all OrganisationUsers",
+				"operationId": "OrganisationUser.List",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationUserRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationUserRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationUserRecord"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"CreateLocaleRequest": {
+				"required": ["countryCode", "languageCode", "serviceId"],
+				"type": "object",
+				"properties": {
+					"serviceId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"languageCode": {
+						"maxLength": 2,
+						"minLength": 0,
+						"type": "string"
+					},
+					"countryCode": {
+						"maxLength": 2,
+						"minLength": 0,
+						"type": "string"
+					},
+					"isDefault": {
+						"type": "boolean",
+						"default": false,
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"CreateOrganisationRequest": {
+				"required": ["name"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					}
+				},
+				"additionalProperties": false
+			},
+			"CreateOrganisationRoleRequest": {
+				"required": [
+					"name",
+					"organisationId",
+					"serviceDelete",
+					"serviceWrite",
+					"userDelete",
+					"userRead",
+					"userWrite"
+				],
+				"type": "object",
+				"properties": {
+					"organisationId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"maxLength": 50,
+						"minLength": 5,
+						"type": "string"
+					},
+					"serviceWrite": {
+						"type": "boolean"
+					},
+					"serviceDelete": {
+						"type": "boolean"
+					},
+					"userRead": {
+						"type": "boolean"
+					},
+					"userWrite": {
+						"type": "boolean"
+					},
+					"userDelete": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"CreateOrganisationUserRequest": {
+				"required": [
+					"email",
+					"firstName",
+					"lastName",
+					"organisationId",
+					"roleId"
+				],
+				"type": "object",
+				"properties": {
+					"organisationId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"email": {
+						"type": "string",
+						"format": "email"
+					},
+					"firstName": {
+						"maxLength": 50,
+						"minLength": 5,
+						"type": "string"
+					},
+					"lastName": {
+						"maxLength": 50,
+						"minLength": 5,
+						"type": "string"
+					},
+					"roleId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"additionalProperties": false
+			},
+			"CreateServiceTemplate": {
+				"required": ["localizedMetadata", "name", "staticMetadata"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"staticMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MetadataArrayElement"
+						}
+					},
+					"localizedMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MetadataArrayElement"
+						}
+					}
+				},
+				"additionalProperties": false
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"LocaleRecord": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"languageCode": {
+						"type": "string",
+						"nullable": true
+					},
+					"countryCode": {
+						"type": "string",
+						"nullable": true
+					},
+					"isDefault": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"MetadataArrayElement": {
+				"type": "object",
+				"properties": {
+					"index": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"type": {
+						"type": "string",
+						"nullable": true
+					},
+					"label": {
+						"type": "string",
+						"nullable": true
+					},
+					"minLength": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					},
+					"maxLength": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true
+					},
+					"required": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"OrganisationRecord": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"routeName": {
+						"type": "string",
+						"nullable": true
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"additionalProperties": false
+			},
+			"OrganisationRoleRecord": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"id": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"serviceWrite": {
+						"type": "boolean"
+					},
+					"serviceDelete": {
+						"type": "boolean"
+					},
+					"userRead": {
+						"type": "boolean"
+					},
+					"userWrite": {
+						"type": "boolean"
+					},
+					"userDelete": {
+						"type": "boolean"
+					}
+				},
+				"additionalProperties": false
+			},
+			"OrganisationUserRecord": {
+				"type": "object",
+				"properties": {
+					"userId": {
+						"type": "string",
+						"nullable": true
+					},
+					"email": {
+						"type": "string",
+						"nullable": true
+					},
+					"firstName": {
+						"type": "string",
+						"nullable": true
+					},
+					"lastName": {
+						"type": "string",
+						"nullable": true
+					},
+					"lastSignIn": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"ServiceTemplateRecord": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"staticMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MetadataArrayElement"
+						},
+						"nullable": true
+					},
+					"localizedMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MetadataArrayElement"
+						},
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"UpdateServiceTemplate": {
+				"required": ["localizedMetadata", "name", "staticMetadata"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"staticMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MetadataArrayElement"
+						}
+					},
+					"localizedMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MetadataArrayElement"
+						}
+					}
+				},
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"OAuth2": {
+				"type": "oauth2",
+				"flows": {
+					"authorizationCode": {
+						"authorizationUrl": "https://idp.srm.k3s.devnico.cloud/realms/dev/protocol/openid-connect/auth",
+						"tokenUrl": "https://idp.srm.k3s.devnico.cloud/realms/dev/protocol/openid-connect/token",
+						"scopes": {}
+					}
+				}
+			}
+		}
+	}
+}

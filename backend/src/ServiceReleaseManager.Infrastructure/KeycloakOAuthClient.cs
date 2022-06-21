@@ -1,8 +1,9 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace ServiceReleaseManager.Core;
+namespace ServiceReleaseManager.Infrastructure;
 
 public class KeycloakOAuthClient
 {
@@ -36,15 +37,16 @@ public class KeycloakOAuthClient
              { "grant_type", "client_credentials" }
            }))
     {
-      content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+      content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
       var response =
         await _httpClient.PostAsync($"{_url}/realms/{_realm}/protocol/openid-connect/token",
           content);
 
       if (response.StatusCode != HttpStatusCode.OK)
       {
-        throw new HttpRequestException("Could not get the keycloak oauth token", null,
-          response.StatusCode);
+        throw new HttpRequestException(
+          string.Format("Could not get the keycloak oauth token. Message from keycloak: {0}",
+            await response.Content.ReadAsStringAsync()), null, response.StatusCode);
       }
 
       var token = await response.Content.ReadFromJsonAsync<TokenResponse>();
