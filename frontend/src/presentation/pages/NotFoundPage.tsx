@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import Center from '../components/Center';
+import Center from '../components/layout/Center';
 
 const NotFoundPage: React.FC = () => {
 	const { t } = useTranslation();

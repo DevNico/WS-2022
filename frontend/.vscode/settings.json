@@ -1,7 +1,7 @@
 {
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"i18n-ally.localesPaths": ["src/presentation/i18n"],
-	"i18n-ally.keystyle": "flat",
+	"i18n-ally.keystyle": "nested",
 	"i18n-ally.sourceLanguage": "de",
 	"i18n-ally.sortKeys": true,
 	"i18n-ally.keepFulfilled": true,

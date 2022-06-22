@@ -40,6 +40,14 @@ public class OrganisationService : IOrganisationService
     var organisations = await _organisationRepository.ListAsync(cancellationToken);
     return Result.Success(spec.Evaluate(organisations).ToList());
   }
+  
+  public async Task<Result<List<Organisation>>> ListByUserEmail(string userEmail,
+    CancellationToken cancellationToken)
+  {
+    var spec = new OrganisationsByUserEmailSpec(userEmail);
+    var organisations = await _organisationRepository.ListAsync(cancellationToken);
+    return Result.Success(spec.Evaluate(organisations).ToList());
+  }
 
   public async Task<Result<Organisation>> Create(string routeName,
     CancellationToken cancellationToken)

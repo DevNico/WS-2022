@@ -1,20 +1,19 @@
 import React from 'react';
 import { Button, Stack, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import RouterButton from './RouterButton';
 
-interface EmptyTableOverlayProps {
+interface DataGridOverlayOverlayProps {
 	text: string;
-	buttonText: string;
-	target: string;
+	buttonText?: string;
+	onClick?: () => void;
 }
 
-const EmptyTableOverlay: React.FC<EmptyTableOverlayProps> = ({
+const DataGridOverlay: React.FC<DataGridOverlayOverlayProps> = ({
 	text,
 	buttonText,
-	target,
+	onClick,
 }) => {
-	const navigate = useNavigate();
-
 	return (
 		<Grid sx={{ width: '100%', height: '100%' }} container>
 			<Stack
@@ -30,19 +29,21 @@ const EmptyTableOverlay: React.FC<EmptyTableOverlayProps> = ({
 				}}
 			>
 				<Typography textAlign='center'>{text}</Typography>
-				<Button
-					onClick={() => navigate(target)}
-					sx={{
-						zIndex: (theme) => theme.zIndex.drawer + 1,
-						width: 'max-content',
-						alignSelf: 'center',
-					}}
-				>
-					{buttonText}
-				</Button>
+				{buttonText && (
+					<Button
+						onClick={onClick}
+						sx={{
+							zIndex: (theme) => theme.zIndex.drawer + 1,
+							width: 'max-content',
+							alignSelf: 'center',
+						}}
+					>
+						{buttonText}
+					</Button>
+				)}
 			</Stack>
 		</Grid>
 	);
 };
 
-export default EmptyTableOverlay;
+export default DataGridOverlay;

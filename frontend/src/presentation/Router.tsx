@@ -1,36 +1,89 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { route, stringParser } from 'typesafe-routes';
 import HomeLayout from './layouts/HomeLayout';
-import HomePage from './pages/HomePage';
+import OrganisationLayout from './layouts/OrganisationLayout';
+import SuperAdminLayout from './layouts/SuperAdminLayout';
+import AdminOrganisationsPage from './pages/AdminOrganisationsPage';
+import ChooseOrganisationPage from './pages/ChooseOrganisationPage';
 import NotFoundPage from './pages/NotFoundPage';
-import OrganisationsPage from './pages/OrganisationsPage';
-import CreateUserPage from './pages/CreateUserPage';
-import CreateRolePage from './pages/CreateRolePage';
-import UsersPage from './pages/UsersPage';
-import RolesPage from './pages/RolesPage';
-import CreateOrganisationPage from './pages/CreateOrganisationPage';
+import OrganisationPage from './pages/OrganisationPage';
+import OrganisationRolesPage from './pages/OrganisationRolesPage';
+import OrganisationUsersPage from './pages/OrganisationUsersPage';
+
+export const adminOrganisationsRoute = route('organisations', {}, {});
+export const adminRoute = route(
+	'admin',
+	{},
+	{ organisations: adminOrganisationsRoute }
+);
+
+export const organisationUsersRoute = route(
+	'users',
+	{ name: stringParser },
+	{}
+);
+export const organisationRolesRoute = route(
+	'roles',
+	{ name: stringParser },
+	{}
+);
+export const organisationRoute = route(
+	'organisation/:name',
+	{ name: stringParser },
+	{ users: organisationUsersRoute, roles: organisationRolesRoute }
+);
+
+export const homeRoute = route(
+	'/',
+	{},
+	{
+		admin: adminRoute,
+		organisation: organisationRoute,
+	}
+);
 
 const Router: React.FC = () => {
 	return (
 		<Routes>
-			<Route path='/' element={<HomeLayout />}>
-				<Route index element={<HomePage />} />
-				<Route path='/organisation'>
-					<Route index element={<OrganisationsPage />} />
-					<Route path='create' element={<CreateOrganisationPage />} />
-					<Route path=':name'>
-						<Route path='user'>
-							<Route index element={<UsersPage />} />
-							<Route
-								path=':create'
-								element={<CreateUserPage />}
+			<Route element={<HomeLayout />}>
+				<Route index element={<ChooseOrganisationPage />} />
+
+				<Route
+					path={organisationRoute.template}
+					element={<OrganisationLayout />}
+				>
+					<Route
+						index
+						element={<Navigate to={organisationUsersRoute({}).$} />}
+					/>
+					<Route
+						path={organisationUsersRoute.template}
+						element={<OrganisationUsersPage />}
+					/>
+					<Route
+						path={organisationRolesRoute.template}
+						element={<OrganisationRolesPage />}
+					/>
+				</Route>
+
+				<Route
+					path={adminRoute.template}
+					element={<SuperAdminLayout />}
+				>
+					<Route
+						index
+						element={
+							<Navigate
+								replace
+								to={adminOrganisationsRoute({}).$}
 							/>
-						</Route>
-						<Route path='role'>
-							<Route index element={<RolesPage />} />
-							<Route path='create' element={<CreateRolePage />} />
-						</Route>
-					</Route>
+						}
+					/>
+					<Route
+						path={adminOrganisationsRoute.template}
+						element={<AdminOrganisationsPage />}
+					/>
 				</Route>
 			</Route>
 			<Route path='*' element={<NotFoundPage />} />
