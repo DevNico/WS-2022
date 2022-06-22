@@ -111,9 +111,10 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
       request.Email,
       request.FirstName,
       request.LastName,
+      request.OrganisationId,
       request.RoleId
     );
-    newUser.OrganisationId = request.OrganisationId;
+
     var result = await _organisationUserService.Create(newUser, cancellationToken);
 
     return this.ToActionResult(result.MapValue(OrganisationUserRecord.FromEntity));

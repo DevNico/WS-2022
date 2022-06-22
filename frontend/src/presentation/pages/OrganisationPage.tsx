@@ -1,3 +1,4 @@
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import { useRouteParams } from 'typesafe-routes';
 import { useOrganisationsGetByName } from '../../api/organisation/organisation';
@@ -11,9 +12,9 @@ const OrganisationPage: React.FC = () => {
 	return (
 		<QueryWrapper result={organisationResult}>
 			{(organisation) => (
-				<div>
-					<h1>{organisation.name}</h1>
-				</div>
+				<>
+					<Typography>{organisation.name}</Typography>
+				</>
 			)}
 		</QueryWrapper>
 	);

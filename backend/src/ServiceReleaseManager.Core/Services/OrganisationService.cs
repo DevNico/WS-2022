@@ -45,7 +45,7 @@ public class OrganisationService : IOrganisationService
     CancellationToken cancellationToken)
   {
     var spec = new OrganisationsByUserEmailSpec(userEmail);
-    var organisations = await _organisationRepository.ListAsync(cancellationToken);
+    var organisations = await _organisationRepository.GetBySpecAsync(cancellationToken);
     return Result.Success(spec.Evaluate(organisations).ToList());
   }
 
