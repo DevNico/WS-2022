@@ -5,7 +5,7 @@ namespace ServiceReleaseManager.Core.Interfaces;
 
 public interface IKeycloakClient
 {
-  public Task<KeycloakUserRecord?> CreateUser(KeycloakUserCreation userCreation);
+  public Task CreateUser(KeycloakUserCreation userCreation);
 
   public Task<KeycloakUserRecord> GetUser(string userId);
 

@@ -1,34 +1,34 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ServiceReleaseManager.Core.Interfaces;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ServiceReleaseManager.Infrastructure;
 
 public class KeycloakClient : IKeycloakClient
 {
-  private static readonly HttpClient _httpClient = new();
+  private readonly HttpClient _httpClient;
   private readonly KeycloakOAuthClient _keycloakOAuthClient;
+  private readonly ILogger _logger;
   private readonly string _realm;
   private readonly string _url;
 
-  public KeycloakClient(IConfiguration config)
+  public KeycloakClient(IConfiguration config, ILogger logger, KeycloakOAuthClient _oAuthClient,
+    HttpClient httpClient)
   {
-    _keycloakOAuthClient = new KeycloakOAuthClient(config);
+    _logger = logger;
+    _httpClient = httpClient;
+    _keycloakOAuthClient = _oAuthClient;
 
     _url = config["Keycloak:Url"];
     _realm = config["Keycloak:Realm"];
   }
 
-  public async Task<KeycloakUserRecord?> CreateUser(KeycloakUserCreation userCreation)
+  public async Task CreateUser(KeycloakUserCreation userCreation)
   {
-    var res = await _request<List<KeycloakUserRecord>>("/users", HttpMethod.Post, userCreation,
-      HttpStatusCode.Created);
-
-    return res.Count > 0 ? res[0] : null;
+    await _request<string>("/users", HttpMethod.Post, userCreation, HttpStatusCode.Created);
   }
 
   public Task<KeycloakUserRecord> GetUser(string userId)
@@ -76,23 +76,27 @@ public class KeycloakClient : IKeycloakClient
   private async Task<T> _request<T>(string url, HttpMethod method, object? body = null,
     HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
   {
+    _logger.LogDebug("Sending {Method} request to {Url}", method.Method, url);
     var token = await _keycloakOAuthClient.getToken();
     using (var requestMessage =
            new HttpRequestMessage(method, $"{_url}/admin/realms/{_realm}{url}"))
     {
       if (body != null)
       {
-        requestMessage.Content = new StringContent(JsonSerializer.Serialize(body));
+        requestMessage.Content = new StringContent(JsonConvert.SerializeObject(body));
         requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
       }
 
       requestMessage.Headers.Add("Authorization", $"Bearer {token}");
       var response = await _httpClient.SendAsync(requestMessage);
       var responseContent = await response.Content.ReadAsStringAsync();
+      _logger.LogDebug("Keycloak returned a response with status {Code}",
+        response.StatusCode.ToString());
       if (response.StatusCode != expectedStatusCode)
       {
         throw new HttpRequestException(
-          string.Format("Could not POST to keycloak, error: {0}", responseContent), null,
+          $"Could not {method.Method.ToUpperInvariant()} to keycloak, error: {responseContent}",
+          null,
           response.StatusCode);
       }
 
