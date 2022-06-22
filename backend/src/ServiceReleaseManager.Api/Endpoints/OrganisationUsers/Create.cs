@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Organisation;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -13,16 +15,18 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
 {
   private readonly IOrganisationUserService _organisationUserService;
   private readonly IOrganisationService _organisationService;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IKeycloakClient _keycloakClient;
   private readonly ILogger<Create> _logger;
 
   public Create(IOrganisationUserService organisationUserService, IKeycloakClient keycloakClient,
-    ILogger<Create> logger, IOrganisationService organisationService)
+    ILogger<Create> logger, IOrganisationService organisationService, IServiceManagerAuthorizationService authorizationService)
   {
     _organisationUserService = organisationUserService;
     _keycloakClient = keycloakClient;
     _logger = logger;
     _organisationService = organisationService;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost]
@@ -42,7 +46,8 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
   {
     var organisationResult =
       await _organisationService.GetById(request.OrganisationId, cancellationToken);
-    if (!organisationResult.IsSuccess)
+    if (!organisationResult.IsSuccess || ! await _authorizationService.EvaluateOrganisationAuthorization(User,
+      OrganisationUserOperations.OrganisationUser_Create, cancellationToken))
     {
       return NotFound();
     }

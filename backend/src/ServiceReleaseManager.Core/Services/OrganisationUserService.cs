@@ -82,4 +82,10 @@ public class OrganisationUserService : IOrganisationUserService
 
     return Result.Success();
   }
+
+  public async Task<OrganisationUser?> GetByUserId(string userId, CancellationToken cancellationToken)
+  {
+    var spec = new OrganisationUserByUserIdSpec(userId);
+    return await _organisationUserRepository.GetBySpecAsync(spec, cancellationToken);
+  }
 }

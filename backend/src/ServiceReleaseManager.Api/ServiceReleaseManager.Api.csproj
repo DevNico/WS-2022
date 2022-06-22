@@ -30,4 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ServiceReleaseManager.Infrastructure\ServiceReleaseManager.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 </Project>

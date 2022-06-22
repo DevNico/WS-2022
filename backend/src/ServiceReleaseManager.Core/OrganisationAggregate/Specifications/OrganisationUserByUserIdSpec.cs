@@ -9,6 +9,7 @@ public sealed class OrganisationUserByUserIdSpec : Specification<OrganisationUse
   {
     Query
       .Where(user => user.IsActive)
-      .Where(user => user.UserId.Equals(userId, StringComparison.OrdinalIgnoreCase));
+      .Where(user => user.UserId.Equals(userId))
+      .Include(user => user.Role);
   }
 }

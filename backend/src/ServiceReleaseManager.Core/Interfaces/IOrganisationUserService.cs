@@ -11,6 +11,8 @@ public interface IOrganisationUserService
   public Task<Result<OrganisationUser>> GetById(int userId,
     CancellationToken cancellationToken);
 
+  public Task<OrganisationUser?> GetByUserId(string userId, CancellationToken cancellationToken);
+
   public Task<Result<List<OrganisationUser>>> ListByOrganisationRouteName(string
     organisationRouteName, CancellationToken cancellationToken);
 

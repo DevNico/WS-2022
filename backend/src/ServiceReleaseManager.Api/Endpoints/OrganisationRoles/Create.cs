@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Organisation;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -12,10 +14,12 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.Wi
   OrganisationRoleRecord>
 {
   private readonly IOrganisationRoleService _organisationRoleService;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(IOrganisationRoleService organisationRoleService)
+  public Create(IOrganisationRoleService organisationRoleService, IServiceManagerAuthorizationService authorizationService)
   {
     _organisationRoleService = organisationRoleService;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost]
@@ -29,6 +33,12 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.Wi
     [FromBody] CreateOrganisationRoleRequest request,
     CancellationToken cancellationToken = new())
   {
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+      OrganisationRoleOperation.OrganisationRole_Create, cancellationToken))
+    {
+      return NotFound();
+    }
+
     var newRole = new OrganisationRole(request.OrganisationId, request.Name, request.ServiceWrite,
       request.ServiceDelete, request.UserRead, request.UserWrite, request.UserDelete);
 
