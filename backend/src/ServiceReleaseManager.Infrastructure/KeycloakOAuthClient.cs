@@ -1,22 +1,26 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ServiceReleaseManager.Infrastructure;
 
 public class KeycloakOAuthClient
 {
-  private static readonly HttpClient _httpClient = new();
+  private readonly HttpClient _httpClient;
   private readonly string _clientId;
   private readonly string _clientSecret;
   private readonly string _realm;
   private readonly string _url;
+  private readonly ILogger _logger;
 
   private TokenCache? _token;
 
-  public KeycloakOAuthClient(IConfiguration config)
+  public KeycloakOAuthClient(IConfiguration config, ILogger logger, HttpClient httpClient)
   {
+    _logger = logger;
+    _httpClient = httpClient;
     _url = config["Keycloak:Url"];
     _realm = config["Keycloak:AuthRealm"];
     _clientId = config["Keycloak:ClientId"];
@@ -30,6 +34,7 @@ public class KeycloakOAuthClient
       return _token.respone.access_token;
     }
 
+    _logger.LogDebug("Retrieving a new keycloak oAuth token");
     using (var content = new FormUrlEncodedContent(new Dictionary<string, string>
            {
              { "client_id", _clientId },
@@ -42,16 +47,21 @@ public class KeycloakOAuthClient
         await _httpClient.PostAsync($"{_url}/realms/{_realm}/protocol/openid-connect/token",
           content);
 
+      var responseContent = await response.Content.ReadAsStringAsync();
       if (response.StatusCode != HttpStatusCode.OK)
       {
+        _logger.LogError(
+          "Could not get the keycloak oAuth token, status code {Status}, message; {Message}",
+          response.StatusCode.ToString(), responseContent);
         throw new HttpRequestException(
           string.Format("Could not get the keycloak oauth token. Message from keycloak: {0}",
-            await response.Content.ReadAsStringAsync()), null, response.StatusCode);
+            responseContent), null, response.StatusCode);
       }
 
-      var token = await response.Content.ReadFromJsonAsync<TokenResponse>();
+      var token = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
       if (token == null)
       {
+        _logger.LogError("Could not decode the response message {Message}", responseContent);
         throw new ApplicationException("Could not decode the token");
       }
 
