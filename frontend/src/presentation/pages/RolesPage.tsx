@@ -12,11 +12,11 @@ import { useRecoilValue } from 'recoil';
 interface ColumnData {
 	id: number;
 	name?: string;
-	serviceWrite?: boolean;
-	serviceDelete?: boolean;
-	userRead?: boolean;
-	userWrite?: boolean;
-	userDelete?: boolean;
+	serviceWrite?: string;
+	serviceDelete?: string;
+	userRead?: string;
+	userWrite?: string;
+	userDelete?: string;
 }
 
 const UsersPage: React.FC = () => {
@@ -91,11 +91,11 @@ const UsersPage: React.FC = () => {
 					roles.data?.map((r) => ({
 						id: r.id!,
 						name: r.name!,
-						serviceWrite: r.serviceWrite!,
-						serviceDelete: r.serviceDelete!,
-						userRead: r.userRead!,
-						userWrite: r.userWrite!,
-						userDelete: r.userDelete!,
+						serviceWrite: r.serviceWrite ? '✔️' : '❌',
+						serviceDelete: r.serviceDelete ? '✔️' : '❌',
+						userRead: r.userRead ? '✔️' : '❌',
+						userWrite: r.userWrite ? '✔️' : '❌',
+						userDelete: r.userDelete ? '✔️' : '❌',
 					})) ?? []
 				}
 				components={{

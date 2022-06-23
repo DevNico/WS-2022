@@ -1,11 +1,8 @@
 name: Backend Prod
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
-    paths:
-      - "backend/**"
 
 jobs:
   build_and_deploy:
