@@ -16,12 +16,12 @@
 		"apiclient": "orval --config ./orval.config.js && npm run prettier:fix"
 	},
 	"dependencies": {
-		"@emotion/react": "^11.9.0",
-		"@emotion/styled": "^11.8.1",
-		"@mui/icons-material": "^5.6.2",
-		"@mui/lab": "^5.0.0-alpha.81",
-		"@mui/material": "^5.7.0",
-		"@mui/x-data-grid": "^5.12.1",
+		"@emotion/react": "^11.9.3",
+		"@emotion/styled": "^11.9.3",
+		"@mui/icons-material": "^5.8.4",
+		"@mui/lab": "^5.0.0-alpha.87",
+		"@mui/material": "^5.8.5",
+		"@mui/x-data-grid": "^5.12.2",
 		"@react-keycloak/web": "^3.4.0",
 		"@types/react": "^18.0.14",
 		"@types/react-dom": "^18.0.5",

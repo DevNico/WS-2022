@@ -7,9 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ardalis.Specification"/>
-    <PackageReference Include="Ardalis.Result"/>
-    <PackageReference Include="MediatR"/>
+    <PackageReference Include="Ardalis.Specification" />
+    <PackageReference Include="Ardalis.Result" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
 </Project>
