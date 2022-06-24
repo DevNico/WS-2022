@@ -3,6 +3,7 @@ using Autofac;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Infrastructure.Data;
@@ -95,9 +96,16 @@ public class DefaultInfrastructureModule : Module
     builder.RegisterType<EmailSender>().As<IEmailSender>()
       .InstancePerLifetimeScope();
 
-    builder.Register(_ => new KeycloakClient(_configuration)).As<IKeycloakClient>()
+    builder.Register(c =>
+        new KeycloakOAuthClient(_configuration, c.Resolve<ILogger<KeycloakOAuthClient>>(),
+          new HttpClient()))
       .InstancePerLifetimeScope();
-    
+
+    builder.Register(c => new KeycloakClient(_configuration, c.Resolve<ILogger<KeycloakClient>>(),
+        c.Resolve<KeycloakOAuthClient>(), new HttpClient()))
+      .As<IKeycloakClient>()
+      .InstancePerLifetimeScope();
+
     builder.RegisterType<MetadataFormatValidator>()
       .As<IMetadataFormatValidator>()
       .InstancePerLifetimeScope();

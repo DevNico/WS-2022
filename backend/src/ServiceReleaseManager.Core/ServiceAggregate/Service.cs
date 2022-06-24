@@ -9,27 +9,33 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class Service : EntityBase, IAggregateRoot
 {
-  public Service(string name)
+  public Service(string name, string description)
   {
     Name = name;
-    Releases = new List<Release>();
-    Locales = new List<Locale>();
-    ReleaseTargets = new List<ReleaseTarget>();
+    Description = description;
     IsActive = true;
-
-    var serviceCreatedEvent = new ServiceCreatedEvent(this);
-    RegisterDomainEvent(serviceCreatedEvent);
   }
 
-  [Required] [MaxLength(50)] public string Name { get; set; }
+  [Required]
+  [MinLength(5)]
+  [MaxLength(50)]
+  public string Name { get; set; }
 
-  [Required] public List<Release> Releases { get; set; }
+  [Required]
+  [MaxLength(200)]
+  public string Description { get; set; }
 
-  [Required] public List<Locale> Locales { get; set; }
+  public List<Locale> Locales { get; set; } = new();
 
-  [Required] public List<ReleaseTarget> ReleaseTargets { get; set; }
+  public List<ServiceUser> ServiceUsers { get; set; } = new();
+
+  public List<Release> Releases { get; set; } = new();
+
+  public List<ReleaseTarget> ReleaseTargets { get; set; } = new();
+
+  public int OrganisationId { get; set; }
   
-  [Required] [DefaultValue(true)] public bool IsActive { get; set; }
+  [DefaultValue(true)] public bool IsActive { get; set; }
   
   public void Deactivate()
   {

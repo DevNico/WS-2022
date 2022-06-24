@@ -6,13 +6,6 @@ namespace ServiceReleaseManager.Infrastructure;
 
 public class MetadataFormatValidator : IMetadataFormatValidator
 {
-  private readonly ILogger _logger;
-
-  public MetadataFormatValidator(ILogger<MetadataFormatValidator> logger)
-  {
-    _logger = logger;
-  }
-
   private static readonly List<string> _allowedTypes = new()
   {
     "all_fields",
@@ -23,23 +16,45 @@ public class MetadataFormatValidator : IMetadataFormatValidator
     "phone"
   };
 
-  private void ValidateMetadataArrayElement(MetadataArrayElement element, List<MetadataArrayElement> elements)
+  private readonly ILogger _logger;
+
+  public MetadataFormatValidator(ILogger<MetadataFormatValidator> logger)
+  {
+    _logger = logger;
+  }
+
+  public string NormalizeMetadata(List<MetadataArrayElement> metadata)
+  {
+    ValidateMetadata(metadata);
+    var normalized = metadata!.ConvertAll(NormalizeArrayElement);
+    normalized.Sort((x, y) => x.Index - y.Index);
+
+    return JsonConvert.SerializeObject(normalized);
+  }
+
+  private void ValidateMetadataArrayElement(MetadataArrayElement element,
+    List<MetadataArrayElement> elements)
   {
     switch (element.Index)
     {
-      case 0 when element.Type == "all_fields" && elements.FindAll(e => e.Type == "all_fields").Count <= 1:
+      case 0 when element.Type == "all_fields" &&
+                  elements.FindAll(e => e.Type == "all_fields").Count <= 1:
         break;
       case < 0:
       case > 0 when !elements.Exists(e => e.Index == element.Index - 1):
-        _logger.LogDebug("Field '{}' has invalid index: {}", element.Name, element.Index.ToString());
-        throw new MetadataFormatValidationError($"Field '{element.Name}' has invalid index: {element.Index}");
+        _logger.LogDebug("Field '{}' has invalid index: {}", element.Name,
+          element.Index.ToString());
+        throw new MetadataFormatValidationError(
+          $"Field '{element.Name}' has invalid index: {element.Index}");
     }
 
     if (string.IsNullOrWhiteSpace(element.Name) || string.IsNullOrWhiteSpace(element.Type) ||
-        string.IsNullOrWhiteSpace(element.Label) || element.Label.Length > 50 || element.Name.Length > 50)
+        string.IsNullOrWhiteSpace(element.Label) || element.Label.Length > 50 ||
+        element.Name.Length > 50)
     {
       _logger.LogDebug("Field '{}' has invalid name, type, or label", element.Name);
-      throw new MetadataFormatValidationError($"Field '{element.Name}' has invalid name, type, or label");
+      throw new MetadataFormatValidationError(
+        $"Field '{element.Name}' has invalid name, type, or label");
     }
 
     if (_allowedTypes.Contains(element.Type.Trim().ToLower()))
@@ -48,15 +63,18 @@ public class MetadataFormatValidator : IMetadataFormatValidator
     }
 
     _logger.LogDebug("Field '{}' has invalid type: '{}'", element.Name, element.Type);
-    throw new MetadataFormatValidationError($"Field '{element.Name}' has invalid type: '{element.Type}'");
+    throw new MetadataFormatValidationError(
+      $"Field '{element.Name}' has invalid type: '{element.Type}'");
   }
 
   private static MetadataArrayElement NormalizeArrayElement(MetadataArrayElement element)
   {
-    bool lengthAllowed = element.Type.Trim().ToLower() is "text" or "phone" or "email";
+    var lengthAllowed = element.Type.Trim().ToLower() is "text" or "phone" or "email";
 
-    return new MetadataArrayElement(element.Index, element.Name.Trim(), element.Type.Trim().ToLower(),
-      element.Label.Trim(), lengthAllowed ? element.MinLength : null, lengthAllowed ? element.MaxLength : null,
+    return new MetadataArrayElement(element.Index, element.Name.Trim(),
+      element.Type.Trim().ToLower(),
+      element.Label.Trim(), lengthAllowed ? element.MinLength : null,
+      lengthAllowed ? element.MaxLength : null,
       element.Required);
   }
 
@@ -72,14 +90,5 @@ public class MetadataFormatValidator : IMetadataFormatValidator
     {
       ValidateMetadataArrayElement(metadataArrayElement, metadata);
     }
-  }
-
-  public string NormalizeMetadata(List<MetadataArrayElement> metadata)
-  {
-    ValidateMetadata(metadata);
-    var normalized = metadata!.ConvertAll(NormalizeArrayElement);
-    normalized.Sort((x, y) => x.Index - y.Index);
-
-    return JsonConvert.SerializeObject(normalized);
   }
 }

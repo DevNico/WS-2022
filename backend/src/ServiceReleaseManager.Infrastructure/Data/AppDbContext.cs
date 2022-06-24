@@ -18,7 +18,7 @@ public class AppDbContext : DbContext
   }
 
   public DbSet<Organisation> Organisations => Set<Organisation>();
-
+  public DbSet<Service> Services => Set<Service>();
   public DbSet<ServiceTemplate> ServiceTemplates => Set<ServiceTemplate>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

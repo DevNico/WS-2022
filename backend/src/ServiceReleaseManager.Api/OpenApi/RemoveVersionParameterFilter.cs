@@ -3,11 +3,11 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ServiceReleaseManager.Api.OpenApi;
 
-public class RemoveVersionParameterFilter : IOperationFilter
+internal class RemoveVersionParameterFilter : IOperationFilter
 {
   public void Apply(OpenApiOperation operation, OperationFilterContext context)
   {
-    if (!operation.Parameters.Any(p => p.Name == "version"))
+    if (operation.Parameters.All(p => p.Name != "version"))
     {
       return;
     }

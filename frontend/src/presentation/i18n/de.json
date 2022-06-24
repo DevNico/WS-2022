@@ -1,5 +1,11 @@
 {
 	"notFoundPage.goToHome": "Zurück zur Startseite",
 	"notFoundPage.subtitle": "Leider konnten wir die von Ihnen gesuchte Seite nicht finden. Vielleicht haben Sie sich bei der URL vertippt? Überprüfen Sie bitte Ihre Rechtschreibung.",
-	"notFoundPage.title": "Die Seite wurde nicht gefunden"
+	"notFoundPage.title": "Die Seite wurde nicht gefunden",
+	"login": "Anmelden",
+	"logout": "Abmelden",
+	"homeLayout": {
+		"organisations": "Organisationen",
+		"users": "Benutzer"
+	}
 }

@@ -1,8 +1,8 @@
-import Typography from '@mui/material/Typography/Typography';
+import Box from '@mui/material/Box/Box';
 import React from 'react';
 
 const HomePage: React.FC = () => {
-	return <Typography variant='h1'>Home</Typography>;
+	return <h1>Home</h1>;
 };
 
 export default HomePage;

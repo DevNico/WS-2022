@@ -1,15 +1,11 @@
-﻿using ServiceReleaseManager.Api.Routes;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
 public class GetServiceTemplate
 {
-  public const string Route = $"{RouteHelper.BaseRoute}/{{serviceName}}";
-  
-  public string ServiceName { get; set; }
+  public const string Route = "{ServiceTemplateName}";
 
-  public static string BuildRoute(string serviceName)
-  {
-    return Route.Replace("{serviceName}", serviceName);
-  }
+  [Required]
+  public string ServiceTemplateName { get; set; } = default!;
 }

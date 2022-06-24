@@ -2,7 +2,8 @@
 
 namespace ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 
-public sealed class ServiceTemplateByIdSpec : Specification<ServiceTemplate>, ISingleResultSpecification
+public sealed class ServiceTemplateByIdSpec : Specification<ServiceTemplate>,
+  ISingleResultSpecification
 {
   public ServiceTemplateByIdSpec(int id)
   {

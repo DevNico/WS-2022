@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -7,19 +6,16 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class List : AuthorizedEndpointBase
-  .WithoutRequest
-  .WithActionResult<List<ServiceTemplateRecord>>
+public class List : EndpointBase.WithoutRequest.WithActionResult<List<ServiceTemplateRecord>>
 {
   private readonly IRepository<ServiceTemplate> _repository;
-  
+
   public List(IRepository<ServiceTemplate> repository)
   {
     _repository = repository;
   }
 
   [HttpGet]
-  [Authorize]
   [SwaggerOperation(
     Summary = "List all service templates",
     Description = "List all service templates",

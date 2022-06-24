@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -7,9 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Delete : AuthorizedEndpointBase
-  .WithRequest<DeleteServiceTemplate>
-  .WithoutResult
+public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutResult
 {
   private readonly IRepository<ServiceTemplate> _repository;
 
@@ -18,7 +15,6 @@ public class Delete : AuthorizedEndpointBase
     _repository = repository;
   }
 
-  [Authorize]
   [HttpDelete]
   [SwaggerOperation(
     Description = "Deletes a service template by its id",
