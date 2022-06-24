@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.ServiceEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.Services;
 
 public class GetServiceByIdRequest
 {

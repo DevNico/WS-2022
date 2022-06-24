@@ -4,9 +4,9 @@ using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.ServiceEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class GetById : AuthorizedEndpointBase
+public class GetById : EndpointBase
   .WithRequest<GetServiceByIdRequest>
   .WithActionResult<ServiceRecord>
 {

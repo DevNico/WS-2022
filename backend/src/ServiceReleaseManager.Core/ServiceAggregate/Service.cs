@@ -9,10 +9,11 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class Service : EntityBase, IAggregateRoot
 {
-  public Service(string name, string description)
+  public Service(string name, string description, int organisationId)
   {
     Name = name;
     Description = description;
+    OrganisationId = organisationId;
     IsActive = true;
   }
 

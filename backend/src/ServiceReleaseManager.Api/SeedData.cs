@@ -14,7 +14,7 @@ public static class SeedData
     new("Test Organisation Deactivated") { IsActive = false };
 
   public static readonly Service TestService1 =
-    new("Test Service", "For testing purposes");
+    new("Test Service", "For testing purposes", 1);
 
   public static void Initialize(IServiceProvider serviceProvider)
   {
