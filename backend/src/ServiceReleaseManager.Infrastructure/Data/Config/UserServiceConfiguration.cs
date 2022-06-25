@@ -10,7 +10,7 @@ public class UserServiceConfiguration : IEntityTypeConfiguration<ServiceUser>
   {
     builder
       .HasOne(serviceUser => serviceUser.OrganisationUser)
-      .WithMany(organisationUser => organisationUser.ServiceUser)
+      .WithMany(organisationUser => organisationUser.ServiceUserList)
       .HasForeignKey(serviceUser => serviceUser.OrganisationUserId)
       .IsRequired();
 

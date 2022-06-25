@@ -1,5 +1,4 @@
 ﻿using Ardalis.Result;
-using Newtonsoft.Json;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
@@ -46,12 +45,15 @@ public class OrganisationRoleService : IOrganisationRoleService
 
     if (organisation.Roles.Exists(r => r.Name == role.Name))
     {
-      var error = new ValidationError();
-      error.Severity = ValidationSeverity.Error;
-      error.Identifier = "Name";
-      error.ErrorMessage = "Role already exists";
-
-      return Result.Invalid(new List<ValidationError> { error });
+      return Result.Invalid(new List<ValidationError>
+      {
+        new()
+        {
+          Severity = ValidationSeverity.Error,
+          Identifier = "Name",
+          ErrorMessage = "Role already exists"
+        }
+      });
     }
 
     var created = await _roleRepository.AddAsync(role, cancellationToken);

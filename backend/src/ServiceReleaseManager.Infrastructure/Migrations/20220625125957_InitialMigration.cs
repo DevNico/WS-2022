@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -117,12 +117,11 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrganisationUser",
+                name: "OrganisationUsers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
@@ -135,15 +134,15 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrganisationUser", x => x.Id);
+                    table.PrimaryKey("PK_OrganisationUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrganisationUser_OrganisationRole_RoleId",
+                        name: "FK_OrganisationUsers_OrganisationRole_RoleId",
                         column: x => x.RoleId,
                         principalTable: "OrganisationRole",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrganisationUser_Organisations_OrganisationId",
+                        name: "FK_OrganisationUsers_Organisations_OrganisationId",
                         column: x => x.OrganisationId,
                         principalTable: "Organisations",
                         principalColumn: "Id",
@@ -217,14 +216,14 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Release", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Release_OrganisationUser_ApprovedById",
+                        name: "FK_Release_OrganisationUsers_ApprovedById",
                         column: x => x.ApprovedById,
-                        principalTable: "OrganisationUser",
+                        principalTable: "OrganisationUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Release_OrganisationUser_PublishedById",
+                        name: "FK_Release_OrganisationUsers_PublishedById",
                         column: x => x.PublishedById,
-                        principalTable: "OrganisationUser",
+                        principalTable: "OrganisationUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Release_Services_ServiceId",
@@ -250,9 +249,9 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ServiceUser", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ServiceUser_OrganisationUser_OrganisationUserId",
+                        name: "FK_ServiceUser_OrganisationUsers_OrganisationUserId",
                         column: x => x.OrganisationUserId,
-                        principalTable: "OrganisationUser",
+                        principalTable: "OrganisationUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -292,6 +291,35 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ReleaseLocalisedMetadata",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Metadata = table.Column<string>(type: "json", nullable: false),
+                    ReleaseId = table.Column<int>(type: "integer", nullable: false),
+                    LocaleId = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReleaseLocalisedMetadata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReleaseLocalisedMetadata_Locale_LocaleId",
+                        column: x => x.LocaleId,
+                        principalTable: "Locale",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReleaseLocalisedMetadata_Release_ReleaseId",
+                        column: x => x.ReleaseId,
+                        principalTable: "Release",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Locale_ServiceId",
                 table: "Locale",
@@ -309,13 +337,19 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrganisationUser_OrganisationId",
-                table: "OrganisationUser",
+                name: "IX_OrganisationUsers_Email",
+                table: "OrganisationUsers",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrganisationUsers_OrganisationId",
+                table: "OrganisationUsers",
                 column: "OrganisationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrganisationUser_RoleId",
-                table: "OrganisationUser",
+                name: "IX_OrganisationUsers_RoleId",
+                table: "OrganisationUsers",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
@@ -332,6 +366,16 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 name: "IX_Release_ServiceId",
                 table: "Release",
                 column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReleaseLocalisedMetadata_LocaleId",
+                table: "ReleaseLocalisedMetadata",
+                column: "LocaleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReleaseLocalisedMetadata_ReleaseId",
+                table: "ReleaseLocalisedMetadata",
+                column: "ReleaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReleaseTarget_ServiceId",
@@ -379,10 +423,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Locale");
-
-            migrationBuilder.DropTable(
-                name: "Release");
+                name: "ReleaseLocalisedMetadata");
 
             migrationBuilder.DropTable(
                 name: "ReleaseTrigger");
@@ -394,13 +435,19 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 name: "ServiceUser");
 
             migrationBuilder.DropTable(
+                name: "Locale");
+
+            migrationBuilder.DropTable(
+                name: "Release");
+
+            migrationBuilder.DropTable(
                 name: "ReleaseTarget");
 
             migrationBuilder.DropTable(
-                name: "OrganisationUser");
+                name: "ServiceRole");
 
             migrationBuilder.DropTable(
-                name: "ServiceRole");
+                name: "OrganisationUsers");
 
             migrationBuilder.DropTable(
                 name: "Services");

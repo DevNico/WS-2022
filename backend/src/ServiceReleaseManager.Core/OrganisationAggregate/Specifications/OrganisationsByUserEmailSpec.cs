@@ -2,12 +2,11 @@
 
 namespace ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 
-public sealed class OrganisationsByUserEmailSpec : Specification<OrganisationUser, List<Organisation>>
+public sealed class OrganisationsByUserEmailSpec : Specification<Organisation>
 {
   public OrganisationsByUserEmailSpec(string email)
   {
-    Query.Include(user => user.Organisation);
-    Query.Where(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
-    Query.Select(user => user.);
+    Query.Include(org => org.Users);
+    Query.Where(org => org.Users.Any(user => user.Email == email));
   }
 }

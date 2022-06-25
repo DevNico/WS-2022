@@ -12,8 +12,8 @@ using ServiceReleaseManager.Infrastructure.Data;
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220624085134_Initial")]
-    partial class Initial
+    [Migration("20220625125957_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -142,17 +142,16 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("OrganisationId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("OrganisationUser");
+                    b.ToTable("OrganisationUsers");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Release", b =>
@@ -202,6 +201,39 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Release");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseLocalisedMetadata", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LocaleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<int>("ReleaseId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocaleId");
+
+                    b.HasIndex("ReleaseId");
+
+                    b.ToTable("ReleaseLocalisedMetadata");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
@@ -510,6 +542,25 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("PublishedBy");
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseLocalisedMetadata", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Locale", "Locale")
+                        .WithMany()
+                        .HasForeignKey("LocaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServiceReleaseManager.Core.ReleaseAggregate.Release", "Release")
+                        .WithMany("LocalisedMetadataList")
+                        .HasForeignKey("ReleaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Locale");
+
+                    b.Navigation("Release");
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
                 {
                     b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
@@ -586,6 +637,11 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
             modelBuilder.Entity("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", b =>
                 {
                     b.Navigation("ServiceUser");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Release", b =>
+                {
+                    b.Navigation("LocalisedMetadataList");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>

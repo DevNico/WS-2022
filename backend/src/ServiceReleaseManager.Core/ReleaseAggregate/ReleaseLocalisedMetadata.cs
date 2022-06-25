@@ -8,6 +8,11 @@ namespace ServiceReleaseManager.Core.ReleaseAggregate;
 
 public class ReleaseLocalisedMetadata : EntityBase, IAggregateRoot
 {
+  // Used by EF Core
+  protected ReleaseLocalisedMetadata()
+  {
+  }
+
   public ReleaseLocalisedMetadata(string metadata, Release release, Locale locale)
   {
     Metadata = metadata;

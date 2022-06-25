@@ -6,9 +6,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class GetById : EndpointBase
-  .WithRequest<GetServiceByIdRequest>
-  .WithActionResult<ServiceRecord>
+public class
+  GetById : EndpointBase.WithRequest<GetServiceByIdRequest>.WithActionResult<ServiceRecord>
 {
   private readonly IRepository<Service> _repository;
 

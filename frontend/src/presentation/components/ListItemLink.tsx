@@ -2,13 +2,14 @@ import ListItem, { ListItemProps } from '@mui/material/ListItem/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText/ListItemText';
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, LinkProps } from 'react-router-dom';
 
-interface ListItemLinkProps extends ListItemProps {
-	to: { $: string };
-	text: string;
-	icon?: React.ReactElement;
-}
+type ListItemLinkProps = ListItemProps &
+	Omit<LinkProps, 'to'> & {
+		to: { $: string };
+		text: string;
+		icon?: React.ReactElement;
+	};
 
 const ListItemLink: React.FC<ListItemLinkProps> = ({
 	to,
