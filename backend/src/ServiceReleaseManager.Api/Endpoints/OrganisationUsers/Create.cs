@@ -11,10 +11,10 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUsers;
 public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.WithActionResult<
   OrganisationUserRecord>
 {
-  private readonly IOrganisationUserService _organisationUserService;
-  private readonly IOrganisationService _organisationService;
   private readonly IKeycloakClient _keycloakClient;
   private readonly ILogger<Create> _logger;
+  private readonly IOrganisationService _organisationService;
+  private readonly IOrganisationUserService _organisationUserService;
 
   public Create(IOrganisationUserService organisationUserService, IKeycloakClient keycloakClient,
     ILogger<Create> logger, IOrganisationService organisationService)

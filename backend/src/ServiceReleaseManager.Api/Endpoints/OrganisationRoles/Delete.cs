@@ -1,4 +1,4 @@
-﻿using Ardalis.Result;
+using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
