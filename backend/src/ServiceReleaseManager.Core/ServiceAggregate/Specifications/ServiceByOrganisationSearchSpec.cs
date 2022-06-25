@@ -3,7 +3,7 @@ using ServiceReleaseManager.Core.OrganisationAggregate;
 
 namespace ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 
-public sealed class ServiceByOrganisationSearchSpec : 
+public sealed class ServiceByOrganisationSearchSpec :
   Specification<Organisation, IEnumerable<Service>>, ISingleResultSpecification
 {
   public ServiceByOrganisationSearchSpec(string name)

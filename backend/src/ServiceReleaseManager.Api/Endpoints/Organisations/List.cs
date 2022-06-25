@@ -24,7 +24,8 @@ public class List : EndpointBase.WithRequest<ListOrganisationsRequest>.WithActio
     OperationId = "Organisations.List",
     Tags = new[] { "Organisation" })
   ]
-  [SwaggerResponse(StatusCodes.Status200OK, "Organisations found", typeof(List<OrganisationRecord>))]
+  [SwaggerResponse(StatusCodes.Status200OK, "Organisations found",
+    typeof(List<OrganisationRecord>))]
   public override async Task<ActionResult<List<OrganisationRecord>>> HandleAsync(
     [FromQuery] ListOrganisationsRequest request,
     CancellationToken cancellationToken = new())

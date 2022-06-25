@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
   }
 
   public DbSet<Organisation> Organisations => Set<Organisation>();
+  public DbSet<OrganisationUser> OrganisationUsers => Set<OrganisationUser>();
   public DbSet<Service> Services => Set<Service>();
   public DbSet<ServiceTemplate> ServiceTemplates => Set<ServiceTemplate>();
 

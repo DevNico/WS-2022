@@ -35,9 +35,10 @@ public class Service : EntityBase, IAggregateRoot
   public List<ReleaseTarget> ReleaseTargets { get; set; } = new();
 
   public int OrganisationId { get; set; }
-  
-  [DefaultValue(true)] public bool IsActive { get; set; }
-  
+
+  [DefaultValue(true)]
+  public bool IsActive { get; set; }
+
   public void Deactivate()
   {
     IsActive = false;

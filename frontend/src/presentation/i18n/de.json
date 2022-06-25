@@ -29,6 +29,9 @@
 	"notFoundPage.subtitle": "Leider konnten wir die von Ihnen gesuchte Seite nicht finden. Vielleicht haben Sie sich bei der URL vertippt? Überprüfen Sie bitte Ihre Rechtschreibung.",
 	"notFoundPage.title": "Die Seite wurde nicht gefunden",
 	"organisation": {
+		"card": {
+			"updatedAt": ""
+		},
 		"drawer": {
 			"roles": "",
 			"title": "",

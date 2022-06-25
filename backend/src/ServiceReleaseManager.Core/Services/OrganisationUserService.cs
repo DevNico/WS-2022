@@ -51,11 +51,10 @@ public class OrganisationUserService : IOrganisationUserService
       return Result.NotFound();
     }
 
-    var organisations = await _organisationUserRepository.ListAsync(cancellationToken);
     var spec = new OrganisationUserByOrganisationIdSpec(organisation.Value.Id);
-    var filteredOrganisations = spec.Evaluate(organisations);
+    var organisations = await _organisationUserRepository.ListAsync(spec, cancellationToken);
 
-    return Result.Success(filteredOrganisations.ToList());
+    return Result.Success(organisations.ToList());
   }
 
   public async Task<Result<OrganisationUser>> GetById(int userId,

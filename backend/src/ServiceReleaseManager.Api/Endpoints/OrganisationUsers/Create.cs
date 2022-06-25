@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUsers;
@@ -13,16 +14,22 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
 {
   private readonly IKeycloakClient _keycloakClient;
   private readonly ILogger<Create> _logger;
+  private readonly IReadRepository<OrganisationRole> _organisationRoleRepository;
   private readonly IOrganisationService _organisationService;
   private readonly IOrganisationUserService _organisationUserService;
 
-  public Create(IOrganisationUserService organisationUserService, IKeycloakClient keycloakClient,
-    ILogger<Create> logger, IOrganisationService organisationService)
+  public Create(
+    IOrganisationUserService organisationUserService,
+    IKeycloakClient keycloakClient,
+    ILogger<Create> logger,
+    IOrganisationService organisationService,
+    IReadRepository<OrganisationRole> organisationRoleRepository)
   {
     _organisationUserService = organisationUserService;
     _keycloakClient = keycloakClient;
     _logger = logger;
     _organisationService = organisationService;
+    _organisationRoleRepository = organisationRoleRepository;
   }
 
   private async Task<KeycloakUserFetchResult> GetKeycloakUser(string email)
@@ -43,7 +50,9 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
           "The request to the keycloak client failed with code {Status} and message {Message}",
           e.StatusCode.ToString(), e.Message);
         if (e.InnerException != null)
+        {
           _logger.LogError("Inner exception message: {Message}", e.InnerException.Message);
+        }
 
         return new KeycloakUserFetchResult(null, true);
       }
@@ -61,7 +70,7 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
   ]
   [SwaggerResponse(200, "User created", typeof(OrganisationUserRecord))]
   [SwaggerResponse(400, "Invalid request")]
-  [SwaggerResponse(404, "Organisation or email not found")]
+  [SwaggerResponse(400, "Organisation or email not found")]
   [SwaggerResponse(424, "The keycloak request failed")]
   public override async Task<ActionResult<OrganisationUserRecord>> HandleAsync(
     [FromBody] CreateOrganisationUserRequest request,
@@ -71,12 +80,23 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
       await _organisationService.GetById(request.OrganisationId, cancellationToken);
     if (!organisationResult.IsSuccess)
     {
-      return NotFound();
+      return BadRequest();
     }
+
+    var roleResult =
+      await _organisationRoleRepository.GetByIdAsync(request.RoleId, cancellationToken);
+
+    if (roleResult == null)
+    {
+      return BadRequest();
+    }
+
 
     var keycloakUser = await GetKeycloakUser(request.Email);
     if (keycloakUser.RequestFailed)
+    {
       return StatusCode(StatusCodes.Status424FailedDependency, "Keycloak client request failed");
+    }
 
     if (keycloakUser.User == null)
     {
@@ -97,7 +117,9 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
 
     keycloakUser = await GetKeycloakUser(request.Email);
     if (keycloakUser.RequestFailed)
+    {
       return StatusCode(StatusCodes.Status424FailedDependency, "Keycloak client request failed");
+    }
 
     if (keycloakUser.User == null)
     {
@@ -108,11 +130,11 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
 
     var newUser = new OrganisationUser(
       keycloakUser.User.Id,
-      request.Email,
+      request.Email.ToLower(),
       request.FirstName,
       request.LastName,
-      request.OrganisationId,
-      request.RoleId
+      roleResult,
+      request.OrganisationId
     );
 
     var result = await _organisationUserService.Create(newUser, cancellationToken);
@@ -121,7 +143,7 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
   }
 }
 
-record KeycloakUserFetchResult(
+internal record KeycloakUserFetchResult(
   KeycloakUserRecord? User,
   bool RequestFailed
 );

@@ -6,9 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class Delete : EndpointBase
-  .WithRequest<DeleteServiceRequest>
-  .WithoutResult
+public class Delete : EndpointBase.WithRequest<DeleteServiceRequest>.WithoutResult
 {
   private readonly IRepository<Service> _repository;
 
@@ -16,7 +14,7 @@ public class Delete : EndpointBase
   {
     _repository = repository;
   }
-  
+
   [HttpDelete(DeleteServiceRequest.Route)]
   [SwaggerOperation(
     Description = "Deletes a service",
@@ -27,7 +25,7 @@ public class Delete : EndpointBase
   [SwaggerResponse(204, "The service was deleted")]
   [SwaggerResponse(404, "A service with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
-    [FromRoute] DeleteServiceRequest request, 
+    [FromRoute] DeleteServiceRequest request,
     CancellationToken cancellationToken = new())
   {
     var spec = new ServiceByIdSpec(request.ServiceId);
@@ -36,7 +34,7 @@ public class Delete : EndpointBase
     {
       return NotFound();
     }
-    
+
     service.Deactivate();
 
     await _repository.UpdateAsync(service, cancellationToken);

@@ -35,11 +35,13 @@ const OrganisationDrawer: React.FC = () => {
 				to={homeRoute({}).organisation({ name }).users({})}
 				text={t('organisation.drawer.users')}
 				icon={<CorporateFare />}
+				onClick={handleDrawerToggle}
 			/>
 			<ListItemLink
 				to={homeRoute({}).organisation({ name }).roles({})}
 				text={t('organisation.drawer.roles')}
 				icon={<CorporateFare />}
+				onClick={handleDrawerToggle}
 			/>
 		</List>
 	);

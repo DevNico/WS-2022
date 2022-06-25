@@ -24,14 +24,15 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
   )]
   [SwaggerResponse(200, "The service was created", typeof(ServiceRecord))]
   [SwaggerResponse(400, "A parameter was null or invalid", typeof(ErrorResponse))]
-  public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request, CancellationToken cancellationToken = new())
+  public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request,
+    CancellationToken cancellationToken = new())
   {
     if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length is < 5 or > 50 ||
         string.IsNullOrWhiteSpace(request.Description) || request.Description.Length > 200)
     {
       return BadRequest(new ErrorResponse("A required parameter was null"));
     }
-    
+
     var service = new Service(request.Name, request.Description, request.OrganisationId);
     await _repository.AddAsync(service, cancellationToken);
 
