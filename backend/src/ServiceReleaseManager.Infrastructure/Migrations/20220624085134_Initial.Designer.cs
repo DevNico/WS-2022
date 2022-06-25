@@ -12,8 +12,8 @@ using ServiceReleaseManager.Infrastructure.Data;
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220618163606_20220618183426_InitialMigration")]
-    partial class _20220618183426_InitialMigration
+    [Migration("20220624085134_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -327,6 +327,9 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
