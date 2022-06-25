@@ -261,3 +261,54 @@ export const useOrganisationsGetByName = <
 		...query,
 	};
 };
+
+/**
+ * @summary Get all Organisations the current user is a member of
+ */
+export const organisationsMe = (
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<OrganisationRecord[]>(
+		{ url: `/api/v1/organisations/me`, method: 'get', signal },
+		options
+	);
+};
+
+export const getOrganisationsMeQueryKey = () => [`/api/v1/organisations/me`];
+
+export type OrganisationsMeQueryResult = NonNullable<
+	Awaited<ReturnType<typeof organisationsMe>>
+>;
+export type OrganisationsMeQueryError = ErrorType<void>;
+
+export const useOrganisationsMe = <
+	TData = Awaited<ReturnType<typeof organisationsMe>>,
+	TError = ErrorType<void>
+>(options?: {
+	query?: UseQueryOptions<
+		Awaited<ReturnType<typeof organisationsMe>>,
+		TError,
+		TData
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getOrganisationsMeQueryKey();
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof organisationsMe>>
+	> = ({ signal }) => organisationsMe(requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof organisationsMe>>,
+		TError,
+		TData
+	>(queryKey, queryFn, queryOptions);
+
+	return {
+		queryKey,
+		...query,
+	};
+};

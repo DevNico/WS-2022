@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import keycloak from '../kc';
+import { keycloakClient } from '../presentation/Root';
 
 export const AXIOS_INSTANCE = Axios.create({
 	baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -15,7 +15,7 @@ export const customInstance = <T>(
 		...config,
 		...options,
 		headers: {
-			Authorization: `Bearer ${keycloak.token}`,
+			Authorization: `Bearer ${keycloakClient.token}`,
 			...config.headers,
 			...options?.headers,
 		},

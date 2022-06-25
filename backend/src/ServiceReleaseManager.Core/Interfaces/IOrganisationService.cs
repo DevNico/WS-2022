@@ -13,6 +13,9 @@ public interface IOrganisationService
   public Task<Result<List<Organisation>>> List(bool includeDeactivated,
     CancellationToken cancellationToken);
 
+  public Task<Result<List<Organisation>>> ListByUserEmail(string userEmail,
+    CancellationToken cancellationToken);
+
   public Task<Result<Organisation>> Create(string routeName, CancellationToken cancellationToken);
 
   public Task<Result> Update(Organisation organisation, CancellationToken cancellationToken);

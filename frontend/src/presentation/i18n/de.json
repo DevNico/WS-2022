@@ -1,11 +1,146 @@
 {
+	"admin": {
+		"organisations": {
+			"title": ""
+		}
+	},
+	"appbar": {
+		"admin": "",
+		"usermenu": {
+			"logout": "Abmelden"
+		}
+	},
+	"common": {
+		"error": {
+			"loading": ""
+		},
+		"loading": "",
+		"submit": ""
+	},
+	"common.retry": "Erneut versuchen",
+	"home.noOrganisations": "Keine Organisationen gefunden, Sie müssen zuerst zu einer Organisation eingeladen werden!",
+	"homeLayout": {
+		"organisations": "Organisationen",
+		"roles": "",
+		"users": "Benutzer"
+	},
+	"login": "Anmelden",
 	"notFoundPage.goToHome": "Zurück zur Startseite",
 	"notFoundPage.subtitle": "Leider konnten wir die von Ihnen gesuchte Seite nicht finden. Vielleicht haben Sie sich bei der URL vertippt? Überprüfen Sie bitte Ihre Rechtschreibung.",
 	"notFoundPage.title": "Die Seite wurde nicht gefunden",
-	"login": "Anmelden",
-	"logout": "Abmelden",
-	"homeLayout": {
-		"organisations": "Organisationen",
-		"users": "Benutzer"
+	"organisation": {
+		"drawer": {
+			"roles": "",
+			"title": "",
+			"users": ""
+		},
+		"roles": {
+			"create": {
+				"error": "",
+				"name": "",
+				"organisation": "",
+				"permissions": "",
+				"service": "",
+				"serviceDelete": "",
+				"serviceWrite": "",
+				"success": "",
+				"title": "",
+				"user": "",
+				"userDelete": "",
+				"userRead": "",
+				"userWrite": ""
+			},
+			"list": {
+				"create": "",
+				"error": "",
+				"noData": "",
+				"title": ""
+			}
+		},
+		"users": {
+			"create": {
+				"error": "",
+				"firstName": "",
+				"lastName": "",
+				"organisation": "",
+				"role": "",
+				"submit": "",
+				"success": "",
+				"title": ""
+			},
+			"list": {
+				"create": "",
+				"email": "",
+				"error": "",
+				"firstName": "",
+				"lastName": "",
+				"lastSignIn": "",
+				"noData": "",
+				"organisation": "",
+				"title": ""
+			}
+		}
+	},
+	"organisation_drawer": {},
+	"organisations": {
+		"create": {
+			"error": "",
+			"name": "",
+			"submit": "",
+			"success": "",
+			"title": ""
+		},
+		"list": {
+			"actions": "",
+			"create": "Organisation erstellen",
+			"createdAt": "Erstellt am",
+			"description": "",
+			"name": "",
+			"noData": "Keine Organisationen gefunden"
+		}
+	},
+	"roles": {
+		"create": {
+			"error": "",
+			"name": "",
+			"organisation": "",
+			"permissions": "",
+			"serviceDelete": "",
+			"serviceWrite": "",
+			"success": "",
+			"title": "",
+			"userDelete": "",
+			"userRead": "",
+			"userWrite": ""
+		},
+		"list": {
+			"create": "",
+			"noData": ""
+		}
+	},
+	"unauthorizedPage": {
+		"subtitle": "",
+		"title": ""
+	},
+	"users": {
+		"create": {
+			"error": "",
+			"firstName": "",
+			"lastName": "",
+			"organisation": "",
+			"role": "",
+			"submit": "",
+			"success": ""
+		},
+		"list": {
+			"create": "",
+			"email": "",
+			"error": "",
+			"firstName": "",
+			"lastName": "",
+			"lastSignIn": "",
+			"noData": "",
+			"organisation": ""
+		}
 	}
 }

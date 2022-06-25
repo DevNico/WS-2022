@@ -42,10 +42,12 @@ resource "keycloak_realm" "keycloak_env" {
   }
 
   smtp_server {
-    host = "smtp.sendgrid.net"
-    from = "no-reply@srm.devnico.cloud"
-    ssl  = true
-    port = 465
+    host              = "smtp.sendgrid.net"
+    from_display_name = "Service Release Manager"
+    from              = "no-reply@srm.devnico.cloud"
+    ssl               = false
+    starttls          = true
+    port              = 587
     auth {
       username = "apikey"
       password = data.google_secret_manager_secret_version.sengrid_api_key.secret_data

@@ -20,7 +20,7 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 
     builder
       .HasMany(organisation => organisation.Users)
-      .WithOne()
+      .WithOne(user => user.Organisation)
       .HasForeignKey(user => user.OrganisationId)
       .IsRequired();
 

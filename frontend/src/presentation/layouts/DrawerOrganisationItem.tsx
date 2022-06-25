@@ -1,18 +1,16 @@
 import React from 'react';
 import {
-	Collapse,
-	List,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-} from '@mui/material';
-import {
 	CorporateFare,
 	ExpandLess,
 	ExpandMore,
 	Person,
 } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ListItemButton from '@mui/material/ListItemButton/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText/ListItemText';
+import List from '@mui/material/List/List';
+import Collapse from '@mui/material/Collapse/Collapse';
 
 interface DrawerOrganisationItemProps {
 	organisationName: string;
