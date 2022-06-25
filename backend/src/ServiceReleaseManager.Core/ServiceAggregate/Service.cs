@@ -28,11 +28,7 @@ public class Service : EntityBase, IAggregateRoot
 
   public List<Locale> Locales { get; set; } = new();
 
-  public List<ServiceUser> ServiceUsers { get; set; } = new();
-
   public List<Release> Releases { get; set; } = new();
-
-  public List<ReleaseTarget> ReleaseTargets { get; set; } = new();
 
   public int OrganisationId { get; set; }
   

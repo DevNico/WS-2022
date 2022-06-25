@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
-    public partial class Initial : Migration
+    public partial class _20220625140022 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -175,29 +175,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReleaseTarget",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    RequiresApproval = table.Column<bool>(type: "boolean", nullable: false),
-                    ServiceId = table.Column<int>(type: "integer", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReleaseTarget", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ReleaseTarget_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Release",
                 columns: table => new
                 {
@@ -261,35 +238,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         principalTable: "ServiceRole",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ServiceUser_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ReleaseTrigger",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Event = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Url = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
-                    ReleaseTargetId = table.Column<int>(type: "integer", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReleaseTrigger", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ReleaseTrigger_ReleaseTarget_ReleaseTargetId",
-                        column: x => x.ReleaseTargetId,
-                        principalTable: "ReleaseTarget",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -334,16 +282,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReleaseTarget_ServiceId",
-                table: "ReleaseTarget",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReleaseTrigger_ReleaseTargetId",
-                table: "ReleaseTrigger",
-                column: "ReleaseTargetId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ServiceRole_Name",
                 table: "ServiceRole",
                 column: "Name",
@@ -366,11 +304,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 column: "OrganisationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceUser_ServiceId",
-                table: "ServiceUser",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ServiceUser_ServiceRoleId",
                 table: "ServiceUser",
                 column: "ServiceRoleId");
@@ -385,25 +318,19 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 name: "Release");
 
             migrationBuilder.DropTable(
-                name: "ReleaseTrigger");
-
-            migrationBuilder.DropTable(
                 name: "ServiceTemplates");
 
             migrationBuilder.DropTable(
                 name: "ServiceUser");
 
             migrationBuilder.DropTable(
-                name: "ReleaseTarget");
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "OrganisationUser");
 
             migrationBuilder.DropTable(
                 name: "ServiceRole");
-
-            migrationBuilder.DropTable(
-                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "OrganisationRole");

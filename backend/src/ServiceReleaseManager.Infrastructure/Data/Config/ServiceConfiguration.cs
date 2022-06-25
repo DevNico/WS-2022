@@ -14,11 +14,11 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
       .HasForeignKey(l => l.ServiceId)
       .IsRequired();
 
-    builder
+    /*builder
       .HasMany(service => service.ServiceUsers)
       .WithOne()
       .HasForeignKey(l => l.ServiceId)
-      .IsRequired();
+      .IsRequired();*/
 
     builder
       .HasMany(service => service.Releases)
@@ -26,10 +26,10 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
       .HasForeignKey(release => release.ServiceId)
       .IsRequired();
 
-    builder
+    /*builder
       .HasMany(service => service.ReleaseTargets)
       .WithOne()
       .HasForeignKey(release => release.ServiceId)
-      .IsRequired();
+      .IsRequired();*/
   }
 }

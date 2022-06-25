@@ -253,6 +253,86 @@
 				]
 			}
 		},
+		"/api/v1/services": {
+			"post": {
+				"tags": ["ServiceEndpoints"],
+				"summary": "Create a service",
+				"description": "Create a service",
+				"operationId": "Service.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceRequest"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceRequest"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The service was created",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "A parameter was null or invalid",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/api/v1/organisation-users": {
 			"post": {
 				"tags": ["OrganisationUser"],
@@ -567,6 +647,97 @@
 				]
 			}
 		},
+		"/api/v1/services/{ServiceId}": {
+			"delete": {
+				"tags": ["ServiceEndpoints"],
+				"summary": "Deletes a service by its id",
+				"description": "Deletes a service",
+				"operationId": "Service.Delete",
+				"parameters": [
+					{
+						"name": "ServiceId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "The service was deleted"
+					},
+					"404": {
+						"description": "A service with the given id was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["ServiceEndpoints"],
+				"summary": "Get a service",
+				"description": "Get a service by its id",
+				"operationId": "Service.GetById",
+				"parameters": [
+					{
+						"name": "ServiceId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The service was found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The service was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/api/v1/organisation-users/{OrganisationUserId}": {
 			"delete": {
 				"tags": ["OrganisationUser"],
@@ -753,8 +924,14 @@
 					}
 				],
 				"responses": {
-					"200": {
-						"description": "Success"
+					"201": {
+						"description": "OrganisationRole deleted"
+					},
+					"404": {
+						"description": "OrganisationRole not found"
+					},
+					"409": {
+						"description": "A User exists depending on this role"
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -978,6 +1155,55 @@
 				]
 			}
 		},
+		"/api/v1/organisations/me": {
+			"get": {
+				"tags": ["Organisation"],
+				"summary": "Get all Organisations the current user is a member of",
+				"operationId": "Organisations.Me",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/OrganisationRecord"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/api/v1/organisations/{OrganisationRouteName}/roles": {
 			"get": {
 				"tags": ["OrganisationRole"],
@@ -1096,11 +1322,22 @@
 				]
 			}
 		},
-		"/api/v1/organisations/me": {
+		"/api/v1/organisations/{OrganisationRouteName}/services": {
 			"get": {
-				"tags": ["Organisation"],
-				"summary": "Get all Organisations the current user is a member of",
-				"operationId": "Organisations.Me",
+				"tags": ["ServiceEndpoints"],
+				"summary": "List all services",
+				"description": "List all services",
+				"operationId": "Service.List",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
 						"description": "Success",
@@ -1109,7 +1346,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/OrganisationRecord"
+										"$ref": "#/components/schemas/ServiceRecord"
 									}
 								}
 							},
@@ -1117,7 +1354,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/OrganisationRecord"
+										"$ref": "#/components/schemas/ServiceRecord"
 									}
 								}
 							},
@@ -1125,7 +1362,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/OrganisationRecord"
+										"$ref": "#/components/schemas/ServiceRecord"
 									}
 								}
 							}
@@ -1252,6 +1489,23 @@
 						"type": "string"
 					},
 					"roleId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"additionalProperties": false
+			},
+			"CreateServiceRequest": {
+				"required": ["description", "name", "organisationId"],
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"organisationId": {
 						"type": "integer",
 						"format": "int32"
 					}
@@ -1423,6 +1677,24 @@
 					"lastSignIn": {
 						"type": "string",
 						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"additionalProperties": false
+			},
+			"ServiceRecord": {
+				"type": "object",
+				"properties": {
+					"serviceId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
 						"nullable": true
 					}
 				},

@@ -202,77 +202,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.ToTable("Release");
                 });
 
-            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<bool>("RequiresApproval")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("ReleaseTarget");
-                });
-
-            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTrigger", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Event")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int?>("ReleaseTargetId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReleaseTargetId");
-
-                    b.ToTable("ReleaseTrigger");
-                });
-
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Locale", b =>
                 {
                     b.Property<int>("Id")
@@ -454,8 +383,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.HasIndex("OrganisationUserId");
 
-                    b.HasIndex("ServiceId");
-
                     b.HasIndex("ServiceRoleId");
 
                     b.ToTable("ServiceUser");
@@ -508,22 +435,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("PublishedBy");
                 });
 
-            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
-                {
-                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
-                        .WithMany("ReleaseTargets")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTrigger", b =>
-                {
-                    b.HasOne("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", null)
-                        .WithMany("ReleaseTriggers")
-                        .HasForeignKey("ReleaseTargetId");
-                });
-
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Locale", b =>
                 {
                     b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
@@ -547,12 +458,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", "OrganisationUser")
                         .WithMany("ServiceUser")
                         .HasForeignKey("OrganisationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
-                        .WithMany("ServiceUsers")
-                        .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -586,20 +491,11 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("ServiceUser");
                 });
 
-            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTarget", b =>
-                {
-                    b.Navigation("ReleaseTriggers");
-                });
-
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Service", b =>
                 {
                     b.Navigation("Locales");
 
-                    b.Navigation("ReleaseTargets");
-
                     b.Navigation("Releases");
-
-                    b.Navigation("ServiceUsers");
                 });
 #pragma warning restore 612, 618
         }

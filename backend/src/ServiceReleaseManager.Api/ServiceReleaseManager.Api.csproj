@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ServiceReleaseManager.Api</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <UserSecretsId>b9ade106-0cde-432f-81a2-6cf601f78ad5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
