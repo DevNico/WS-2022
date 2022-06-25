@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Endpoints.Releases;
 using ServiceReleaseManager.Core.ReleaseAggregate;
+using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
+using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,11 +13,13 @@ namespace ServiceReleaseManager.Api.Endpoints.Services;
 public class List : EndpointBaseAsync.WithRequest<ListReleasesByServiceId>.WithActionResult<
   List<ReleaseRecord>>
 {
-  private readonly IRepository<Release> _repository;
+  private readonly IRepository<Release> _releaseRepository;
+  private readonly IRepository<Service> _serviceRepository;
 
-  public List(IRepository<Release> repository)
+  public List(IRepository<Release> releaseRepository, IRepository<Service> serviceRepository)
   {
-    _repository = repository;
+    _releaseRepository = releaseRepository;
+    _serviceRepository = serviceRepository;
   }
 
   [HttpGet(ListReleasesByServiceId.Route)]
@@ -25,14 +29,25 @@ public class List : EndpointBaseAsync.WithRequest<ListReleasesByServiceId>.WithA
     OperationId = "Releases.List",
     Tags = new[] { "Release Endpoints" })
   ]
+  [SwaggerResponse(StatusCodes.Status200OK, "List of Releases",
+    typeof(List<ReleaseRecord>))]
   public override async Task<ActionResult<List<ReleaseRecord>>> HandleAsync(
     [FromRoute] ListReleasesByServiceId request,
     CancellationToken cancellationToken = new())
   {
-    var releases = await _repository.ListAsync(cancellationToken);
+    var service = await _serviceRepository.GetByIdAsync(request.ServiceId, cancellationToken);
+
+    // TODO: Service Authorization
+    if (service == null)
+    {
+      return BadRequest("Service id not found");
+    }
+
+    var releaseByServiceIdSpec = new ReleaseByServiceIdSpec(request.ServiceId);
+    var allReleases = await _releaseRepository.ListAsync(cancellationToken);
+    var releases = releaseByServiceIdSpec.Evaluate(allReleases);
 
     var response = releases
-      .Where(r => r.ServiceId == request.ServiceId)
       .Select(ReleaseRecord.FromEntity)
       .ToList();
 
