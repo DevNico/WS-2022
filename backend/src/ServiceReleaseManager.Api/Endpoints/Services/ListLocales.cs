@@ -21,7 +21,7 @@ public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceId>.With
   [SwaggerOperation(
     Summary = "List all locales",
     OperationId = "Locales.List",
-    Tags = new[] { "Locale" }
+    Tags = new[] { "Service" }
   )]
   [SwaggerResponse(200, "Locales found", typeof(List<LocaleRecord>))]
   [SwaggerResponse(404, "The service was not found")]

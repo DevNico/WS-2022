@@ -17,6 +17,10 @@ public class ReleaseLocalisedMetadata : EntityBase, IAggregateRoot
     Locale = locale;
   }
 
+  public ReleaseLocalisedMetadata()
+  {
+  }
+
   [Required]
   [Column(TypeName = "json")]
   public string Metadata { get; set; }

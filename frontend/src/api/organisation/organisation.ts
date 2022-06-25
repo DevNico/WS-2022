@@ -18,6 +18,8 @@ import type {
 	OrganisationRecord,
 	CreateOrganisationRequest,
 	OrganisationsListParams,
+	ServiceRoleRecord,
+	ServiceRecord,
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
@@ -306,6 +308,139 @@ export const useOrganisationsMe = <
 		TError,
 		TData
 	>(queryKey, queryFn, queryOptions);
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * @summary Get all service roles by their id
+ */
+export const organisationListServiceRoles = (
+	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceRoleRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/service-roles`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getOrganisationListServiceRolesQueryKey = (
+	organisationRouteName: string
+) => [`/api/v1/organisations/${organisationRouteName}/service-roles`];
+
+export type OrganisationListServiceRolesQueryResult = NonNullable<
+	Awaited<ReturnType<typeof organisationListServiceRoles>>
+>;
+export type OrganisationListServiceRolesQueryError = ErrorType<void>;
+
+export const useOrganisationListServiceRoles = <
+	TData = Awaited<ReturnType<typeof organisationListServiceRoles>>,
+	TError = ErrorType<void>
+>(
+	organisationRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof organisationListServiceRoles>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getOrganisationListServiceRolesQueryKey(organisationRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof organisationListServiceRoles>>
+	> = ({ signal }) =>
+		organisationListServiceRoles(
+			organisationRouteName,
+			requestOptions,
+			signal
+		);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof organisationListServiceRoles>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * List all services
+ * @summary List all services
+ */
+export const organisationListServices = (
+	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/services`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getOrganisationListServicesQueryKey = (
+	organisationRouteName: string
+) => [`/api/v1/organisations/${organisationRouteName}/services`];
+
+export type OrganisationListServicesQueryResult = NonNullable<
+	Awaited<ReturnType<typeof organisationListServices>>
+>;
+export type OrganisationListServicesQueryError = ErrorType<void>;
+
+export const useOrganisationListServices = <
+	TData = Awaited<ReturnType<typeof organisationListServices>>,
+	TError = ErrorType<void>
+>(
+	organisationRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof organisationListServices>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getOrganisationListServicesQueryKey(organisationRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof organisationListServices>>
+	> = ({ signal }) =>
+		organisationListServices(organisationRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof organisationListServices>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
 
 	return {
 		queryKey,

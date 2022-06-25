@@ -27,5 +27,17 @@ public class DefaultCoreModule : Module
     builder.RegisterType<ServiceService>()
       .As<IServiceService>()
       .InstancePerLifetimeScope();
+
+    builder.RegisterType<ReleaseService>()
+      .As<IReleaseService>()
+      .InstancePerLifetimeScope();
+
+    builder.RegisterType<ServiceUserService>()
+      .As<IServiceUserService>()
+      .InstancePerLifetimeScope();
+    
+    builder.RegisterType<ServiceRoleService>()
+      .As<IServiceRoleService>()
+      .InstancePerLifetimeScope();
   }
 }

@@ -23,8 +23,8 @@ public class ListServices : EndpointBase
   [SwaggerOperation(
     Summary = "List all services",
     Description = "List all services",
-    OperationId = "Service.List",
-    Tags = new[] { "ServiceEndpoints" }
+    OperationId = "Organisation.ListServices",
+    Tags = new[] { "Organisation" }
   )]
   [SwaggerResponse(200, "Success", typeof(List<ServiceRecord>))]
   public override async Task<ActionResult<List<ServiceRecord>>> HandleAsync(

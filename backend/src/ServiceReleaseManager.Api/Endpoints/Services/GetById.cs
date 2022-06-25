@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ardalis.Result.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
+using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -10,11 +13,11 @@ public class GetById : EndpointBase
   .WithRequest<GetServiceByIdRequest>
   .WithActionResult<ServiceRecord>
 {
-  private readonly IRepository<Service> _repository;
+  private readonly IServiceService _service;
 
-  public GetById(IRepository<Service> repository)
+  public GetById(IServiceService service)
   {
-    _repository = repository;
+    _service = service;
   }
 
   [HttpGet(GetServiceByIdRequest.Route)]
@@ -22,7 +25,7 @@ public class GetById : EndpointBase
     Summary = "Get a service",
     Description = "Get a service by its id",
     OperationId = "Service.GetById",
-    Tags = new[] { "ServiceEndpoints" }
+    Tags = new[] { "Service" }
   )]
   [SwaggerResponse(200, "The service was found", typeof(ServiceRecord))]
   [SwaggerResponse(404, "The service was not found")]
@@ -30,14 +33,7 @@ public class GetById : EndpointBase
     [FromRoute] GetServiceByIdRequest request,
     CancellationToken cancellationToken = new())
   {
-    var spec = new ServiceByIdSpec(request.ServiceId);
-    var service = await _repository.GetBySpecAsync(spec, cancellationToken);
-    if (service == null)
-    {
-      return NotFound();
-    }
-
-    var response = ServiceRecord.FromEntity(service);
-    return Ok(response);
+    var service = await _service.GetById(request.ServiceId, cancellationToken);
+    return this.ToActionResult(service.MapValue(ServiceRecord.FromEntity));
   }
 }

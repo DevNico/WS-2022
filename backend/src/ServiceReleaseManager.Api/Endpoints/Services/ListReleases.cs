@@ -1,56 +1,35 @@
-﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Api.Endpoints.Releases;
-using ServiceReleaseManager.Core.ReleaseAggregate;
-using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
-using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.SharedKernel.Interfaces;
+using ServiceReleaseManager.Core.Interfaces;
+using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class List : EndpointBaseAsync.WithRequest<ListReleasesByServiceId>.WithActionResult<
-  List<ReleaseRecord>>
+public class List : EndpointBase
+  .WithRequest<ListReleasesByServiceId>
+  .WithActionResult<List<ReleaseRecord>>
 {
-  private readonly IRepository<Release> _releaseRepository;
-  private readonly IRepository<Service> _serviceRepository;
+  private readonly IReleaseService _service;
 
-  public List(IRepository<Release> releaseRepository, IRepository<Service> serviceRepository)
+  public List(IReleaseService service)
   {
-    _releaseRepository = releaseRepository;
-    _serviceRepository = serviceRepository;
+    _service = service;
   }
 
   [HttpGet(ListReleasesByServiceId.Route)]
-  [Authorize]
   [SwaggerOperation(
     Summary = "Gets a list of all Releases",
-    OperationId = "Releases.List",
-    Tags = new[] { "Release Endpoints" })
+    OperationId = "Services.ListReleases",
+    Tags = new[] { "Service" })
   ]
-  [SwaggerResponse(StatusCodes.Status200OK, "List of Releases",
-    typeof(List<ReleaseRecord>))]
+  [SwaggerResponse(200, "List of Releases", typeof(List<ReleaseRecord>))]
+  [SwaggerResponse(404, "Service id not found")]
   public override async Task<ActionResult<List<ReleaseRecord>>> HandleAsync(
     [FromRoute] ListReleasesByServiceId request,
     CancellationToken cancellationToken = new())
   {
-    var service = await _serviceRepository.GetByIdAsync(request.ServiceId, cancellationToken);
-
-    // TODO: Service Authorization
-    if (service == null)
-    {
-      return BadRequest("Service id not found");
-    }
-
-    var releaseByServiceIdSpec = new ReleaseByServiceIdSpec(request.ServiceId);
-    var allReleases = await _releaseRepository.ListAsync(cancellationToken);
-    var releases = releaseByServiceIdSpec.Evaluate(allReleases);
-
-    var response = releases
-      .Select(ReleaseRecord.FromEntity)
-      .ToList();
-
-    return Ok(response);
+    var releases = await _service.GetByServiceId(request.ServiceId, cancellationToken);
+    return this.ToActionResult(releases.MapValue(r => r.ConvertAll(ReleaseRecord.FromEntity)));
   }
 }

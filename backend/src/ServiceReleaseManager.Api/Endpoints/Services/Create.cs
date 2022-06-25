@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ardalis.Result.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -6,13 +8,15 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionResult<ServiceRecord>
+public class Create : EndpointBase
+  .WithRequest<CreateServiceRequest>
+  .WithActionResult<ServiceRecord>
 {
-  private readonly IRepository<Service> _repository;
+  private readonly IServiceService _service;
 
-  public Create(IRepository<Service> repository)
+  public Create(IServiceService service)
   {
-    _repository = repository;
+    _service = service;
   }
 
   [HttpPost]
@@ -20,21 +24,27 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
     Summary = "Create a service",
     Description = "Create a service",
     OperationId = "Service.Create",
-    Tags = new[] { "ServiceEndpoints" }
+    Tags = new[] { "Service" }
   )]
   [SwaggerResponse(200, "The service was created", typeof(ServiceRecord))]
   [SwaggerResponse(400, "A parameter was null or invalid", typeof(ErrorResponse))]
-  public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request, CancellationToken cancellationToken = new())
+  [SwaggerResponse(409, "A service with the same name and organisation already exists",
+    typeof(ErrorResponse))]
+  public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request,
+    CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length is < 5 or > 50 ||
-        string.IsNullOrWhiteSpace(request.Description) || request.Description.Length > 200)
+    var found =
+      await _service.GetByNameAndOrganisationId(request.Name, request.OrganisationId,
+        cancellationToken);
+    if (found.IsSuccess)
     {
-      return BadRequest(new ErrorResponse("A required parameter was null"));
+      return Conflict(
+        new ErrorResponse("A service with the same name and organisation already exists"));
     }
-    
-    var service = new Service(request.Name, request.Description, request.OrganisationId);
-    await _repository.AddAsync(service, cancellationToken);
 
-    return Ok(ServiceRecord.FromEntity(service));
+    var service = new Service(request.Name, request.Description, request.OrganisationId);
+    var created = await _service.Create(service, cancellationToken);
+
+    return this.ToActionResult(created.MapValue(ServiceRecord.FromEntity));
   }
 }

@@ -12,8 +12,8 @@ using ServiceReleaseManager.Infrastructure.Data;
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220625120044_20220625140022")]
-    partial class _20220625140022
+    [Migration("20220625204459_20220625224415")]
+    partial class _20220625224415
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -204,6 +204,39 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.ToTable("Release");
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseLocalisedMetadata", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LocaleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasColumnType("json");
+
+                    b.Property<int>("ReleaseId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocaleId");
+
+                    b.HasIndex("ReleaseId");
+
+                    b.ToTable("ReleaseLocalisedMetadata");
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Locale", b =>
                 {
                     b.Property<int>("Id")
@@ -289,10 +322,16 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<int>("OrganisationId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("ReleaseApprove")
                         .HasColumnType("boolean");
@@ -316,6 +355,8 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("OrganisationId");
 
                     b.ToTable("ServiceRole");
                 });
@@ -369,6 +410,9 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("OrganisationUserId")
                         .HasColumnType("integer");
 
@@ -384,6 +428,8 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrganisationUserId");
+
+                    b.HasIndex("ServiceId");
 
                     b.HasIndex("ServiceRoleId");
 
@@ -437,6 +483,25 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("PublishedBy");
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseLocalisedMetadata", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Locale", "Locale")
+                        .WithMany()
+                        .HasForeignKey("LocaleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServiceReleaseManager.Core.ReleaseAggregate.Release", "Release")
+                        .WithMany("LocalisedMetadataList")
+                        .HasForeignKey("ReleaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Locale");
+
+                    b.Navigation("Release");
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Locale", b =>
                 {
                     b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
@@ -455,11 +520,26 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", null)
+                        .WithMany("ServiceRoles")
+                        .HasForeignKey("OrganisationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceUser", b =>
                 {
                     b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", "OrganisationUser")
                         .WithMany("ServiceUser")
                         .HasForeignKey("OrganisationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", null)
+                        .WithMany("Users")
+                        .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -478,6 +558,8 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 {
                     b.Navigation("Roles");
 
+                    b.Navigation("ServiceRoles");
+
                     b.Navigation("Services");
 
                     b.Navigation("Users");
@@ -493,11 +575,18 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("ServiceUser");
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Release", b =>
+                {
+                    b.Navigation("LocalisedMetadataList");
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Service", b =>
                 {
                     b.Navigation("Locales");
 
                     b.Navigation("Releases");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

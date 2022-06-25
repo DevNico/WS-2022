@@ -30,6 +30,8 @@ public class Service : EntityBase, IAggregateRoot
 
   public List<Release> Releases { get; set; } = new();
 
+  public List<ServiceUser> Users { get; set; } = new();
+
   public int OrganisationId { get; set; }
   
   [DefaultValue(true)] public bool IsActive { get; set; }

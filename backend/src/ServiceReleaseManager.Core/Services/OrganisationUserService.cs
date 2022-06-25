@@ -40,6 +40,14 @@ public class OrganisationUserService : IOrganisationUserService
     return Result.Success(createdUser);
   }
 
+  public async Task<Result<List<OrganisationUser>>> GetByEmail(string email,
+    CancellationToken cancellationToken)
+  {
+    var spec = new OrganisationUsersByEmailSpec(email);
+    var result = await _organisationUserRepository.ListAsync(spec, cancellationToken);
+    return result;
+  }
+
   public async Task<Result<List<OrganisationUser>>> ListByOrganisationRouteName(string
     organisationRouteName, CancellationToken cancellationToken)
   {

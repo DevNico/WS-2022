@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
-    public partial class _20220625140022 : Migration
+    public partial class _20220625224415 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,26 +25,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Organisations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServiceRole",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    ReleaseCreate = table.Column<bool>(type: "boolean", nullable: false),
-                    ReleaseApprove = table.Column<bool>(type: "boolean", nullable: false),
-                    ReleasePublish = table.Column<bool>(type: "boolean", nullable: false),
-                    ReleaseMetadataEdit = table.Column<bool>(type: "boolean", nullable: false),
-                    ReleaseLocalizedMetadataEdit = table.Column<bool>(type: "boolean", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceRole", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,6 +66,34 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     table.PrimaryKey("PK_OrganisationRole", x => x.Id);
                     table.ForeignKey(
                         name: "FK_OrganisationRole_Organisations_OrganisationId",
+                        column: x => x.OrganisationId,
+                        principalTable: "Organisations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServiceRole",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    ReleaseCreate = table.Column<bool>(type: "boolean", nullable: false),
+                    ReleaseApprove = table.Column<bool>(type: "boolean", nullable: false),
+                    ReleasePublish = table.Column<bool>(type: "boolean", nullable: false),
+                    ReleaseMetadataEdit = table.Column<bool>(type: "boolean", nullable: false),
+                    ReleaseLocalizedMetadataEdit = table.Column<bool>(type: "boolean", nullable: false),
+                    OrganisationId = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceRole", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServiceRole_Organisations_OrganisationId",
                         column: x => x.OrganisationId,
                         principalTable: "Organisations",
                         principalColumn: "Id",
@@ -220,6 +228,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     ServiceRoleId = table.Column<int>(type: "integer", nullable: false),
                     OrganisationUserId = table.Column<int>(type: "integer", nullable: false),
                     ServiceId = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -236,6 +245,41 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         name: "FK_ServiceUser_ServiceRole_ServiceRoleId",
                         column: x => x.ServiceRoleId,
                         principalTable: "ServiceRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ServiceUser_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReleaseLocalisedMetadata",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Metadata = table.Column<string>(type: "json", nullable: false),
+                    ReleaseId = table.Column<int>(type: "integer", nullable: false),
+                    LocaleId = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReleaseLocalisedMetadata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReleaseLocalisedMetadata_Locale_LocaleId",
+                        column: x => x.LocaleId,
+                        principalTable: "Locale",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReleaseLocalisedMetadata_Release_ReleaseId",
+                        column: x => x.ReleaseId,
+                        principalTable: "Release",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -282,10 +326,25 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReleaseLocalisedMetadata_LocaleId",
+                table: "ReleaseLocalisedMetadata",
+                column: "LocaleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReleaseLocalisedMetadata_ReleaseId",
+                table: "ReleaseLocalisedMetadata",
+                column: "ReleaseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceRole_Name",
                 table: "ServiceRole",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceRole_OrganisationId",
+                table: "ServiceRole",
+                column: "OrganisationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_OrganisationId",
@@ -304,6 +363,11 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 column: "OrganisationUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ServiceUser_ServiceId",
+                table: "ServiceUser",
+                column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceUser_ServiceRoleId",
                 table: "ServiceUser",
                 column: "ServiceRoleId");
@@ -312,10 +376,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Locale");
-
-            migrationBuilder.DropTable(
-                name: "Release");
+                name: "ReleaseLocalisedMetadata");
 
             migrationBuilder.DropTable(
                 name: "ServiceTemplates");
@@ -324,13 +385,19 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 name: "ServiceUser");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "Locale");
+
+            migrationBuilder.DropTable(
+                name: "Release");
+
+            migrationBuilder.DropTable(
+                name: "ServiceRole");
 
             migrationBuilder.DropTable(
                 name: "OrganisationUser");
 
             migrationBuilder.DropTable(
-                name: "ServiceRole");
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "OrganisationRole");
