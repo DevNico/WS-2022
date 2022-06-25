@@ -12,7 +12,7 @@ public static class KebabNamespace
     options.Conventions.Add(new CustomRouteToken(
       "namespace", (Func<ControllerModel, string>)(c =>
       {
-        string str = c.ControllerType.Namespace ?? String.Empty;
+        var str = c.ControllerType.Namespace ?? String.Empty;
         return str.Split(new[] { '.' }).Last().PascalToKebabCase();
       })));
     return options;
@@ -21,7 +21,9 @@ public static class KebabNamespace
   private static string PascalToKebabCase(this string str)
   {
     if (string.IsNullOrEmpty(str))
+    {
       return string.Empty;
+    }
 
     var builder = new StringBuilder();
     builder.Append(char.ToLower(str.First()));
@@ -49,27 +51,27 @@ public static class KebabNamespace
 
     public CustomRouteToken(string tokenName, Func<ControllerModel, string?> valueGenerator)
     {
-      this._tokenRegex = "(\\[" + tokenName + "])(?<!\\[\\1(?=]))";
-      this._valueGenerator = valueGenerator;
+      _tokenRegex = "(\\[" + tokenName + "])(?<!\\[\\1(?=]))";
+      _valueGenerator = valueGenerator;
     }
 
     public void Apply(ApplicationModel application)
     {
-      foreach (ControllerModel controller in (IEnumerable<ControllerModel>)application.Controllers)
+      foreach (var controller in application.Controllers)
       {
-        string? tokenValue = this._valueGenerator(controller);
-        this.UpdateSelectors((IEnumerable<SelectorModel>)controller.Selectors, tokenValue);
-        this.UpdateSelectors(
-          controller.Actions.SelectMany<ActionModel, SelectorModel>(
-            (Func<ActionModel, IEnumerable<SelectorModel>>)(a =>
-              (IEnumerable<SelectorModel>)a.Selectors)), tokenValue);
+        var tokenValue = _valueGenerator(controller);
+        UpdateSelectors(controller.Selectors, tokenValue);
+        UpdateSelectors(
+          controller.Actions.SelectMany(
+            a =>
+              a.Selectors), tokenValue);
       }
     }
 
     private void UpdateSelectors(IEnumerable<SelectorModel> selectors, string? tokenValue)
     {
-      foreach (SelectorModel selectorModel in selectors.Where<SelectorModel>(
-                 (Func<SelectorModel, bool>)(s => s.AttributeRouteModel != null)))
+      foreach (var selectorModel in selectors.Where(
+                 s => s.AttributeRouteModel != null))
       {
         if (selectorModel.AttributeRouteModel == null)
         {
@@ -77,14 +79,17 @@ public static class KebabNamespace
         }
 
         selectorModel.AttributeRouteModel.Template =
-          this.InsertTokenValue(selectorModel.AttributeRouteModel.Template, tokenValue);
+          InsertTokenValue(selectorModel.AttributeRouteModel.Template, tokenValue);
         selectorModel.AttributeRouteModel.Name =
-          this.InsertTokenValue(selectorModel.AttributeRouteModel.Name, tokenValue);
+          InsertTokenValue(selectorModel.AttributeRouteModel.Name, tokenValue);
       }
     }
 
-    private string? InsertTokenValue(string? template, string? tokenValue) => template == null
-      ? template
-      : Regex.Replace(template, this._tokenRegex, tokenValue);
+    private string? InsertTokenValue(string? template, string? tokenValue)
+    {
+      return template == null
+        ? template
+        : Regex.Replace(template, _tokenRegex, tokenValue);
+    }
   }
 }

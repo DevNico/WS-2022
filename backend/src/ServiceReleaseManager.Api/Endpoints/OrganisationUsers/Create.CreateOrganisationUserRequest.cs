@@ -20,7 +20,7 @@ public class CreateOrganisationUserRequest
   [MinLength(5)]
   [MaxLength(50)]
   public string LastName { get; set; } = default!;
-  
+
   [Required]
   public int RoleId { get; set; } = default!;
 }

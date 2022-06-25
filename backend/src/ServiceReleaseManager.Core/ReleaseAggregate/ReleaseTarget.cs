@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.ReleaseAggregate;
 
-public class ReleaseTarget : EntityBase
+public class ReleaseTarget : EntityBase, IAggregateRoot
 {
   public ReleaseTarget(string name, bool requiresApproval = false)
   {
