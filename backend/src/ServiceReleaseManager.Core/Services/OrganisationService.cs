@@ -37,16 +37,17 @@ public class OrganisationService : IOrganisationService
     CancellationToken cancellationToken)
   {
     var spec = new OrganisationsSearchSpec(includeDeactivated);
-    var organisations = await _organisationRepository.ListAsync(cancellationToken);
-    return Result.Success(spec.Evaluate(organisations).ToList());
+    var organisations = await _organisationRepository.ListAsync(spec, cancellationToken);
+    return Result.Success(organisations);
   }
-  
+
   public async Task<Result<List<Organisation>>> ListByUserEmail(string userEmail,
     CancellationToken cancellationToken)
   {
-    var spec = new OrganisationsByUserEmailSpec(userEmail);
-    var organisations = await _organisationRepository.ListAsync(cancellationToken);
-    return Result.Success(spec.Evaluate(organisations).ToList());
+    var spec = new OrganisationsByUserEmailSpec(userEmail.ToLower());
+    var organisations = await _organisationRepository.ListAsync(spec, cancellationToken);
+
+    return Result.Success(organisations);
   }
 
   public async Task<Result<Organisation>> Create(string routeName,

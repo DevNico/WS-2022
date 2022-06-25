@@ -24,6 +24,7 @@ public class GetByRouteName : EndpointBase.WithRequest<GetOrganisationByRouteNam
     OperationId = "Organisations.GetByName",
     Tags = new[] { "Organisation" })
   ]
+  [SwaggerResponse(StatusCodes.Status200OK, "Organisation found", typeof(OrganisationRecord))]
   public override async Task<ActionResult<OrganisationRecord>> HandleAsync(
     [FromRoute] GetOrganisationByRouteNameRequest request,
     CancellationToken cancellationToken = new())

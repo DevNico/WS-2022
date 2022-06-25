@@ -16,6 +16,7 @@ import {
 } from 'react-query';
 import type {
 	OrganisationRecord,
+	ErrorResponse,
 	CreateOrganisationRequest,
 	OrganisationsListParams,
 	ServiceRoleRecord,
@@ -54,10 +55,10 @@ export type OrganisationCreateMutationResult = NonNullable<
 	Awaited<ReturnType<typeof organisationCreate>>
 >;
 export type OrganisationCreateMutationBody = CreateOrganisationRequest;
-export type OrganisationCreateMutationError = ErrorType<void>;
+export type OrganisationCreateMutationError = ErrorType<ErrorResponse | void>;
 
 export const useOrganisationCreate = <
-	TError = ErrorType<void>,
+	TError = ErrorType<ErrorResponse | void>,
 	TContext = unknown
 >(options?: {
 	mutation?: UseMutationOptions<

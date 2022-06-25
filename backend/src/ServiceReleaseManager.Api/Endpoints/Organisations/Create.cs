@@ -25,6 +25,8 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRequest>.WithAc
     OperationId = "Organisation.Create",
     Tags = new[] { "Organisation" })
   ]
+  [SwaggerResponse(StatusCodes.Status200OK, "Organisation created", typeof(OrganisationRecord))]
+  [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request", typeof(ErrorResponse))]
   public override async Task<ActionResult<OrganisationRecord>> HandleAsync(
     CreateOrganisationRequest request,
     CancellationToken cancellationToken = new())

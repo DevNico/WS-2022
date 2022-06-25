@@ -24,6 +24,7 @@ public class Delete : EndpointBase.WithRequest<DeleteOrganisationRequest>.Withou
     OperationId = "Organisations.Delete",
     Tags = new[] { "Organisation" })
   ]
+  [SwaggerResponse(StatusCodes.Status204NoContent, "Organisation deleted")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteOrganisationRequest request,
     CancellationToken cancellationToken = new())

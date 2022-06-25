@@ -6,9 +6,9 @@
  */
 
 export interface OrganisationUserRecord {
+	id?: number;
 	userId?: string | null;
 	email?: string | null;
 	firstName?: string | null;
 	lastName?: string | null;
-	lastSignIn?: string | null;
 }

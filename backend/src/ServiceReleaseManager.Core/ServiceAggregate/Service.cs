@@ -33,9 +33,10 @@ public class Service : EntityBase, IAggregateRoot
   public List<ServiceUser> Users { get; set; } = new();
 
   public int OrganisationId { get; set; }
-  
-  [DefaultValue(true)] public bool IsActive { get; set; }
-  
+
+  [DefaultValue(true)]
+  public bool IsActive { get; set; }
+
   public void Deactivate()
   {
     IsActive = false;

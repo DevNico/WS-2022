@@ -8,12 +8,12 @@ namespace ServiceReleaseManager.Infrastructure;
 
 public class KeycloakOAuthClient
 {
-  private readonly HttpClient _httpClient;
   private readonly string _clientId;
   private readonly string _clientSecret;
+  private readonly HttpClient _httpClient;
+  private readonly ILogger _logger;
   private readonly string _realm;
   private readonly string _url;
-  private readonly ILogger _logger;
 
   private TokenCache? _token;
 

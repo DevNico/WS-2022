@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Endpoints.Releases;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;

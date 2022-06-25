@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using ServiceReleaseManager.Core.OrganisationAggregate.Events;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -9,15 +8,26 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationUser : EntityBase, IAggregateRoot
 {
-  public OrganisationUser(string userId, string email, string firstName, string lastName,
-    int roleId)
+  // Used by EF Core
+  protected OrganisationUser()
+  {
+  }
+
+  public OrganisationUser(
+    string userId,
+    string email,
+    string firstName,
+    string lastName,
+    OrganisationRole role,
+    int organisationId)
   {
     UserId = userId;
-    Email = email;
+    Email = email.ToLower();
     FirstName = firstName;
     LastName = lastName;
-    LastSignIn = null;
-    RoleId = roleId;
+    Role = role;
+    RoleId = role.Id;
+    OrganisationId = organisationId;
     IsActive = true;
 
     var organisationUserCreatedEvent = new OrganisationUserCreatedEvent(this);
@@ -25,11 +35,11 @@ public class OrganisationUser : EntityBase, IAggregateRoot
   }
 
   [Required]
-  public String UserId { get; set; }
+  public String UserId { get; }
 
   [Required]
   [EmailAddress]
-  public String Email { get; set; }
+  public String Email { get; }
 
   [Required]
   [MaxLength(50)]
@@ -39,17 +49,15 @@ public class OrganisationUser : EntityBase, IAggregateRoot
   [MaxLength(50)]
   public String LastName { get; set; }
 
-  public DateTime? LastSignIn { get; set; }
-
   public int OrganisationId { get; set; }
 
   public OrganisationRole Role { get; set; }
+
   public int RoleId { get; set; }
 
-  public List<ServiceUser> ServiceUser { get; set; } = new();
+  public List<ServiceUser> ServiceUserList { get; set; } = new();
 
   [Required]
-  [DefaultValue(true)]
   public bool IsActive { get; set; }
 
   public void Deactivate()

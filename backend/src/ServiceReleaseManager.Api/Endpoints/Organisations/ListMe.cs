@@ -24,11 +24,16 @@ public class ListMe : EndpointBase.WithoutRequest.WithActionResult<List<Organisa
     OperationId = "Organisations.Me",
     Tags = new[] { "Organisation" })
   ]
+  [SwaggerResponse(StatusCodes.Status200OK, "Organisations found",
+    typeof(List<OrganisationRecord>))]
   public override async Task<ActionResult<List<OrganisationRecord>>> HandleAsync(
     CancellationToken cancellationToken = new())
   {
     var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-    if (email == null) return StatusCode(500);
+    if (email == null)
+    {
+      return StatusCode(500);
+    }
 
     var result = await _organisationService.ListByUserEmail(email, cancellationToken);
 

@@ -12,8 +12,8 @@ using ServiceReleaseManager.Infrastructure.Data;
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220625204459_20220625224415")]
-    partial class _20220625224415
+    [Migration("20220625205607_20220625225515")]
+    partial class _20220625225515
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -130,9 +130,6 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<DateTime?>("LastSignIn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("OrganisationId")
                         .HasColumnType("integer");
 
@@ -142,17 +139,16 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("OrganisationId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("OrganisationUser");
+                    b.ToTable("OrganisationUsers");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Release", b =>
@@ -532,7 +528,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceUser", b =>
                 {
                     b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", "OrganisationUser")
-                        .WithMany("ServiceUser")
+                        .WithMany("ServiceUserList")
                         .HasForeignKey("OrganisationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -572,7 +568,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
             modelBuilder.Entity("ServiceReleaseManager.Core.OrganisationAggregate.OrganisationUser", b =>
                 {
-                    b.Navigation("ServiceUser");
+                    b.Navigation("ServiceUserList");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.Release", b =>

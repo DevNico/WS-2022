@@ -48,6 +48,7 @@ const OrganisationUsersTable: React.FC<OrganisationUsersTableProps> = ({
 	return (
 		<DataGrid
 			sx={{ minHeight: '500px' }}
+			getRowId={(row) => row.id!}
 			columns={columns}
 			rows={users}
 			components={{

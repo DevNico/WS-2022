@@ -4,14 +4,14 @@
  * Service Release Manager API
  * OpenAPI spec version: v1
  */
-import type { ReleaseRecordMetadata } from './releaseRecordMetadata';
+import type { ReleaseLocalisedMetadataRecord } from './releaseLocalisedMetadataRecord';
 
 export interface ReleaseRecord {
+	id?: number;
 	version?: string | null;
-	metadata?: ReleaseRecordMetadata;
 	serviceId?: number;
-	approvedBy?: number | null;
-	approvedAt?: string | null;
-	publishedBy?: number | null;
-	publishedAt?: string | null;
+	metadata?: string | null;
+	localisedMetadata?: ReleaseLocalisedMetadataRecord[] | null;
+	updatedAt?: string;
+	createdAt?: string;
 }

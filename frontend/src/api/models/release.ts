@@ -6,6 +6,7 @@
  */
 import type { DomainEventBase } from './domainEventBase';
 import type { OrganisationUser } from './organisationUser';
+import type { ReleaseLocalisedMetadata } from './releaseLocalisedMetadata';
 
 export interface Release {
 	id?: number;
@@ -18,5 +19,6 @@ export interface Release {
 	readonly publishedAt?: string | null;
 	version: string;
 	metadata: string;
+	localisedMetadataList?: ReleaseLocalisedMetadata[] | null;
 	serviceId?: number;
 }

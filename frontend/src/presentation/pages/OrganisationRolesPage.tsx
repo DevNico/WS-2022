@@ -35,7 +35,11 @@ const OrganisationRolesPage: React.FC = () => {
 
 	return (
 		<>
-			<Stack direction='row' justifyContent='space-between' mb={2}>
+			<Stack
+				direction={['column', 'column', 'row']}
+				justifyContent='space-between'
+				mb={2}
+			>
 				<Typography variant='h4' component='h2'>
 					{t('organisation.roles.list.title')}
 				</Typography>

@@ -50,6 +50,8 @@ public class Release : EntityBase, IAggregateRoot
 
   public void Approve(OrganisationUser user)
   {
+    if (ApprovedAt != null) return;
+    
     ApprovedBy = user;
     ApprovedAt = DateTime.Now;
 
@@ -59,6 +61,8 @@ public class Release : EntityBase, IAggregateRoot
 
   public void Publish(OrganisationUser user)
   {
+    if (ApprovedAt == null || PublishedAt != null) return;
+    
     PublishedBy = user;
     PublishedAt = DateTime.Now;
 

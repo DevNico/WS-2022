@@ -8,9 +8,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 
-public class ListServices : EndpointBase
-  .WithRequest<ListOrganisationServicesRequest>
-  .WithActionResult<List<ServiceRecord>>
+public class ListServices : EndpointBase.WithRequest<ListOrganisationServicesRequest>.
+  WithActionResult<List<ServiceRecord>>
 {
   private readonly IRepository<Organisation> _repository;
 
@@ -18,7 +17,7 @@ public class ListServices : EndpointBase
   {
     _repository = repository;
   }
-  
+
   [HttpGet(ListOrganisationServicesRequest.Route)]
   [SwaggerOperation(
     Summary = "List all services",
@@ -32,14 +31,14 @@ public class ListServices : EndpointBase
     CancellationToken cancellationToken = new())
   {
     var spec = new ServiceByOrganisationSearchSpec(request.OrganisationRouteName);
-    
+
     var services = await _repository.GetBySpecAsync<IEnumerable<Service>>(spec, cancellationToken);
 
     if (services == null)
     {
       return Ok(new List<ServiceRecord>());
     }
-    
+
     var response = services
       .Where(service => service.IsActive)
       .ToList()

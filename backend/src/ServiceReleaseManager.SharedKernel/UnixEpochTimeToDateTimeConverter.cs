@@ -14,8 +14,15 @@ public class UnixEpochTimeToDateTimeConverter : JsonConverter
   public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue,
     JsonSerializer serializer)
   {
-    if (reader.TokenType is JsonToken.Null or not JsonToken.Integer) return null;
-    if (!reader.Path.Contains("time")) return null;
+    if (reader.TokenType is JsonToken.Null or not JsonToken.Integer)
+    {
+      return null;
+    }
+
+    if (!reader.Path.Contains("time"))
+    {
+      return null;
+    }
 
     return long.TryParse(reader.Value?.ToString(), out var epoch)
       ? DateTimeOffset.FromUnixTimeMilliseconds(epoch).DateTime

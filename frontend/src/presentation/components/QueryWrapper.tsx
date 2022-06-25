@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 export interface QueryWrapperProps<TData, TError> {
 	result: UseQueryResult<TData, TError>;
+	overrideLoading?: boolean;
 	loading?: React.ReactNode;
 	error?: React.ReactNode;
 	loadingError?: string;
@@ -16,6 +17,7 @@ export interface QueryWrapperProps<TData, TError> {
 
 function QueryWrapper<TData>({
 	result,
+	overrideLoading,
 	loading,
 	error,
 	loadingError,
@@ -25,7 +27,7 @@ function QueryWrapper<TData>({
 
 	const { t } = useTranslation();
 
-	if (isLoading) {
+	if (isLoading || overrideLoading) {
 		if (loading) {
 			return <>{loading}</>;
 		}

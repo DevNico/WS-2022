@@ -44,6 +44,6 @@ public class OrganisationRole : EntityBase, IAggregateRoot
 
   public static OrganisationRole Administrator(int organisationId)
   {
-    return new(organisationId, "Administrator", true, true, true, true, true);
+    return new OrganisationRole(organisationId, "Administrator", true, true, true, true, true);
   }
 }

@@ -17,10 +17,9 @@ export interface OrganisationUser {
 	email: string;
 	firstName: string;
 	lastName: string;
-	lastSignIn?: string | null;
 	organisationId?: number;
 	role?: OrganisationRole;
 	roleId?: number;
-	serviceUser?: ServiceUser[] | null;
+	serviceUserList?: ServiceUser[] | null;
 	isActive: boolean;
 }
