@@ -27,6 +27,12 @@ public class LocaleService : ILocaleService
   public async Task<Result<List<Locale>>> ListByServiceId(int serviceId,
     CancellationToken cancellationToken)
   {
+    var service = await _serviceService.GetById(serviceId, cancellationToken);
+    if (!service.IsSuccess)
+    {
+      return Result<List<Locale>>.NotFound();
+    }
+
     var locales = await _localeRepository.ListAsync(cancellationToken);
     var spec = new LocalesByServiceIdSpec(serviceId);
     var localesByServiceId = spec.Evaluate(locales);

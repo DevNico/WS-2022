@@ -10,14 +10,10 @@ namespace ServiceReleaseManager.Core.Services;
 public class OrganisationService : IOrganisationService
 {
   private readonly IRepository<Organisation> _organisationRepository;
-  private readonly IRepository<OrganisationUser> _organisationUserRepository;
 
-  public OrganisationService(
-    IRepository<Organisation> organisationRepository,
-    IRepository<OrganisationUser> organisationUserRepository)
+  public OrganisationService(IRepository<Organisation> organisationRepository)
   {
     _organisationRepository = organisationRepository;
-    _organisationUserRepository = organisationUserRepository;
   }
 
   public async Task<Result<Organisation>> GetById(int id, CancellationToken cancellationToken)

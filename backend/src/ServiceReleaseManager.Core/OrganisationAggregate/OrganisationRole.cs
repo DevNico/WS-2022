@@ -18,7 +18,6 @@ public class OrganisationRole : EntityBase, IAggregateRoot
     UserDelete = userDelete;
   }
 
-
   [Required]
   [MinLength(5)]
   [MaxLength(50)]

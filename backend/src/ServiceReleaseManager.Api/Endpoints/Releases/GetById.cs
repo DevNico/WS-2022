@@ -24,7 +24,7 @@ public class GetById : EndpointBaseAsync.WithRequest<GetReleaseByIdRequest>.With
     Summary = "Gets a single Release",
     Description = "Gets a single Release by ReleaseId",
     OperationId = "Releases.GetById",
-    Tags = new[] { "Release Endpoints" })
+    Tags = new[] { "Release" })
   ]
   public override async Task<ActionResult<ReleaseRecord>> HandleAsync(
     [FromRoute] GetReleaseByIdRequest request,

@@ -32,7 +32,7 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
     Summary = "Updates a Release",
     Description = "Updates a Release",
     OperationId = "Release.Update",
-    Tags = new[] { "Release Endpoints" })
+    Tags = new[] { "Release" })
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "The Release was created", typeof(ReleaseRecord))]
   [SwaggerResponse(StatusCodes.Status404NotFound, "Release not found")]

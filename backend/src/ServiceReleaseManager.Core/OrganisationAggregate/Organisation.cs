@@ -35,6 +35,8 @@ public class Organisation : EntityBase, IAggregateRoot
 
   public List<Service> Services { get; set; } = new();
 
+  public List<ServiceRole> ServiceRoles { get; set; } = new();
+
   public void Deactivate()
   {
     IsActive = false;

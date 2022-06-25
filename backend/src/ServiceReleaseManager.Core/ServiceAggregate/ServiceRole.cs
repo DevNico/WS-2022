@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ServiceReleaseManager.Core.ServiceAggregate.Events;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 
 namespace ServiceReleaseManager.Core.ServiceAggregate;
 
-public class ServiceRole : EntityBase
+public class ServiceRole : EntityBase, IAggregateRoot
 {
   public ServiceRole(string name, bool releaseCreate, bool releaseApprove, bool releasePublish,
     bool releaseMetadataEdit, bool releaseLocalizedMetadataEdit)
@@ -14,6 +16,7 @@ public class ServiceRole : EntityBase
     ReleasePublish = releasePublish;
     ReleaseMetadataEdit = releaseMetadataEdit;
     ReleaseLocalizedMetadataEdit = releaseLocalizedMetadataEdit;
+    IsActive = true;
   }
 
   [Required]
@@ -35,4 +38,16 @@ public class ServiceRole : EntityBase
 
   [Required]
   public bool ReleaseLocalizedMetadataEdit { get; set; }
+
+  public int OrganisationId { get; set; }
+
+  [Required]
+  public bool IsActive { get; set; }
+
+  public void Deactivate()
+  {
+    IsActive = false;
+    var e = new ServiceRoleDeactivatedEvent(this);
+    RegisterDomainEvent(e);
+  }
 }

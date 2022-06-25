@@ -5,6 +5,68 @@
 		"version": "v1"
 	},
 	"paths": {
+		"/api/v1/service-users": {
+			"post": {
+				"tags": ["ServiceUser"],
+				"summary": "Create a new service user",
+				"operationId": "ServiceUser.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceUserRequest"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceUserRequest"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceUserRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The service user was created",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceUserRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceUserRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceUserRecord"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "One of the dependencies was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/api/v1/service-templates": {
 			"post": {
 				"tags": ["ServiceTemplateEndpoints"],
@@ -255,7 +317,7 @@
 		},
 		"/api/v1/services": {
 			"post": {
-				"tags": ["ServiceEndpoints"],
+				"tags": ["Service"],
 				"summary": "Create a service",
 				"description": "Create a service",
 				"operationId": "Service.Create",
@@ -319,6 +381,88 @@
 							}
 						}
 					},
+					"409": {
+						"description": "A service with the same name and organisation already exists",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/service-roles": {
+			"post": {
+				"tags": ["ServiceRole"],
+				"summary": "Creates a new service role",
+				"operationId": "ServiceRole.Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceRole"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceRole"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateServiceRole"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The service role was created",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRoleRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRoleRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRoleRecord"
+								}
+							}
+						}
+					},
+					"408": {
+						"description": "A role with the same name already exists"
+					},
 					"401": {
 						"description": "Unauthorized"
 					},
@@ -335,7 +479,7 @@
 		},
 		"/releases": {
 			"post": {
-				"tags": ["Release Endpoints"],
+				"tags": ["Release"],
 				"summary": "Creates a new Release",
 				"description": "Creates a new Release",
 				"operationId": "Release.Create",
@@ -381,6 +525,9 @@
 					},
 					"400": {
 						"description": "Service or locale id not found"
+					},
+					"409": {
+						"description": "There already is an active release for this service"
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -727,9 +874,115 @@
 				]
 			}
 		},
+		"/api/v1/service-users/{ServiceUserId}": {
+			"delete": {
+				"tags": ["ServiceUser"],
+				"summary": "Deletes a service user",
+				"operationId": "ServiceUser.Delete",
+				"parameters": [
+					{
+						"name": "ServiceUserId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The user was disabled"
+					},
+					"404": {
+						"description": "A user with the given id does not exist"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["ServiceUser"],
+				"summary": "Get a service user by its id",
+				"operationId": "ServiceUser.GetById",
+				"parameters": [
+					{
+						"name": "ServiceUserId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Service user found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceUserRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceUserRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceUserRecord"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Service user not found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/NotFoundResult"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/NotFoundResult"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/NotFoundResult"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/api/v1/services/{ServiceId}": {
 			"delete": {
-				"tags": ["ServiceEndpoints"],
+				"tags": ["Service"],
 				"summary": "Deletes a service by its id",
 				"description": "Deletes a service",
 				"operationId": "Service.Delete",
@@ -745,7 +998,7 @@
 					}
 				],
 				"responses": {
-					"204": {
+					"200": {
 						"description": "The service was deleted"
 					},
 					"404": {
@@ -765,7 +1018,7 @@
 				]
 			},
 			"get": {
-				"tags": ["ServiceEndpoints"],
+				"tags": ["Service"],
 				"summary": "Get a service",
 				"description": "Get a service by its id",
 				"operationId": "Service.GetById",
@@ -818,9 +1071,131 @@
 				]
 			}
 		},
+		"/api/v1/service-roles/{ServiceRoleId}": {
+			"delete": {
+				"tags": ["ServiceRole"],
+				"summary": "Delete a service role",
+				"operationId": "ServiceRole.Delete",
+				"parameters": [
+					{
+						"name": "ServiceRoleId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeleteServiceRole"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeleteServiceRole"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeleteServiceRole"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The service role was deactivated"
+					},
+					"404": {
+						"description": "The service role was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			},
+			"get": {
+				"tags": ["ServiceRole"],
+				"summary": "Get a service role by its id",
+				"operationId": "ServiceRole.GetById",
+				"parameters": [
+					{
+						"name": "ServiceRoleId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetServiceRoleById"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetServiceRoleById"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/GetServiceRoleById"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRoleRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRoleRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRoleRecord"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/releases/{ReleaseId}": {
 			"delete": {
-				"tags": ["Release Endpoints"],
+				"tags": ["Release"],
 				"summary": "Deletes a release",
 				"description": "Deletes a release",
 				"operationId": "Release.Delete",
@@ -853,7 +1228,7 @@
 				]
 			},
 			"get": {
-				"tags": ["Release Endpoints"],
+				"tags": ["Release"],
 				"summary": "Gets a single Release",
 				"description": "Gets a single Release by ReleaseId",
 				"operationId": "Releases.GetById",
@@ -903,7 +1278,7 @@
 				]
 			},
 			"post": {
-				"tags": ["Release Endpoints"],
+				"tags": ["Release"],
 				"summary": "Updates a Release",
 				"description": "Updates a Release",
 				"operationId": "Release.Update",
@@ -962,6 +1337,9 @@
 					},
 					"400": {
 						"description": "locale id not found"
+					},
+					"409": {
+						"description": "Release is approved and cannot be updated"
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -1331,11 +1709,11 @@
 				]
 			}
 		},
-		"/{ServiceId}/releases": {
+		"/api/v1/services/{ServiceId}/releases": {
 			"get": {
-				"tags": ["Release Endpoints"],
+				"tags": ["Service"],
 				"summary": "Gets a list of all Releases",
-				"operationId": "Releases.List",
+				"operationId": "Services.ListReleases",
 				"parameters": [
 					{
 						"name": "ServiceId",
@@ -1377,6 +1755,9 @@
 							}
 						}
 					},
+					"404": {
+						"description": "Service id not found"
+					},
 					"401": {
 						"description": "Unauthorized"
 					},
@@ -1393,7 +1774,7 @@
 		},
 		"/api/v1/services/{ServiceId}/locales": {
 			"get": {
-				"tags": ["Locale"],
+				"tags": ["Service"],
 				"summary": "List all locales",
 				"operationId": "Locales.List",
 				"parameters": [
@@ -1439,6 +1820,55 @@
 					},
 					"404": {
 						"description": "The service was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/services/me": {
+			"get": {
+				"tags": ["Service"],
+				"summary": "Get the services this user can access",
+				"operationId": "Service.Me",
+				"responses": {
+					"200": {
+						"description": "The operation was successful",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceRecord"
+									}
+								}
+							}
+						}
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -1621,12 +2051,74 @@
 				]
 			}
 		},
+		"/api/v1/organisations/{OrganisationRouteName}/service-roles": {
+			"get": {
+				"tags": ["Organisation"],
+				"summary": "Get all service roles by their id",
+				"operationId": "Organisation.ListServiceRoles",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The operation was successful",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceRoleRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceRoleRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceRoleRecord"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The organisation does not exist"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/api/v1/organisations/{OrganisationRouteName}/services": {
 			"get": {
-				"tags": ["ServiceEndpoints"],
+				"tags": ["Organisation"],
 				"summary": "List all services",
 				"description": "List all services",
-				"operationId": "Service.List",
+				"operationId": "Organisation.ListServices",
 				"parameters": [
 					{
 						"name": "OrganisationRouteName",
@@ -1666,6 +2158,87 @@
 								}
 							}
 						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/services/{ServiceId}/users": {
+			"get": {
+				"tags": ["Service"],
+				"summary": "List all users for a service",
+				"operationId": "Services.ListUsers",
+				"parameters": [
+					{
+						"name": "ServiceId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ListUsersByServiceId"
+							}
+						},
+						"text/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ListUsersByServiceId"
+							}
+						},
+						"application/*+json": {
+							"schema": {
+								"$ref": "#/components/schemas/ListUsersByServiceId"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The users for the service",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceUserRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceUserRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceUserRecord"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The service was not found"
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -1841,6 +2414,8 @@
 				"type": "object",
 				"properties": {
 					"name": {
+						"maxLength": 50,
+						"minLength": 2,
 						"type": "string"
 					},
 					"description": {
@@ -1849,6 +2424,45 @@
 					"organisationId": {
 						"type": "integer",
 						"format": "int32"
+					}
+				},
+				"additionalProperties": false
+			},
+			"CreateServiceRole": {
+				"required": [
+					"name",
+					"organisationId",
+					"releaseApprove",
+					"releaseCreate",
+					"releaseLocalizedMetadataEdit",
+					"releaseMetadataEdit",
+					"releasePublish"
+				],
+				"type": "object",
+				"properties": {
+					"organisationId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"maxLength": 50,
+						"minLength": 2,
+						"type": "string"
+					},
+					"releaseCreate": {
+						"type": "boolean"
+					},
+					"releaseApprove": {
+						"type": "boolean"
+					},
+					"releasePublish": {
+						"type": "boolean"
+					},
+					"releaseMetadataEdit": {
+						"type": "boolean"
+					},
+					"releaseLocalizedMetadataEdit": {
+						"type": "boolean"
 					}
 				},
 				"additionalProperties": false
@@ -1875,13 +2489,35 @@
 				},
 				"additionalProperties": false
 			},
-			"DomainEventBase": {
+			"CreateServiceUserRequest": {
+				"required": [
+					"organisationUserId",
+					"serviceId",
+					"serviceRoleId"
+				],
 				"type": "object",
 				"properties": {
-					"dateOccurred": {
-						"type": "string",
-						"format": "date-time",
-						"readOnly": true
+					"serviceId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"organisationUserId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"serviceRoleId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"additionalProperties": false
+			},
+			"DeleteServiceRole": {
+				"type": "object",
+				"properties": {
+					"serviceRoleId": {
+						"type": "integer",
+						"format": "int32"
 					}
 				},
 				"additionalProperties": false
@@ -1896,44 +2532,19 @@
 				},
 				"additionalProperties": false
 			},
-			"Locale": {
-				"required": ["countryCode", "isDefault", "languageCode"],
+			"GetServiceRoleById": {
 				"type": "object",
 				"properties": {
-					"id": {
+					"serviceRoleId": {
 						"type": "integer",
 						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
-					"isDefault": {
-						"type": "boolean",
-						"default": false
-					},
-					"countryCode": {
-						"maxLength": 2,
-						"minLength": 0,
-						"type": "string"
-					},
-					"languageCode": {
-						"maxLength": 2,
-						"minLength": 0,
-						"type": "string"
-					},
+					}
+				},
+				"additionalProperties": false
+			},
+			"ListUsersByServiceId": {
+				"type": "object",
+				"properties": {
 					"serviceId": {
 						"type": "integer",
 						"format": "int32"
@@ -1997,6 +2608,16 @@
 				},
 				"additionalProperties": false
 			},
+			"NotFoundResult": {
+				"type": "object",
+				"properties": {
+					"statusCode": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"additionalProperties": false
+			},
 			"OrganisationRecord": {
 				"type": "object",
 				"properties": {
@@ -2019,71 +2640,6 @@
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
-					}
-				},
-				"additionalProperties": false
-			},
-			"OrganisationRole": {
-				"required": [
-					"name",
-					"serviceDelete",
-					"serviceWrite",
-					"userDelete",
-					"userRead",
-					"userWrite"
-				],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
-					"name": {
-						"maxLength": 50,
-						"minLength": 5,
-						"type": "string"
-					},
-					"serviceWrite": {
-						"type": "boolean"
-					},
-					"serviceDelete": {
-						"type": "boolean"
-					},
-					"userRead": {
-						"type": "boolean"
-					},
-					"userWrite": {
-						"type": "boolean"
-					},
-					"userDelete": {
-						"type": "boolean"
-					},
-					"organisationId": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"users": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/OrganisationUser"
-						},
-						"nullable": true
 					}
 				},
 				"additionalProperties": false
@@ -2117,75 +2673,6 @@
 				},
 				"additionalProperties": false
 			},
-			"OrganisationUser": {
-				"required": [
-					"email",
-					"firstName",
-					"isActive",
-					"lastName",
-					"userId"
-				],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
-					"userId": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string",
-						"format": "email"
-					},
-					"firstName": {
-						"maxLength": 50,
-						"type": "string"
-					},
-					"lastName": {
-						"maxLength": 50,
-						"type": "string"
-					},
-					"organisationId": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"role": {
-						"$ref": "#/components/schemas/OrganisationRole"
-					},
-					"roleId": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"serviceUserList": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/ServiceUser"
-						},
-						"nullable": true
-					},
-					"isActive": {
-						"type": "boolean"
-					}
-				},
-				"additionalProperties": false
-			},
 			"OrganisationUserRecord": {
 				"type": "object",
 				"properties": {
@@ -2208,115 +2695,6 @@
 					"lastName": {
 						"type": "string",
 						"nullable": true
-					}
-				},
-				"additionalProperties": false
-			},
-			"Release": {
-				"required": ["metadata", "version"],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
-					"approvedBy": {
-						"$ref": "#/components/schemas/OrganisationUser"
-					},
-					"approvedAt": {
-						"type": "string",
-						"format": "date-time",
-						"nullable": true,
-						"readOnly": true
-					},
-					"publishedBy": {
-						"$ref": "#/components/schemas/OrganisationUser"
-					},
-					"publishedAt": {
-						"type": "string",
-						"format": "date-time",
-						"nullable": true,
-						"readOnly": true
-					},
-					"version": {
-						"maxLength": 30,
-						"type": "string"
-					},
-					"metadata": {
-						"type": "string"
-					},
-					"localisedMetadataList": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/ReleaseLocalisedMetadata"
-						},
-						"nullable": true
-					},
-					"serviceId": {
-						"type": "integer",
-						"format": "int32"
-					}
-				},
-				"additionalProperties": false
-			},
-			"ReleaseLocalisedMetadata": {
-				"required": ["localeId", "metadata", "releaseId"],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
-					"metadata": {
-						"type": "string"
-					},
-					"releaseId": {
-						"type": "integer",
-						"format": "int32",
-						"readOnly": true
-					},
-					"release": {
-						"$ref": "#/components/schemas/Release"
-					},
-					"localeId": {
-						"type": "integer",
-						"format": "int32",
-						"readOnly": true
-					},
-					"locale": {
-						"$ref": "#/components/schemas/Locale"
 					}
 				},
 				"additionalProperties": false
@@ -2372,91 +2750,6 @@
 				},
 				"additionalProperties": false
 			},
-			"ReleaseTarget": {
-				"required": ["name", "requiresApproval"],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
-					"name": {
-						"maxLength": 50,
-						"type": "string"
-					},
-					"requiresApproval": {
-						"type": "boolean",
-						"default": false
-					},
-					"releaseTriggers": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/ReleaseTrigger"
-						},
-						"nullable": true
-					},
-					"serviceId": {
-						"type": "integer",
-						"format": "int32"
-					}
-				},
-				"additionalProperties": false
-			},
-			"ReleaseTrigger": {
-				"required": ["event", "name", "url"],
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
-					"name": {
-						"maxLength": 50,
-						"type": "string"
-					},
-					"event": {
-						"maxLength": 50,
-						"type": "string"
-					},
-					"url": {
-						"maxLength": 250,
-						"type": "string"
-					}
-				},
-				"additionalProperties": false
-			},
 			"ServiceRecord": {
 				"type": "object",
 				"properties": {
@@ -2471,77 +2764,16 @@
 					"description": {
 						"type": "string",
 						"nullable": true
-					},
-					"locales": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/Locale"
-						},
-						"nullable": true
-					},
-					"serviceUsers": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/ServiceUser"
-						},
-						"nullable": true
-					},
-					"releases": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/Release"
-						},
-						"nullable": true
-					},
-					"releaseTargets": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/ReleaseTarget"
-						},
-						"nullable": true
-					},
-					"organisationId": {
-						"type": "integer",
-						"format": "int32"
 					}
 				},
 				"additionalProperties": false
 			},
-			"ServiceRole": {
-				"required": [
-					"name",
-					"releaseApprove",
-					"releaseCreate",
-					"releaseLocalizedMetadataEdit",
-					"releaseMetadataEdit",
-					"releasePublish"
-				],
+			"ServiceRoleRecord": {
 				"type": "object",
 				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
 					"name": {
-						"maxLength": 50,
-						"minLength": 5,
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"releaseCreate": {
 						"type": "boolean"
@@ -2557,6 +2789,10 @@
 					},
 					"releaseLocalizedMetadataEdit": {
 						"type": "boolean"
+					},
+					"organisationId": {
+						"type": "integer",
+						"format": "int32"
 					}
 				},
 				"additionalProperties": false
@@ -2589,44 +2825,14 @@
 				},
 				"additionalProperties": false
 			},
-			"ServiceUser": {
+			"ServiceUserRecord": {
 				"type": "object",
 				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"domainEvents": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/DomainEventBase"
-						},
-						"nullable": true,
-						"readOnly": true
-					},
 					"serviceRole": {
-						"$ref": "#/components/schemas/ServiceRole"
-					},
-					"serviceRoleId": {
 						"type": "integer",
 						"format": "int32"
 					},
 					"organisationUser": {
-						"$ref": "#/components/schemas/OrganisationUser"
-					},
-					"organisationUserId": {
-						"type": "integer",
-						"format": "int32"
-					},
-					"serviceId": {
 						"type": "integer",
 						"format": "int32"
 					}

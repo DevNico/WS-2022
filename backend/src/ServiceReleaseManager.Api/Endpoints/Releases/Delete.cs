@@ -24,7 +24,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteReleaseReqest>.Without
     Summary = "Deletes a release",
     Description = "Deletes a release",
     OperationId = "Release.Delete",
-    Tags = new[] { "Release Endpoints" })
+    Tags = new[] { "Release" })
   ]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteReleaseReqest request,

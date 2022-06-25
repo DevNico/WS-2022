@@ -35,7 +35,7 @@ public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithAc
     Summary = "Creates a new Release",
     Description = "Creates a new Release",
     OperationId = "Release.Create",
-    Tags = new[] { "Release Endpoints" })
+    Tags = new[] { "Release" })
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "The Release was created", typeof(ReleaseRecord))]
   [SwaggerResponse(StatusCodes.Status400BadRequest, "Service or locale id not found")]
