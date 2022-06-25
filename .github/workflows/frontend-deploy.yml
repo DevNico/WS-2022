@@ -40,12 +40,11 @@ jobs:
       - run: npm ci
         name: 📦 Install dependencies
 
-      - run: npm run build
-        name: 🔨 Build Frontend
-
       - run: |
           rm .env
           mv ".env.${{ inputs.branch }}" .env
+          npm run build
+        name: 🔨 Build Frontend
 
       - run: npx firebase-tools deploy --only hosting:${{ inputs.branch }} --project service-release-manager
         name: 🌍 Deploy to Firebase hosting

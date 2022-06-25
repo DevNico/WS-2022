@@ -7,7 +7,7 @@ import theme from './theme';
 import './i18n';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import keycloak from '../keycloak';
+import keycloak from '../kc';
 import { RecoilRoot } from 'recoil';
 import { Toaster } from 'react-hot-toast';
 

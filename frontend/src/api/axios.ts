@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import keycloak from '../keycloak';
+import keycloak from '../kc';
 
 export const AXIOS_INSTANCE = Axios.create({
 	baseURL: process.env.REACT_APP_API_BASE_URL,
