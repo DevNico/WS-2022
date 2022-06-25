@@ -1,5 +1,4 @@
 ﻿using Ardalis.Result.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;

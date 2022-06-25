@@ -26,7 +26,6 @@
     <Folder Include="Aggregates" />
     <Folder Include="OrganisationAggregate\Handlers" />
     <Folder Include="OrganisationAggregate\Services" />
-    <Folder Include="ReleaseAggregate\Specifications" />
     <Folder Include="ServiceAggregate\Events" />
   </ItemGroup>
 

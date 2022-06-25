@@ -14,7 +14,7 @@ public interface IOrganisationService
     CancellationToken cancellationToken);
 
   public Task<Result<Organisation>> Create(string routeName, CancellationToken cancellationToken);
-  
+
   public Task<Result> Update(Organisation organisation, CancellationToken cancellationToken);
 
   public Task<Result> Delete(string routeName, CancellationToken cancellationToken);

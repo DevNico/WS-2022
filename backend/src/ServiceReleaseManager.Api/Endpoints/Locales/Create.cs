@@ -1,5 +1,4 @@
-﻿using Ardalis.ApiEndpoints;
-using Ardalis.Result.AspNetCore;
+﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
