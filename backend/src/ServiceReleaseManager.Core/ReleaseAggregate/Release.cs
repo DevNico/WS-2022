@@ -9,7 +9,11 @@ namespace ServiceReleaseManager.Core.ReleaseAggregate;
 
 public class Release : EntityBase, IAggregateRoot
 {
-  public Release(string version, string metadata)
+  public Release(
+    string version,
+    string metadata,
+    int serviceId
+  )
   {
     ApprovedBy = null;
     ApprovedAt = null;
@@ -17,6 +21,8 @@ public class Release : EntityBase, IAggregateRoot
     PublishedAt = null;
     Version = version;
     Metadata = metadata;
+    LocalisedMetadataList = new List<ReleaseLocalisedMetadata>();
+    ServiceId = serviceId;
 
     var releaseCreatedEvent = new ReleaseCreatedEvent(this);
     RegisterDomainEvent(releaseCreatedEvent);
@@ -37,6 +43,8 @@ public class Release : EntityBase, IAggregateRoot
   [Required]
   [Column(TypeName = "json")]
   public string Metadata { get; set; }
+
+  public List<ReleaseLocalisedMetadata> LocalisedMetadataList { get; set; }
 
   public int ServiceId { get; set; }
 

@@ -11,10 +11,10 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUsers;
 public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.WithActionResult<
   OrganisationUserRecord>
 {
-  private readonly IOrganisationUserService _organisationUserService;
-  private readonly IOrganisationService _organisationService;
   private readonly IKeycloakClient _keycloakClient;
   private readonly ILogger<Create> _logger;
+  private readonly IOrganisationService _organisationService;
+  private readonly IOrganisationUserService _organisationUserService;
 
   public Create(IOrganisationUserService organisationUserService, IKeycloakClient keycloakClient,
     ILogger<Create> logger, IOrganisationService organisationService)
@@ -56,7 +56,8 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     {
       if (e.StatusCode != HttpStatusCode.NotFound)
       {
-        _logger.LogError("The request to the keycloak client failed with code {Status} and message {Message}",
+        _logger.LogError(
+          "The request to the keycloak client failed with code {Status} and message {Message}",
           e.StatusCode.ToString(), e.Message);
         return StatusCode(StatusCodes.Status424FailedDependency, "Keycloak client request failed");
       }

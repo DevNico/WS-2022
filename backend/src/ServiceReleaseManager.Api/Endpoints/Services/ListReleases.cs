@@ -1,14 +1,15 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Endpoints.Releases;
 using ServiceReleaseManager.Core.ReleaseAggregate;
-using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.ReleaseEndpoints;
+namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<ReleaseRecord>>
+public class List : EndpointBaseAsync.WithRequest<ListReleasesByServiceId>.WithActionResult<
+  List<ReleaseRecord>>
 {
   private readonly IRepository<Release> _repository;
 
@@ -17,7 +18,7 @@ public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<Relea
     _repository = repository;
   }
 
-  [HttpGet("/releases")]
+  [HttpGet(ListReleasesByServiceId.Route)]
   [Authorize]
   [SwaggerOperation(
     Summary = "Gets a list of all Releases",
@@ -25,13 +26,13 @@ public class List : EndpointBaseAsync.WithoutRequest.WithActionResult<List<Relea
     Tags = new[] { "Release Endpoints" })
   ]
   public override async Task<ActionResult<List<ReleaseRecord>>> HandleAsync(
+    [FromRoute] ListReleasesByServiceId request,
     CancellationToken cancellationToken = new())
   {
-    // ToDo: Auf Service Ebene bauen
-
     var releases = await _repository.ListAsync(cancellationToken);
 
     var response = releases
+      .Where(r => r.ServiceId == request.ServiceId)
       .Select(ReleaseRecord.FromEntity)
       .ToList();
 
