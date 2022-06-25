@@ -7,6 +7,7 @@ public sealed class ServiceByIdSpec : Specification<Service>, ISingleResultSpeci
   public ServiceByIdSpec(int id)
   {
     Query
+      .Where(s => s.IsActive)
       .Where(s => s.Id == id)
       .Include(s => s.Locales);
   }
