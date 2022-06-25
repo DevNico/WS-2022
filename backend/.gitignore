@@ -272,6 +272,7 @@ __pycache__/
 # tools/
 
 !ServiceReleaseManager/Domain/Models/Release
+!src/ServiceReleaseManager.Api/Endpoints/Releases
 /ServiceReleaseManager/obj
 /ServiceReleaseManager/bin
 /.idea
