@@ -23,26 +23,26 @@ const OrganisationsTable: React.FC<OrganisationsTableProps> = ({
 	const columns: GridColDef<OrganisationRecord>[] = [
 		{
 			field: 'name',
-			headerName: t('organisations.list.name'),
+			headerName: t('organisation.list.name'),
 			hideable: false,
 			flex: 2,
 			minWidth: 150,
 		},
 		{
 			field: 'description',
-			headerName: t('organisations.list.description'),
+			headerName: t('organisation.list.description'),
 			flex: 4,
 		},
 		{
 			field: 'createdAt',
-			headerName: t('organisations.list.createdAt'),
+			headerName: t('organisation.list.createdAt'),
 			flex: 1,
 			valueFormatter: dateValueFormatter,
 			minWidth: 130,
 		},
 		{
 			field: 'routeName',
-			headerName: t('organisations.list.actions'),
+			headerName: t('organisation.list.actions'),
 			renderCell: (rowData) => (
 				<>
 					<RouterIconButton
@@ -64,8 +64,8 @@ const OrganisationsTable: React.FC<OrganisationsTableProps> = ({
 				LoadingOverlay: LinearProgress,
 				NoRowsOverlay: () => (
 					<DataGridOverlay
-						text={t('organisations.list.noData')}
-						// buttonText={t('organisations.list.create')}
+						text={t('organisation.list.noData')}
+						// buttonText={t('organisation.list.create')}
 						// target={createRoute}
 					/>
 				),

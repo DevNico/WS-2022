@@ -5,8 +5,8 @@
 			"organisations": "Organisations",
 			"title": "Admin Area"
 		},
-		"organisations": {
-			"title": "Global organisations"
+		"organisation": {
+			"title": "Organisations"
 		}
 	},
 	"appbar": {
@@ -29,11 +29,6 @@
 	"home": {
 		"noOrganisations": "No organizations found, you need to be invited to one to start using the application."
 	},
-	"homeLayout": {
-		"organisations": "Organisations",
-		"roles": "Roles",
-		"users": "Users"
-	},
 	"locale": {
 		"create": {
 			"error": "Failed to create locale: {{error}}",
@@ -54,84 +49,33 @@
 			"title": "Locales"
 		},
 		"model": {
-			"country": "Country",
 			"isDefault": "Is default",
 			"language": "Language",
 			"tag": "Tag"
 		}
 	},
-	"login": "Login",
-	"notFoundPage.goToHome": "Go To Home",
-	"notFoundPage.subtitle": "Sorry, we couldn't find the page you're looking for. Perhaps you've mistyped the URL? Be sure to check your spelling.",
-	"notFoundPage.title": "Sorry, page not found!",
+	"notFoundPage": {
+		"goToHome": "Go To Home",
+		"subtitle": "Sorry, we couldn't find the page you're looking for. Perhaps you've mistyped the URL? Be sure to check your spelling.",
+		"title": "Sorry, page not found!"
+	},
 	"organisation": {
 		"card": {
 			"updatedAt": "Last updated: {{updatedAt}}"
 		},
-		"drawer": {
-			"back": "",
-			"home": "Home",
-			"roles": "Roles",
-			"serviceTemplates": "Service Templates",
-			"services": "Services",
-			"title": "Organisation",
-			"users": "Users"
-		},
-		"roles": {
-			"create": {
-				"error": "Could not create a new role: {{error}}",
-				"name": "Name",
-				"organisation": "Organisation",
-				"permissions": "Select role permissions",
-				"service": "Service",
-				"success": "Role created successfully",
-				"title": "Create a new Role",
-				"user": "User"
-			},
-			"list": {
-				"create": "Create a new role",
-				"error": "Could not load the roles",
-				"noData": "No roles found",
-				"title": "Organisation Roles"
-			},
-			"model": {
-				"serviceDelete": "Delete Services",
-				"serviceWrite": "Create Services",
-				"userDelete": "Delete Users",
-				"userRead": "Read Users",
-				"userWrite": "Create Users"
-			}
-		},
-		"users": {
-			"create": {
-				"error": "Could not create a new user: {{error}}",
-				"organisation": "Organisation",
-				"submit": "Submit",
-				"success": "User created successfully",
-				"title": "Create a new User"
-			},
-			"list": {
-				"create": "Create a new user",
-				"error": "Could not load the users",
-				"noData": "No users found",
-				"organisation": "Organisation",
-				"title": "Organisation Users"
-			},
-			"model": {
-				"email": "Email",
-				"firstName": "First Name",
-				"lastName": "Last Name",
-				"role": "Role"
-			}
-		}
-	},
-	"organisations": {
 		"create": {
 			"error": "Could not create a new organisation: {{error}}",
 			"name": "Name",
 			"submit": "Create",
 			"success": "Organisation created successfully",
 			"title": "Create a new Organisation"
+		},
+		"drawer": {
+			"home": "Home",
+			"roles": "Roles",
+			"serviceTemplates": "Service Templates",
+			"services": "Services",
+			"users": "Users"
 		},
 		"list": {
 			"actions": "Actions",
@@ -142,15 +86,78 @@
 			"noData": "No organisations found, click the button below to create a new one"
 		}
 	},
-	"release": {
-		"list": {
-			"create": "Create Release",
-			"title": "Releases"
+	"organisationRole": {
+		"create": {
+			"error": "Could not create a new role: {{error}}",
+			"name": "Name",
+			"permissions": "Select role permissions",
+			"service": "Service",
+			"success": "Role created successfully",
+			"title": "Create a new Role",
+			"user": "User"
 		},
+		"list": {
+			"create": "Create a new role",
+			"error": "Could not load the roles",
+			"noData": "No roles found",
+			"title": "Organisation Roles"
+		},
+		"model": {
+			"serviceDelete": "Delete Services",
+			"serviceWrite": "Create Services",
+			"userDelete": "Delete Users",
+			"userRead": "Read Users",
+			"userWrite": "Create Users"
+		}
+	},
+	"organisationUser": {
+		"create": {
+			"error": "Could not create a new user: {{error}}",
+			"submit": "Submit",
+			"success": "User created successfully",
+			"title": "Create a new User"
+		},
+		"list": {
+			"create": "Create a new user",
+			"error": "Could not load the users",
+			"noData": "No users found",
+			"title": "Organisation Users"
+		},
+		"model": {
+			"email": "Email",
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"role": "Role"
+		}
+	},
+	"release": {
 		"create": {
 			"error": "Error creating new release: {{error}}",
 			"submit": "Submit",
-			"success": "Release created successfully"
+			"success": "Release created successfully",
+			"title": "Create Release"
+		},
+		"list": {
+			"create": "Create Release",
+			"title": "Releases"
+		}
+	},
+	"service": {
+		"create": {
+			"error": "Could not create a new service: {{error}}",
+			"submit": "Create",
+			"success": "Service created successfully",
+			"title": "Create a new Service"
+		},
+		"drawer": {
+			"locales": "Locales",
+			"releases": "Releases"
+		},
+		"model": {
+			"description": "Description",
+			"name": "Name",
+			"template": "Template",
+			"updatedAt": "Last updated: {{updatedAt}}"
 		}
 	},
 	"serviceTemplate": {
@@ -171,28 +178,5 @@
 			"name": "Name",
 			"staticMetadata": "Static Metadata"
 		}
-	},
-	"services": {
-		"create": {
-			"error": "Could not create a new service: {{error}}",
-			"submit": "Create",
-			"success": "Service created successfully",
-			"title": "Create a new Service"
-		},
-		"drawer": {
-			"locales": "Locales",
-			"releases": "Releases"
-		},
-		"model": {
-			"description": "Description",
-			"name": "Name",
-			"template": "Template",
-			"updatedAt": "Last updated: {{updatedAt}}"
-		},
-		"noneFound": "No Services found"
-	},
-	"unauthorizedPage": {
-		"subtitle": "You are not authorized to access this page.",
-		"title": "Unauthorized"
 	}
 }

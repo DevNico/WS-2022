@@ -41,14 +41,14 @@ const OrganisationUsersPage: React.FC = () => {
 				mb={2}
 			>
 				<Typography variant='h4' component='h2'>
-					{t('organisation.users.list.title')}
+					{t('organisationUser.list.title')}
 				</Typography>
 				<Button
 					onClick={handleOpenCreateDialog}
 					startIcon={<AddIcon />}
 					sx={{ width: 'max-content' }}
 				>
-					{t('organisation.users.list.create')}
+					{t('organisationUser.list.create')}
 				</Button>
 			</Stack>
 			<OrganisationUsersTable

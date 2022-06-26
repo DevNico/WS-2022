@@ -21,7 +21,7 @@ const OrganisationRoleDetails: React.FC<OrganisationRoleDetailsProps> = ({
 			<Grid item sm={6} xs={12}>
 				<Stack>
 					<Typography variant='body2'>
-						{t('organisation.roles.create.service')}
+						{t('organisationRole.create.service')}
 					</Typography>
 					<FormControlLabel
 						control={
@@ -30,7 +30,7 @@ const OrganisationRoleDetails: React.FC<OrganisationRoleDetailsProps> = ({
 								checked={role?.serviceWrite ?? false}
 							/>
 						}
-						label={t('organisation.roles.model.serviceWrite')}
+						label={t('organisationRole.model.serviceWrite')}
 						disabled
 					/>
 					<FormControlLabel
@@ -40,7 +40,7 @@ const OrganisationRoleDetails: React.FC<OrganisationRoleDetailsProps> = ({
 								checked={role?.serviceDelete ?? false}
 							/>
 						}
-						label={t('organisation.roles.model.serviceDelete')}
+						label={t('organisationRole.model.serviceDelete')}
 						disabled
 					/>
 				</Stack>
@@ -48,7 +48,7 @@ const OrganisationRoleDetails: React.FC<OrganisationRoleDetailsProps> = ({
 			<Grid item sm={6} xs={12}>
 				<Stack>
 					<Typography variant='body2'>
-						{t('organisation.roles.create.user')}
+						{t('organisationRole.create.user')}
 					</Typography>
 					<FormControlLabel
 						control={
@@ -57,7 +57,7 @@ const OrganisationRoleDetails: React.FC<OrganisationRoleDetailsProps> = ({
 								checked={role?.userRead ?? false}
 							/>
 						}
-						label={t('organisation.roles.model.userRead')}
+						label={t('organisationRole.model.userRead')}
 						disabled
 					/>
 					<FormControlLabel
@@ -67,7 +67,7 @@ const OrganisationRoleDetails: React.FC<OrganisationRoleDetailsProps> = ({
 								checked={role?.userWrite ?? false}
 							/>
 						}
-						label={t('organisation.roles.model.userWrite')}
+						label={t('organisationRole.model.userWrite')}
 						disabled
 					/>
 					<FormControlLabel
@@ -77,7 +77,7 @@ const OrganisationRoleDetails: React.FC<OrganisationRoleDetailsProps> = ({
 								checked={role?.userDelete ?? false}
 							/>
 						}
-						label={t('organisation.roles.model.userDelete')}
+						label={t('organisationRole.model.userDelete')}
 						disabled
 					/>
 				</Stack>

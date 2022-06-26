@@ -52,7 +52,7 @@ const LocalesTable: React.FC<LocalesTableProps> = ({
 		queryClient.invalidateQueries(getLocalesListQueryKey(serviceRouteName));
 	};
 
-	const columns: GridColDef<OrganisationUserRecord>[] = [
+	const columns: GridColDef<LocaleRecord>[] = [
 		{
 			field: 'tag',
 			headerName: t('locale.model.tag'),

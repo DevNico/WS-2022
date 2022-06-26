@@ -60,9 +60,9 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 				loading: t('common.loading'),
 				success: () => {
 					formik.resetForm();
-					return t('organisation.roles.create.success');
+					return t('organisationRole.create.success');
 				},
-				error: t('organisation.roles.create.error', {
+				error: t('organisationRole.create.error', {
 					error:
 						(createRole.error as any)?.message ||
 						'No message available',
@@ -83,7 +83,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 						fullWidth
 						id='name'
 						name='name'
-						label={t('organisation.roles.create.name')}
+						label={t('organisationRole.create.name')}
 						value={formik.values.name}
 						onChange={formik.handleChange}
 						error={
@@ -95,13 +95,13 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant='h6'>
-						{t('organisation.roles.create.permissions')}
+						{t('organisationRole.create.permissions')}
 					</Typography>
 				</Grid>
 				<Grid item sm={6} xs={12}>
 					<Stack>
 						<Typography variant='body2'>
-							{t('organisation.roles.create.service')}
+							{t('organisationRole.create.service')}
 						</Typography>
 						<FormControlLabel
 							disabled={loading}
@@ -112,7 +112,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.model.serviceWrite')}
+							label={t('organisationRole.model.serviceWrite')}
 						/>
 						<FormControlLabel
 							disabled={loading}
@@ -123,14 +123,14 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.model.serviceDelete')}
+							label={t('organisationRole.model.serviceDelete')}
 						/>
 					</Stack>
 				</Grid>
 				<Grid item sm={6} xs={12}>
 					<Stack>
 						<Typography variant='body2'>
-							{t('organisation.roles.create.user')}
+							{t('organisationRole.create.user')}
 						</Typography>
 						<FormControlLabel
 							disabled={loading}
@@ -141,7 +141,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.model.userRead')}
+							label={t('organisationRole.model.userRead')}
 						/>
 						<FormControlLabel
 							disabled={loading}
@@ -152,7 +152,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.model.userWrite')}
+							label={t('organisationRole.model.userWrite')}
 						/>
 						<FormControlLabel
 							disabled={loading}
@@ -163,7 +163,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.model.userDelete')}
+							label={t('organisationRole.model.userDelete')}
 						/>
 					</Stack>
 				</Grid>

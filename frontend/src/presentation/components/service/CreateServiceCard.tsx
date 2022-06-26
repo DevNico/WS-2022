@@ -37,7 +37,7 @@ const CreateServiceCard: React.FC<CreateServiceCardProps> = ({
 						<Stack>
 							<Center my={[1, 2]}>
 								<Typography variant='h5' gutterBottom>
-									{t('services.create.title')}
+									{t('service.create.title')}
 								</Typography>
 								<AddIcon />
 							</Center>
