@@ -1,5 +1,10 @@
 {
   "yaml.schemas": {
     "kubernetes://schema/v1@service": "file:///Users/devnico/code/ws2022/.deployment/deployment.tpl.yaml"
-  }
+  },
+  "i18n-ally.localesPaths": [
+    "frontend/src/api/locale",
+    "frontend/src/presentation/i18n",
+    "frontend/src/presentation/components/locale"
+  ]
 }
