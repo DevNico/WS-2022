@@ -106,7 +106,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 					select
 					id='serviceTemplateId'
 					name='serviceTemplateId'
-					label={t('organisation.users.model.role')}
+					label={t('services.model.template')}
 					value={
 						formik.values.serviceTemplateId === -1
 							? ''

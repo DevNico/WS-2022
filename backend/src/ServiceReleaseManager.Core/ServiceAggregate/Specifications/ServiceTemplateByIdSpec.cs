@@ -10,5 +10,7 @@ public sealed class ServiceTemplateByIdSpec : Specification<ServiceTemplate>,
     Query
       .Where(s => s.IsActive)
       .Where(s => s.Id == id);
+    Query
+      .Include(s => s.Organisation);
   }
 }

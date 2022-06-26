@@ -14,12 +14,6 @@ public static class SeedData
     new("Test Organisation Deactivated") { IsActive = false };
 
 
-  public static readonly ServiceTemplate TestServiceTemplate1 =
-    new("Test Service Template", "[]", "[]", 1);
-
-  public static readonly Service TestService1 =
-    new("Test Service", "For testing purposes", 1, 1);
-
   public static void Initialize(IServiceProvider serviceProvider)
   {
     using var dbContext = new AppDbContext(
@@ -41,7 +35,6 @@ public static class SeedData
 
     dbContext.SaveChanges();
 
-    TestOrganisation1.Services.Add(TestService1);
     dbContext.Organisations.Add(TestOrganisation1);
     dbContext.Organisations.Add(TestOrganisation2);
 
