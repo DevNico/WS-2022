@@ -1,172 +1,195 @@
 {
-	"admin": {
-		"drawer": {
-			"home": "Home",
-			"organisations": "Organisations",
-			"title": "Admin Area"
-		},
-		"organisations": {
-			"title": "Global organisations"
-		}
-	},
-	"appbar": {
-		"admin": "Admin Area",
-		"usermenu": {
-			"logout": "Logout"
-		}
-	},
-	"common": {
-		"__i18n_ally_root__": {
-			"error": {
-				"loading": ""
-			},
-			"loading": "",
-			"submit": ""
-		},
-		"error": {
-			"loading": "Failed to load data"
-		},
-		"loading": "Loading",
-		"retry": "Try again",
-		"submit": "Submit"
-	},
-	"home": {
-		"noOrganisations": "No organizations found, you need to be invited to one to start using the application."
-	},
-	"homeLayout": {
-		"organisations": "Organisations",
-		"roles": "Roles",
-		"users": "Users"
-	},
-	"login": "Login",
-	"notFoundPage.goToHome": "Go To Home",
-	"notFoundPage.subtitle": "Sorry, we couldn't find the page you're looking for. Perhaps you've mistyped the URL? Be sure to check your spelling.",
-	"notFoundPage.title": "Sorry, page not found!",
-	"organisation": {
-		"card": {
-			"updatedAt": "Last updated: {{updatedAt}}"
-		},
-		"drawer": {
-			"back": "",
-			"home": "Home",
-			"roles": "Roles",
-			"serviceTemplates": "Service Templates",
-			"services": "Services",
-			"title": "Organisation",
-			"users": "Users"
-		},
-		"roles": {
-			"create": {
-				"error": "Could not create a new role: {{error}}",
-				"name": "Name",
-				"organisation": "Organisation",
-				"permissions": "Select role permissions",
-				"service": "Service",
-				"success": "Role created successfully",
-				"title": "Create a new Role",
-				"user": "User"
-			},
-			"list": {
-				"create": "Create a new role",
-				"error": "Could not load the roles",
-				"noData": "No roles found",
-				"title": "Organisation Roles"
-			},
-			"model": {
-				"serviceDelete": "Delete Services",
-				"serviceWrite": "Create Services",
-				"userDelete": "Delete Users",
-				"userRead": "Read Users",
-				"userWrite": "Create Users"
-			}
-		},
-		"users": {
-			"create": {
-				"error": "Could not create a new user: {{error}}",
-				"organisation": "Organisation",
-				"submit": "Submit",
-				"success": "User created successfully",
-				"title": "Create a new User"
-			},
-			"list": {
-				"create": "Create a new user",
-				"error": "Could not load the users",
-				"noData": "No users found",
-				"organisation": "Organisation",
-				"title": "Organisation Users"
-			},
-			"model": {
-				"email": "Email",
-				"firstName": "First Name",
-				"lastName": "Last Name",
-				"role": "Role"
-			}
-		}
-	},
-	"organisation_drawer": {},
-	"organisations": {
-		"create": {
-			"error": "Could not create a new organisation: {{error}}",
-			"name": "Name",
-			"submit": "Create",
-			"success": "Organisation created successfully",
-			"title": "Create a new Organisation"
-		},
-		"list": {
-			"actions": "Actions",
-			"create": "Create a new organisation",
-			"createdAt": "Created At",
-			"description": "Description",
-			"name": "Name",
-			"noData": "No organisations found, click the button below to create a new one"
-		}
-	},
-	"releases": {
-		"create": {
-			"error": "Error creating new release: {{error}}",
-			"submit": "Submit",
-			"success": "Release created successfully"
-		}
-	},
-	"serviceTemplate": {
-		"create": {
-			"error": "Service Template could not be created: {{error}}",
-			"submit": "Submit",
-			"success": "Service Template created successfully",
-			"title": "Create a new ServiceTemplate"
-		},
-		"list": {
-			"create": "Create ServiceTemplate",
-			"error": "Couldn't load Service Templates",
-			"noData": "No Service Templates found",
-			"title": "Service Templates"
-		},
-		"model": {
-			"localizedMetadata": "Localized Metadata",
-			"name": "Name",
-			"staticMetadata": "Static Metadata"
-		}
-	},
-	"services": {
-		"create": {
-			"error": "Could not create a new service: {{error}}",
-			"submit": "Create",
-			"success": "Service created successfully",
-			"title": "Create a new Service"
-		},
-		"drawer": {
-			"releases": "Releases"
-		},
-		"model": {
-			"description": "Description",
-			"name": "Name",
-			"template": "Template",
-			"updatedAt": "Last updated: {{updatedAt}}"
-		},
-		"noneFound": "No Services found"
-	},
-	"unauthorizedPage": {
-		"subtitle": "You are not authorized to access this page.",
-		"title": "Unauthorized"
-	}
+  "admin": {
+    "drawer": {
+      "home": "Home",
+      "organisations": "Organisations",
+      "title": "Admin Area"
+    },
+    "organisations": {
+      "title": "Global organisations"
+    }
+  },
+  "appbar": {
+    "admin": "Admin Area",
+    "usermenu": {
+      "logout": "Logout"
+    }
+  },
+  "common": {
+    "__i18n_ally_root__": {
+      "error": {
+        "loading": ""
+      },
+      "loading": "",
+      "submit": ""
+    },
+    "error": {
+      "loading": "Failed to load data"
+    },
+    "loading": "Loading",
+    "retry": "Try again",
+    "submit": "Submit"
+  },
+  "home": {
+    "noOrganisations": "No organizations found, you need to be invited to one to start using the application."
+  },
+  "homeLayout": {
+    "organisations": "Organisations",
+    "roles": "Roles",
+    "users": "Users"
+  },
+  "locale": {
+    "create": {
+      "error": "Failed to create locale: {{error}}",
+      "submit": "Submit",
+      "success": "Create new locale successfully",
+      "title": "Create Locale"
+    },
+    "list": {
+      "actions": "Actions",
+      "create": "Create Locale",
+      "error": "Couldn't load locales",
+      "noData": "No locales found",
+      "title": "Locales"
+    },
+    "model": {
+      "country": "Country",
+      "isDefault": "Is default",
+      "language": "Language",
+      "tag": "Tag"
+    }
+  },
+  "login": "Login",
+  "notFoundPage.goToHome": "Go To Home",
+  "notFoundPage.subtitle": "Sorry, we couldn't find the page you're looking for. Perhaps you've mistyped the URL? Be sure to check your spelling.",
+  "notFoundPage.title": "Sorry, page not found!",
+  "organisation": {
+    "card": {
+      "updatedAt": "Last updated: {{updatedAt}}"
+    },
+    "drawer": {
+      "back": "",
+      "home": "Home",
+      "roles": "Roles",
+      "serviceTemplates": "Service Templates",
+      "services": "Services",
+      "title": "Organisation",
+      "users": "Users"
+    },
+    "roles": {
+      "create": {
+        "error": "Could not create a new role: {{error}}",
+        "name": "Name",
+        "organisation": "Organisation",
+        "permissions": "Select role permissions",
+        "service": "Service",
+        "success": "Role created successfully",
+        "title": "Create a new Role",
+        "user": "User"
+      },
+      "list": {
+        "create": "Create a new role",
+        "error": "Could not load the roles",
+        "noData": "No roles found",
+        "title": "Organisation Roles"
+      },
+      "model": {
+        "serviceDelete": "Delete Services",
+        "serviceWrite": "Create Services",
+        "userDelete": "Delete Users",
+        "userRead": "Read Users",
+        "userWrite": "Create Users"
+      }
+    },
+    "users": {
+      "create": {
+        "error": "Could not create a new user: {{error}}",
+        "organisation": "Organisation",
+        "submit": "Submit",
+        "success": "User created successfully",
+        "title": "Create a new User"
+      },
+      "list": {
+        "create": "Create a new user",
+        "error": "Could not load the users",
+        "noData": "No users found",
+        "organisation": "Organisation",
+        "title": "Organisation Users"
+      },
+      "model": {
+        "email": "Email",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "role": "Role"
+      }
+    }
+  },
+  "organisation_drawer": {
+  },
+  "organisations": {
+    "create": {
+      "error": "Could not create a new organisation: {{error}}",
+      "name": "Name",
+      "submit": "Create",
+      "success": "Organisation created successfully",
+      "title": "Create a new Organisation"
+    },
+    "list": {
+      "actions": "Actions",
+      "create": "Create a new organisation",
+      "createdAt": "Created At",
+      "description": "Description",
+      "name": "Name",
+      "noData": "No organisations found, click the button below to create a new one"
+    }
+  },
+  "releases": {
+    "create": {
+      "error": "Error creating new release: {{error}}",
+      "submit": "Submit",
+      "success": "Release created successfully"
+    }
+  },
+  "serviceTemplate": {
+    "create": {
+      "error": "Service Template could not be created: {{error}}",
+      "submit": "Submit",
+      "success": "Service Template created successfully",
+      "title": "Create a new ServiceTemplate"
+    },
+    "list": {
+      "create": "Create ServiceTemplate",
+      "error": "Couldn't load Service Templates",
+      "noData": "No Service Templates found",
+      "title": "Service Templates"
+    },
+    "model": {
+      "localizedMetadata": "Localized Metadata",
+      "name": "Name",
+      "staticMetadata": "Static Metadata"
+    }
+  },
+  "services": {
+    "create": {
+      "error": "Could not create a new service: {{error}}",
+      "submit": "Create",
+      "success": "Service created successfully",
+      "title": "Create a new Service"
+    },
+    "drawer": {
+      "locales": "Locales",
+      "releases": "Releases"
+    },
+    "model": {
+      "description": "Description",
+      "name": "Name",
+      "template": "Template",
+      "updatedAt": "Last updated: {{updatedAt}}"
+    },
+    "noneFound": "No Services found"
+  },
+  "unauthorizedPage": {
+    "subtitle": "You are not authorized to access this page.",
+    "title": "Unauthorized"
+  }
 }

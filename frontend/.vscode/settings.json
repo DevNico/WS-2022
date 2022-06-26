@@ -10,7 +10,10 @@
 	},
 	"typescript.suggest.completeFunctionCalls": true,
 	"editor.codeActionsOnSave": {
-		"source.fixAll": true,
+		"source.fixAll": false,
 		"source.organizeImports": false
-	}
+	},
+	"cSpell.words": [
+		"cospired"
+	]
 }

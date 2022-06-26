@@ -1,6 +1,7 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import Keycloak from 'keycloak-js';
+import { ConfirmProvider } from 'material-ui-confirm';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -56,14 +57,16 @@ export const Root: React.FC = () => {
 				<QueryClientProvider client={queryClient}>
 					<BrowserRouter>
 						<ThemeProvider theme={theme}>
-							{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-							<CssBaseline />
-							<Router />
-							<Toaster
-								position='top-right'
-								reverseOrder={false}
-							/>
-							<ReactQueryDevtools initialIsOpen={false} />
+							<ConfirmProvider>
+								{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+								<CssBaseline />
+								<Router />
+								<Toaster
+									position='top-right'
+									reverseOrder={false}
+								/>
+								<ReactQueryDevtools initialIsOpen={false} />
+							</ConfirmProvider>
 						</ThemeProvider>
 					</BrowserRouter>
 				</QueryClientProvider>

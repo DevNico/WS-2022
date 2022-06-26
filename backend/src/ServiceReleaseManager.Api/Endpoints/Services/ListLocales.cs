@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceId>.WithActionResult<
+public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceRouteName>.WithActionResult<
   List<LocaleRecord>>
 {
   private readonly ILocaleService _localeService;
@@ -17,7 +17,7 @@ public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceId>.With
     _localeService = localeService;
   }
 
-  [HttpGet(ListLocalesByServiceId.Route)]
+  [HttpGet(ListLocalesByServiceRouteName.Route)]
   [SwaggerOperation(
     Summary = "List all locales",
     OperationId = "Locales.List",
@@ -26,10 +26,11 @@ public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceId>.With
   [SwaggerResponse(200, "Locales found", typeof(List<LocaleRecord>))]
   [SwaggerResponse(404, "The service was not found")]
   public override async Task<ActionResult<List<LocaleRecord>>> HandleAsync(
-    [FromRoute] ListLocalesByServiceId request,
+    [FromRoute] ListLocalesByServiceRouteName request,
     CancellationToken cancellationToken = new())
   {
-    var locales = await _localeService.ListByServiceId(request.ServiceId, cancellationToken);
+    var locales =
+      await _localeService.ListByServiceRouteName(request.ServiceRouteName, cancellationToken);
     return this.ToActionResult(locales.MapValue(l => l.ConvertAll(LocaleRecord.FromEntity)));
   }
 }

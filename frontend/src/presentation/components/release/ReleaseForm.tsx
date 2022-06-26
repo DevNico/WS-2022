@@ -27,7 +27,7 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 
 	const queryClient = useQueryClient();
 	const createRelease = useMutation(releaseCreate);
-	const locales = useLocalesList(service.id!);
+	const locales = useLocalesList(service.routeName!);
 	const isLoading = createRelease.isLoading || locales.isLoading;
 
 	const validationSchema = yup.object({
