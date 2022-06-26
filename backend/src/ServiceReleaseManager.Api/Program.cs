@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using ServiceReleaseManager.Api;
@@ -128,7 +129,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultCoreModule());
   containerBuilder.RegisterModule(
-    new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development", config));
+    new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development", config,
+      builder.Environment.ContentRootPath));
 });
 
 var app = builder.Build();
@@ -141,6 +143,18 @@ if (app.Environment.IsDevelopment())
   app.UseShowAllServicesMiddleware();
   app.UseDeveloperExceptionPage();
 }
+
+app.UseStaticFiles(new StaticFileOptions
+{
+  FileProvider = new PhysicalFileProvider(
+    Path.Combine(builder.Environment.ContentRootPath, "StaticFiles")),
+  RequestPath = "/static-files",
+  OnPrepareResponse = ctx =>
+  {
+    ctx.Context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+    ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={60 * 60 * 24 * 7}");
+  }
+});
 
 if (swaggerConfig.GetValue<bool>("Enabled"))
 {

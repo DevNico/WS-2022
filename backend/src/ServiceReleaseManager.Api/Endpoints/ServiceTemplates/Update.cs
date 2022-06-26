@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ardalis.Result;
+using Ardalis.Result.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
@@ -41,15 +43,16 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
       return NotFound();
     }
 
-    string staticMetadata, localizedMetadata;
-    try
+    var staticMetadata = await _metadataValidator.NormalizeMetadata(request.StaticMetadata);
+    if (!staticMetadata.IsSuccess)
     {
-      staticMetadata = _metadataValidator.NormalizeMetadata(request.StaticMetadata);
-      localizedMetadata = _metadataValidator.NormalizeMetadata(request.LocalizedMetadata);
+      return this.ToActionResult(Result.Invalid(staticMetadata.ValidationErrors));
     }
-    catch (MetadataFormatValidationError e)
+
+    var localizedMetadata = await _metadataValidator.NormalizeMetadata(request.LocalizedMetadata);
+    if (!localizedMetadata.IsSuccess)
     {
-      return BadRequest(ErrorResponse.FromException(e));
+      return this.ToActionResult(Result.Invalid(localizedMetadata.ValidationErrors));
     }
 
     serviceTemplate.Name = request.Name;
