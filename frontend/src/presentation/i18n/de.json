@@ -140,6 +140,12 @@
       "noData": "Keine Organisationen gefunden"
     }
   },
+  "release": {
+    "list": {
+      "create": "",
+      "title": ""
+    }
+  },
   "releases": {
     "create": {
       "error": "",

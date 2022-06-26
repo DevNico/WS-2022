@@ -17,6 +17,9 @@
   },
   "common": {
     "__i18n_ally_root__": {
+      "confirmation": {
+        "delete": ""
+      },
       "error": {
         "loading": ""
       },
@@ -149,6 +152,12 @@
       "description": "Description",
       "name": "Name",
       "noData": "No organisations found, click the button below to create a new one"
+    }
+  },
+  "release": {
+    "list": {
+      "create": "Create Release",
+      "title": "Releases"
     }
   },
   "releases": {
