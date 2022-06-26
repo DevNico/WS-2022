@@ -1,17 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Ardalis.Result;
+using Newtonsoft.Json;
 
 namespace ServiceReleaseManager.Core.Interfaces;
 
 public interface IMetadataFormatValidator
 {
-  public string NormalizeMetadata(List<MetadataArrayElement> metadata);
-}
-
-public class MetadataFormatValidationError : Exception
-{
-  public MetadataFormatValidationError(string message) : base(message)
-  {
-  }
+  public Task<Result<string>> NormalizeMetadata(List<MetadataArrayElement> metadata);
 }
 
 public record MetadataArrayElement(
