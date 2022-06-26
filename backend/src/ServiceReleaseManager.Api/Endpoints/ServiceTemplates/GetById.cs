@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
-public class Get : EndpointBase.WithRequest<GetServiceTemplate>.WithActionResult<
+public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionResult<
   ServiceTemplateRecord>
 {
   private readonly IRepository<ServiceTemplate> _repository;
@@ -16,20 +16,20 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplate>.WithActionResult
     _repository = repository;
   }
 
-  [HttpGet(GetServiceTemplate.Route)]
+  [HttpGet(GetServiceTemplateById.Route)]
   [SwaggerOperation(
     Summary = "Get a service template",
-    Description = "Get a service template by its name",
+    Description = "Get a service template by its id",
     OperationId = "ServiceTemplate.Get",
     Tags = new[] { "ServiceTemplateEndpoints" }
   )]
   [SwaggerResponse(200, "The service template was found", typeof(ServiceTemplateRecord))]
   [SwaggerResponse(404, "The service template was not found")]
   public override async Task<ActionResult<ServiceTemplateRecord>> HandleAsync(
-    [FromRoute] GetServiceTemplate request,
+    [FromRoute] GetServiceTemplateById request,
     CancellationToken cancellationToken = new())
   {
-    var spec = new ServiceTemplateByNameSpec(request.ServiceTemplateName);
+    var spec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
     var template = await _repository.GetBySpecAsync(spec, cancellationToken);
     if (template == null)
     {

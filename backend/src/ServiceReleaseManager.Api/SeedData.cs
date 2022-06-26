@@ -13,8 +13,12 @@ public static class SeedData
   public static readonly Organisation TestOrganisation2 =
     new("Test Organisation Deactivated") { IsActive = false };
 
+
+  public static readonly ServiceTemplate TestServiceTemplate1 =
+    new("Test Service Template", "[]", "[]", 1);
+
   public static readonly Service TestService1 =
-    new("Test Service", "For testing purposes", 1);
+    new("Test Service", "For testing purposes", 1, 1);
 
   public static void Initialize(IServiceProvider serviceProvider)
   {

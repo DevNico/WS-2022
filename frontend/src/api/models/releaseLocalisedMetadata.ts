@@ -5,8 +5,8 @@
  * OpenAPI spec version: v1
  */
 import type { DomainEventBase } from './domainEventBase';
-import type { Release } from './release';
 import type { Locale } from './locale';
+import type { Release } from './release';
 
 export interface ReleaseLocalisedMetadata {
 	id?: number;

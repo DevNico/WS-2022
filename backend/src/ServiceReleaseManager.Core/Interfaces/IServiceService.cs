@@ -5,10 +5,17 @@ namespace ServiceReleaseManager.Core.Interfaces;
 
 public interface IServiceService
 {
-  public Task<Result<Service>> Create(Service service, CancellationToken cancellationToken);
+  public Task<Result<Service>> Create(
+    string name,
+    string description,
+    int serviceTemplateId,
+    CancellationToken cancellationToken
+  );
 
-  public Task<Result<List<Service>>> GetByOrganisationUserIds(ICollection<int> organisationUserIds,
-    CancellationToken cancellationToken);
+  public Task<Result<List<Service>>> GetByOrganisationUserIds(
+    ICollection<int> organisationUserIds,
+    CancellationToken cancellationToken
+  );
 
   public Task<Result<Service>> GetById(int id, CancellationToken cancellationToken);
 
@@ -17,8 +24,11 @@ public interface IServiceService
     CancellationToken cancellationToken
   );
 
-  public Task<Result<Service>> GetByNameAndOrganisationId(string name, int organisationId,
-    CancellationToken cancellationToken);
+  public Task<Result<Service>> GetByNameAndOrganisationId(
+    string name,
+    int organisationId,
+    CancellationToken cancellationToken
+  );
 
   public Task Update(Service service, CancellationToken cancellationToken);
 

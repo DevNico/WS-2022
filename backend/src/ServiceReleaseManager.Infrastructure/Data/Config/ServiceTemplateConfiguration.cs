@@ -11,5 +11,11 @@ public class ServiceTemplateConfiguration : IEntityTypeConfiguration<ServiceTemp
     builder
       .HasIndex(s => s.Name)
       .IsUnique();
+
+    builder
+      .HasOne(s => s.Organisation)
+      .WithMany()
+      .HasForeignKey(s => s.OrganisationId)
+      .IsRequired();
   }
 }

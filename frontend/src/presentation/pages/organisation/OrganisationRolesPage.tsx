@@ -6,11 +6,11 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useRouteParams } from 'typesafe-routes';
-import { useOrganisationRolesList } from '../../api/organisation-role/organisation-role';
-import { useOrganisationsGetByRouteName } from '../../api/organisation/organisation';
-import CreateOrganisationRoleDialog from '../components/organisationRoles/CreateOrganisationRoleDialog';
-import OrganisationRolesTable from '../components/organisationRoles/OrganisationRolesTable';
-import { organisationRoute } from '../Router';
+import { useOrganisationRolesList } from '../../../api/organisation-role/organisation-role';
+import { useOrganisationsGetByRouteName } from '../../../api/organisation/organisation';
+import CreateOrganisationRoleDialog from '../../components/organisationRole/CreateOrganisationRoleDialog';
+import OrganisationRolesTable from '../../components/organisationRole/OrganisationRolesTable';
+import { organisationRoute } from '../../Router';
 
 const OrganisationRolesPage: React.FC = () => {
 	const { name } = useRouteParams(organisationRoute);

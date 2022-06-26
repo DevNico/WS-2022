@@ -9,14 +9,17 @@ import { useKeycloak } from '@react-keycloak/web';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import RouterButton from '../../components/RouterButton';
+import RouterLink from '../../components/RouterLink';
 import { homeRoute } from '../../Router';
 import { drawerOpenState } from '../../store/generalState';
 import { isSuperAdminState } from '../../store/keycloakState';
-import RouterButton from '../RouterButton';
-import RouterLink from '../RouterLink';
-import { useDrawer } from './Drawer';
 
-const HomeAppBar: React.FC = () => {
+interface AppBarProps {
+	hasDrawer: boolean;
+}
+
+const AppBar: React.FC<AppBarProps> = ({ hasDrawer }) => {
 	const { keycloak } = useKeycloak();
 	const { t } = useTranslation();
 
@@ -34,12 +37,10 @@ const HomeAppBar: React.FC = () => {
 		closeUserMenu();
 	}, [keycloak]);
 
-	const drawer = useDrawer();
-
 	return (
 		<MuiAppBar position='relative' elevation={0}>
 			<Toolbar>
-				{drawer && (
+				{hasDrawer && (
 					<IconButton
 						color='inherit'
 						aria-label='open drawer'
@@ -103,4 +104,4 @@ const HomeAppBar: React.FC = () => {
 	);
 };
 
-export default HomeAppBar;
+export default AppBar;

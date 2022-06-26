@@ -1,4 +1,3 @@
-import styled from '@mui/material/styles/styled';
 import React, { PropsWithChildren } from 'react';
 import Div100vh from 'react-div-100vh';
 import Center from './Center';

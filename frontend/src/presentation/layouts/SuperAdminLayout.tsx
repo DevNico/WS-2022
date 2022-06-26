@@ -1,7 +1,9 @@
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { isSuperAdminState } from '../store/keycloakState';
+import BaseLayout from './BaseLayout';
+import AdminDrawer from './components/AdminDrawer';
 
 const SuperAdminLayout: React.FC = () => {
 	const navigate = useNavigate();
@@ -12,7 +14,7 @@ const SuperAdminLayout: React.FC = () => {
 		return <></>;
 	}
 
-	return <Outlet />;
+	return <BaseLayout drawer={<AdminDrawer />} />;
 };
 
 export default SuperAdminLayout;

@@ -1,15 +1,13 @@
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button/Button';
-import Card from '@mui/material/Card/Card';
-import CardContent from '@mui/material/CardContent/CardContent';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import React from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useOrganisationsList } from '../../api/organisation/organisation';
-import CreateOrganisationDialog from '../components/organisation/CreateOrganisationDialog';
-import OrganisationsTable from '../components/organisation/OrganisationsTable';
+import { useOrganisationsList } from '../../../api/organisation/organisation';
+import CreateOrganisationDialog from '../../components/organisation/CreateOrganisationDialog';
+import OrganisationsTable from '../../components/organisation/OrganisationsTable';
 
 const AdminOrganisationsPage: React.FC = () => {
 	const { data, isLoading, isError, error } = useOrganisationsList();

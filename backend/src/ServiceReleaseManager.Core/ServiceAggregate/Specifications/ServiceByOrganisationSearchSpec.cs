@@ -1,17 +1,16 @@
 ﻿using Ardalis.Specification;
-using ServiceReleaseManager.Core.OrganisationAggregate;
 
 namespace ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 
 public sealed class ServiceByOrganisationSearchSpec :
-  Specification<Organisation, IEnumerable<Service>>, ISingleResultSpecification
+  Specification<Service>
 {
-  public ServiceByOrganisationSearchSpec(string name)
+  public ServiceByOrganisationSearchSpec(string organisationRouteName)
   {
     Query
-      .Where(organisation => organisation.RouteName == name)
-      .Include(organisation => organisation.Services);
+      .Include(service => service.Organisation);
     Query
-      .Select(organisation => organisation.Services);
+      .Where(service => service.IsActive)
+      .Where(service => service.Organisation.RouteName == organisationRouteName.ToLower());
   }
 }

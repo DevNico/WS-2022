@@ -12,6 +12,13 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
       .HasIndex(service => service.RouteName)
       .IsUnique();
 
+
+    builder
+      .HasOne(service => service.ServiceTemplate)
+      .WithMany()
+      .HasForeignKey(service => service.ServiceTemplateId)
+      .IsRequired();
+
     builder
       .HasMany(service => service.Locales)
       .WithOne()

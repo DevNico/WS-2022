@@ -34,15 +34,8 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
     UpdateServiceTemplate request,
     CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length > 50 ||
-        request.LocalizedMetadata == null ||
-        request.StaticMetadata == null)
-    {
-      return BadRequest(new ErrorResponse("A required parameter was null"));
-    }
-
-    var nameSpec = new ServiceTemplateByNameSpec(request.Name);
-    var serviceTemplate = await _repository.GetBySpecAsync(nameSpec, cancellationToken);
+    var idSpec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
+    var serviceTemplate = await _repository.GetBySpecAsync(idSpec, cancellationToken);
     if (serviceTemplate == null)
     {
       return NotFound();
@@ -59,6 +52,7 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
       return BadRequest(ErrorResponse.FromException(e));
     }
 
+    serviceTemplate.Name = request.Name;
     serviceTemplate.LocalizedMetadata = localizedMetadata;
     serviceTemplate.StaticMetadata = staticMetadata;
     await _repository.UpdateAsync(serviceTemplate, cancellationToken);

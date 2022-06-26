@@ -1,17 +1,15 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
-import React, { useEffect } from 'react';
+import Keycloak from 'keycloak-js';
+import React from 'react';
+import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import './i18n';
 import Router from './Router';
 import theme from './theme';
-import './i18n';
-import { DefaultOptions, QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { RecoilRoot, useSetRecoilState } from 'recoil';
-import { Toaster } from 'react-hot-toast';
-import Keycloak from 'keycloak-js';
-import { ErrorResponse } from '../api/models';
-import { ErrorType } from '../api/axios';
 
 const queryClient = new QueryClient({
 	defaultOptions: {

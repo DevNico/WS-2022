@@ -5,8 +5,8 @@
  * OpenAPI spec version: v1
  */
 import type { DomainEventBase } from './domainEventBase';
-import type { ServiceRole } from './serviceRole';
 import type { OrganisationUser } from './organisationUser';
+import type { ServiceRole } from './serviceRole';
 
 export interface ServiceUser {
 	id?: number;

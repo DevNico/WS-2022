@@ -2,11 +2,7 @@ import { LinearProgress } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-	OrganisationRoleRecord,
-	OrganisationUserRecord,
-} from '../../../api/models';
-import { useOrganisationRolesList } from '../../../api/organisation-role/organisation-role';
+import { OrganisationUserRecord } from '../../../api/models';
 import DataGridOverlay from '../DataGridOverlay';
 
 export interface OrganisationUsersTableProps {

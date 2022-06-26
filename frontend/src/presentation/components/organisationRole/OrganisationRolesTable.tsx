@@ -3,7 +3,6 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { OrganisationRoleRecord } from '../../../api/models';
-import { useOrganisationRolesList } from '../../../api/organisation-role/organisation-role';
 import DataGridOverlay from '../DataGridOverlay';
 
 export interface OrganisationRolesTableProps {

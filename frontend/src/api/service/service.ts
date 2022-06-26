@@ -5,25 +5,25 @@
  * OpenAPI spec version: v1
  */
 import {
-	useQuery,
-	useMutation,
-	UseQueryOptions,
-	UseMutationOptions,
-	QueryFunction,
 	MutationFunction,
-	UseQueryResult,
+	QueryFunction,
 	QueryKey,
+	useMutation,
+	UseMutationOptions,
+	useQuery,
+	UseQueryOptions,
+	UseQueryResult,
 } from 'react-query';
-import type {
-	ServiceRecord,
-	ErrorResponse,
-	CreateServiceRequest,
-	ReleaseRecord,
-	LocaleRecord,
-	ServiceUserRecord,
-	ListUsersByServiceId,
-} from '.././models';
 import { customInstance, ErrorType } from '.././axios';
+import type {
+	CreateServiceRequest,
+	ErrorResponse,
+	ListUsersByServiceId,
+	LocaleRecord,
+	ReleaseRecord,
+	ServiceRecord,
+	ServiceUserRecord,
+} from '.././models';
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (

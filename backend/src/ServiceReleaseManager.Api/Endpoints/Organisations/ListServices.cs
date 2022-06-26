@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Endpoints.Services;
-using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -11,11 +10,11 @@ namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 public class ListServices : EndpointBase.WithRequest<ListOrganisationServicesRequest>.
   WithActionResult<List<ServiceRecord>>
 {
-  private readonly IRepository<Organisation> _repository;
+  private readonly IRepository<Service> _serviceRepository;
 
-  public ListServices(IRepository<Organisation> repository)
+  public ListServices(IRepository<Service> serviceRepository)
   {
-    _repository = repository;
+    _serviceRepository = serviceRepository;
   }
 
   [HttpGet(ListOrganisationServicesRequest.Route)]
@@ -31,19 +30,8 @@ public class ListServices : EndpointBase.WithRequest<ListOrganisationServicesReq
     CancellationToken cancellationToken = new())
   {
     var spec = new ServiceByOrganisationSearchSpec(request.OrganisationRouteName);
+    var services = await _serviceRepository.ListAsync(spec, cancellationToken);
 
-    var services = await _repository.GetBySpecAsync<IEnumerable<Service>>(spec, cancellationToken);
-
-    if (services == null)
-    {
-      return Ok(new List<ServiceRecord>());
-    }
-
-    var response = services
-      .Where(service => service.IsActive)
-      .ToList()
-      .ConvertAll(ServiceRecord.FromEntity);
-
-    return Ok(response);
+    return Ok(services.ConvertAll(ServiceRecord.FromEntity));
   }
 }

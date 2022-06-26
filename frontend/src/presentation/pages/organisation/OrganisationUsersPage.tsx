@@ -6,11 +6,11 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useRouteParams } from 'typesafe-routes';
-import { useOrganisationUserList } from '../../api/organisation-user/organisation-user';
-import { useOrganisationsGetByRouteName } from '../../api/organisation/organisation';
-import CreateOrganisationUserDialog from '../components/organisationUsers/CreateOrganisationUserDialog';
-import OrganisationUsersTable from '../components/organisationUsers/OrganisationUsersTable';
-import { organisationRoute } from '../Router';
+import { useOrganisationUserList } from '../../../api/organisation-user/organisation-user';
+import { useOrganisationsGetByRouteName } from '../../../api/organisation/organisation';
+import CreateOrganisationUserDialog from '../../components/organisationUser/CreateOrganisationUserDialog';
+import OrganisationUsersTable from '../../components/organisationUser/OrganisationUsersTable';
+import { organisationRoute } from '../../Router';
 
 const OrganisationUsersPage: React.FC = () => {
 	const { name } = useRouteParams(organisationRoute);

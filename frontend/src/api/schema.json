@@ -170,55 +170,7 @@
 						"description": "The service template was deleted"
 					},
 					"404": {
-						"description": "A service template with the given name was not found"
-					},
-					"401": {
-						"description": "Unauthorized"
-					},
-					"403": {
-						"description": "Forbidden"
-					}
-				},
-				"security": [
-					{
-						"OAuth2": ["OAuth2"]
-					}
-				]
-			},
-			"get": {
-				"tags": ["ServiceTemplateEndpoints"],
-				"summary": "List all service templates",
-				"description": "List all service templates",
-				"operationId": "ServiceTemplate.List",
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"text/plain": {
-								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/ServiceTemplateRecord"
-									}
-								}
-							},
-							"application/json": {
-								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/ServiceTemplateRecord"
-									}
-								}
-							},
-							"text/json": {
-								"schema": {
-									"type": "array",
-									"items": {
-										"$ref": "#/components/schemas/ServiceTemplateRecord"
-									}
-								}
-							}
-						}
+						"description": "A service template with the given id was not found"
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -1655,19 +1607,20 @@
 				]
 			}
 		},
-		"/api/v1/service-templates/{ServiceTemplateName}": {
+		"/api/v1/service-templates/{ServiceTemplateId}": {
 			"get": {
 				"tags": ["ServiceTemplateEndpoints"],
 				"summary": "Get a service template",
-				"description": "Get a service template by its name",
+				"description": "Get a service template by its id",
 				"operationId": "ServiceTemplate.Get",
 				"parameters": [
 					{
-						"name": "ServiceTemplateName",
+						"name": "ServiceTemplateId",
 						"in": "path",
 						"required": true,
 						"schema": {
-							"type": "string"
+							"type": "integer",
+							"format": "int32"
 						}
 					}
 				],
@@ -2279,6 +2232,66 @@
 				]
 			}
 		},
+		"/api/v1/organisations/{OrganisationRouteName}/services-templates": {
+			"get": {
+				"tags": ["ServiceTemplateEndpoints"],
+				"summary": "List all service templates",
+				"description": "List all service templates",
+				"operationId": "ServiceTemplate.List",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceTemplateRecord"
+									}
+								}
+							},
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceTemplateRecord"
+									}
+								}
+							},
+							"text/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ServiceTemplateRecord"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
 		"/api/v1/services/{ServiceId}/users": {
 			"get": {
 				"tags": ["Service"],
@@ -2516,7 +2529,7 @@
 				"additionalProperties": false
 			},
 			"CreateServiceRequest": {
-				"required": ["description", "name", "organisationId"],
+				"required": ["description", "name", "serviceTemplateId"],
 				"type": "object",
 				"properties": {
 					"name": {
@@ -2527,7 +2540,7 @@
 					"description": {
 						"type": "string"
 					},
-					"organisationId": {
+					"serviceTemplateId": {
 						"type": "integer",
 						"format": "int32"
 					}
@@ -2574,9 +2587,18 @@
 				"additionalProperties": false
 			},
 			"CreateServiceTemplate": {
-				"required": ["localizedMetadata", "name", "staticMetadata"],
+				"required": [
+					"localizedMetadata",
+					"name",
+					"organisationId",
+					"staticMetadata"
+				],
 				"type": "object",
 				"properties": {
+					"organisationId": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"name": {
 						"type": "string"
 					},
@@ -3005,6 +3027,10 @@
 				"required": ["localizedMetadata", "name", "staticMetadata"],
 				"type": "object",
 				"properties": {
+					"serviceTemplateId": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"name": {
 						"type": "string"
 					},

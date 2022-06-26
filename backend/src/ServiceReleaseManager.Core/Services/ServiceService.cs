@@ -11,17 +11,50 @@ namespace ServiceReleaseManager.Core.Services;
 public class ServiceService : IServiceService
 {
   private readonly IRepository<Service> _serviceRepository;
+  private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
   private readonly IRepository<Organisation> _organisationRepository;
 
-  public ServiceService(IRepository<Service> serviceRepository,
-    IRepository<Organisation> organisationRepository)
+  public ServiceService(
+    IRepository<Service> serviceRepository,
+    IRepository<Organisation> organisationRepository,
+    IRepository<ServiceTemplate> serviceTemplateRepository
+  )
   {
     _serviceRepository = serviceRepository;
     _organisationRepository = organisationRepository;
+    _serviceTemplateRepository = serviceTemplateRepository;
   }
 
-  public async Task<Result<Service>> Create(Service service, CancellationToken cancellationToken)
+  public async Task<Result<Service>> Create(
+    string name,
+    string description,
+    int serviceTemplateId,
+    CancellationToken cancellationToken
+  )
   {
+    var templateSpec = new ServiceTemplateByIdSpec(serviceTemplateId);
+    var template = await _serviceTemplateRepository.GetBySpecAsync(templateSpec, cancellationToken);
+
+    if (template == null)
+    {
+      return Result<Service>.Invalid(new List<ValidationError>
+      {
+        new()
+        {
+          Identifier = "ServiceTemplateId",
+          Severity = ValidationSeverity.Error,
+          ErrorMessage = "Service template not found"
+        }
+      });
+    }
+
+    var service = new Service(
+      name: name,
+      description: description,
+      serviceTemplateId: template.Id,
+      organisationId: template.OrganisationId
+    );
+
     var created = await _serviceRepository.AddAsync(service, cancellationToken);
     await _serviceRepository.SaveChangesAsync(cancellationToken);
 

@@ -1,4 +1,4 @@
-import Button, { ButtonProps } from '@mui/material/Button/Button';
+import { ButtonProps } from '@mui/material/Button/Button';
 import IconButton from '@mui/material/IconButton/IconButton';
 import React from 'react';
 import { Link, LinkProps } from 'react-router-dom';

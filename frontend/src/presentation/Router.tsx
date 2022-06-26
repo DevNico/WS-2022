@@ -1,27 +1,39 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { route, stringParser } from 'typesafe-routes';
-import HomeLayout from './layouts/HomeLayout';
+import AuthLayout from './layouts/AuthLayout';
+import BaseLayout from './layouts/BaseLayout';
 import OrganisationLayout from './layouts/OrganisationLayout';
+import ServiceLayout from './layouts/ServiceLayout';
 import SuperAdminLayout from './layouts/SuperAdminLayout';
-import AdminOrganisationsPage from './pages/AdminOrganisationsPage';
+import AdminOrganisationsPage from './pages/admin/AdminOrganisationsPage';
 import ChooseOrganisationPage from './pages/ChooseOrganisationPage';
 import NotFoundPage from './pages/NotFoundPage';
-import OrganisationRolesPage from './pages/OrganisationRolesPage';
-import OrganisationUsersPage from './pages/OrganisationUsersPage';
-import ReleasesPage from './pages/ReleasesPage';
-import ServicesPage from './pages/ServicesPage';
+import CreateServiceTemplatePage from './pages/organisation/CreateServiceTemplatePage';
+import OrganisationRolesPage from './pages/organisation/OrganisationRolesPage';
+import OrganisationUsersPage from './pages/organisation/OrganisationUsersPage';
+import ServiceTemplatesPage from './pages/organisation/ServiceTemplatesPage';
+import ReleasesPage from './pages/service/ReleasesPage';
+import ServicesPage from './pages/service/ServicesPage';
 
 // --- ADMIN ---
 export const adminOrganisationsRoute = route('organisations', {}, {});
 export const adminRoute = route(
 	'admin',
 	{},
-	{ organisations: adminOrganisationsRoute }
+	{
+		organisations: adminOrganisationsRoute,
+	}
 );
 
 // --- Organisation ---
 export const servicesRoute = route('services', {}, {});
+export const createServiceTemplateRoute = route('create', {}, {});
+export const serviceTemplatesRoute = route(
+	'service-templates',
+	{},
+	{ create: createServiceTemplateRoute }
+);
 export const organisationUsersRoute = route('users', {}, {});
 export const organisationRolesRoute = route('roles', {}, {});
 export const organisationRoute = route(
@@ -31,6 +43,7 @@ export const organisationRoute = route(
 		users: organisationUsersRoute,
 		roles: organisationRolesRoute,
 		services: servicesRoute,
+		serviceTemplates: serviceTemplatesRoute,
 	}
 );
 
@@ -55,8 +68,10 @@ export const homeRoute = route(
 const Router: React.FC = () => {
 	return (
 		<Routes>
-			<Route element={<HomeLayout />}>
-				<Route index element={<ChooseOrganisationPage />} />
+			<Route element={<AuthLayout />}>
+				<Route element={<BaseLayout />}>
+					<Route index element={<ChooseOrganisationPage />} />
+				</Route>
 
 				<Route
 					path={organisationRoute.template}
@@ -74,13 +89,20 @@ const Router: React.FC = () => {
 						path={organisationRolesRoute.template}
 						element={<OrganisationRolesPage />}
 					/>
+					<Route path={serviceTemplatesRoute.template}>
+						<Route index element={<ServiceTemplatesPage />} />
+						<Route
+							path={createServiceTemplateRoute.template}
+							element={<CreateServiceTemplatePage />}
+						/>
+					</Route>
 					<Route
 						path={servicesRoute.template}
 						element={<ServicesPage />}
 					/>
 				</Route>
 
-				<Route path={serviceRoute.template}>
+				<Route path={serviceRoute.template} element={<ServiceLayout />}>
 					<Route
 						index
 						element={<Navigate to={releasesRoute({}).$} />}

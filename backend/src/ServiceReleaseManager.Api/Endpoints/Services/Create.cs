@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
-using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -30,18 +29,24 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
   public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request,
     CancellationToken cancellationToken = new())
   {
-    var found =
-      await _service.GetByNameAndOrganisationId(request.Name, request.OrganisationId,
-        cancellationToken);
+    var found = await _service.GetByNameAndOrganisationId(
+      request.Name,
+      request.ServiceTemplateId,
+      cancellationToken
+    );
+
     if (found.IsSuccess)
     {
       return Conflict(
         new ErrorResponse("A service with the same name and organisation already exists"));
     }
 
-    var service = new Service(request.Name, request.Description, request.OrganisationId);
-    var created = await _service.Create(service, cancellationToken);
-
+    var created = await _service.Create(
+      request.Name,
+      request.Description,
+      request.ServiceTemplateId,
+      cancellationToken
+    );
     return this.ToActionResult(created.MapValue(ServiceRecord.FromEntity));
   }
 }

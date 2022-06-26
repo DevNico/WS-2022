@@ -1,134 +1,161 @@
 {
-  "admin": {
-    "organisations": {
-      "title": ""
-    }
-  },
-  "appbar": {
-    "admin": "",
-    "usermenu": {
-      "logout": "Abmelden"
-    }
-  },
-  "common": {
-    "error": {
-      "loading": ""
-    },
-    "loading": "",
-    "submit": ""
-  },
-  "common.retry": "Erneut versuchen",
-  "home.noOrganisations": "Keine Organisationen gefunden, Sie müssen zuerst zu einer Organisation eingeladen werden!",
-  "homeLayout": {
-    "organisations": "Organisationen",
-    "roles": "",
-    "users": "Benutzer"
-  },
-  "login": "Anmelden",
-  "notFoundPage.goToHome": "Zurück zur Startseite",
-  "notFoundPage.subtitle": "Leider konnten wir die von Ihnen gesuchte Seite nicht finden. Vielleicht haben Sie sich bei der URL vertippt? Überprüfen Sie bitte Ihre Rechtschreibung.",
-  "notFoundPage.title": "Die Seite wurde nicht gefunden",
-  "organisation": {
-    "card": {
-      "updatedAt": ""
-    },
-    "drawer": {
-      "roles": "",
-      "services": "",
-      "title": "",
-      "users": ""
-    },
-    "roles": {
-      "create": {
-        "error": "",
-        "name": "",
-        "organisation": "",
-        "permissions": "",
-        "service": "",
-        "success": "",
-        "title": "",
-        "user": ""
-      },
-      "list": {
-        "create": "",
-        "error": "",
-        "noData": "",
-        "title": ""
-      },
-      "model": {
-        "serviceDelete": "",
-        "serviceWrite": "",
-        "userDelete": "",
-        "userRead": "",
-        "userWrite": ""
-      }
-    },
-    "users": {
-      "create": {
-        "error": "",
-        "organisation": "",
-        "submit": "",
-        "success": "",
-        "title": ""
-      },
-      "list": {
-        "create": "",
-        "error": "",
-        "noData": "",
-        "organisation": "",
-        "title": ""
-      },
-      "model": {
-        "email": "",
-        "firstName": "",
-        "lastName": "",
-        "role": ""
-      }
-    }
-  },
-  "organisations": {
-    "create": {
-      "error": "",
-      "name": "",
-      "submit": "",
-      "success": "",
-      "title": ""
-    },
-    "list": {
-      "actions": "",
-      "create": "Organisation erstellen",
-      "createdAt": "Erstellt am",
-      "description": "",
-      "name": "",
-      "noData": "Keine Organisationen gefunden"
-    }
-  },
-  "releases": {
-    "create": {
-      "error": "",
-      "submit": "",
-      "success": ""
-    }
-  },
-  "services": {
-    "create": {
-      "error": "",
-      "submit": "",
-      "success": "",
-      "title": ""
-    },
-    "drawer": {
-      "releases": ""
-    },
-    "model": {
-      "description": "",
-      "name": "",
-      "updatedAt": ""
-    },
-    "noneFound": ""
-  },
-  "unauthorizedPage": {
-    "subtitle": "",
-    "title": ""
-  }
+	"admin": {
+		"drawer": {
+			"home": "",
+			"organisations": "",
+			"title": ""
+		},
+		"organisations": {
+			"title": ""
+		}
+	},
+	"appbar": {
+		"admin": "",
+		"usermenu": {
+			"logout": "Abmelden"
+		}
+	},
+	"common": {
+		"error": {
+			"loading": ""
+		},
+		"loading": "",
+		"submit": ""
+	},
+	"common.retry": "Erneut versuchen",
+	"home.noOrganisations": "Keine Organisationen gefunden, Sie müssen zuerst zu einer Organisation eingeladen werden!",
+	"homeLayout": {
+		"organisations": "Organisationen",
+		"roles": "",
+		"users": "Benutzer"
+	},
+	"login": "Anmelden",
+	"notFoundPage.goToHome": "Zurück zur Startseite",
+	"notFoundPage.subtitle": "Leider konnten wir die von Ihnen gesuchte Seite nicht finden. Vielleicht haben Sie sich bei der URL vertippt? Überprüfen Sie bitte Ihre Rechtschreibung.",
+	"notFoundPage.title": "Die Seite wurde nicht gefunden",
+	"organisation": {
+		"card": {
+			"updatedAt": ""
+		},
+		"drawer": {
+			"back": "",
+			"home": "",
+			"roles": "",
+			"serviceTemplates": "",
+			"services": "",
+			"title": "",
+			"users": ""
+		},
+		"roles": {
+			"create": {
+				"error": "",
+				"name": "",
+				"organisation": "",
+				"permissions": "",
+				"service": "",
+				"success": "",
+				"title": "",
+				"user": ""
+			},
+			"list": {
+				"create": "",
+				"error": "",
+				"noData": "",
+				"title": ""
+			},
+			"model": {
+				"serviceDelete": "",
+				"serviceWrite": "",
+				"userDelete": "",
+				"userRead": "",
+				"userWrite": ""
+			}
+		},
+		"users": {
+			"create": {
+				"error": "",
+				"organisation": "",
+				"submit": "",
+				"success": "",
+				"title": ""
+			},
+			"list": {
+				"create": "",
+				"error": "",
+				"noData": "",
+				"organisation": "",
+				"title": ""
+			},
+			"model": {
+				"email": "",
+				"firstName": "",
+				"lastName": "",
+				"role": ""
+			}
+		}
+	},
+	"organisations": {
+		"create": {
+			"error": "",
+			"name": "",
+			"submit": "",
+			"success": "",
+			"title": ""
+		},
+		"list": {
+			"actions": "",
+			"create": "Organisation erstellen",
+			"createdAt": "Erstellt am",
+			"description": "",
+			"name": "",
+			"noData": "Keine Organisationen gefunden"
+		}
+	},
+	"releases": {
+		"create": {
+			"error": "",
+			"submit": "",
+			"success": ""
+		}
+	},
+	"serviceTemplate": {
+		"create": {
+			"error": "",
+			"submit": "",
+			"success": "",
+			"title": ""
+		},
+		"list": {
+			"create": "",
+			"error": "",
+			"noData": "",
+			"title": ""
+		},
+		"model": {
+			"localizedMetadata": "",
+			"name": "",
+			"staticMetadata": ""
+		}
+	},
+	"services": {
+		"create": {
+			"error": "",
+			"submit": "",
+			"success": "",
+			"title": ""
+		},
+		"drawer": {
+			"releases": ""
+		},
+		"model": {
+			"description": "",
+			"name": "",
+			"updatedAt": ""
+		},
+		"noneFound": ""
+	},
+	"unauthorizedPage": {
+		"subtitle": "",
+		"title": ""
+	}
 }

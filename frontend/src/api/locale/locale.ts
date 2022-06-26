@@ -5,17 +5,17 @@
  * OpenAPI spec version: v1
  */
 import {
-	useQuery,
-	useMutation,
-	UseQueryOptions,
-	UseMutationOptions,
-	QueryFunction,
 	MutationFunction,
-	UseQueryResult,
+	QueryFunction,
 	QueryKey,
+	useMutation,
+	UseMutationOptions,
+	useQuery,
+	UseQueryOptions,
+	UseQueryResult,
 } from 'react-query';
-import type { LocaleRecord, CreateLocaleRequest } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
+import type { CreateLocaleRequest, LocaleRecord } from '.././models';
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (

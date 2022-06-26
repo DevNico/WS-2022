@@ -23,7 +23,7 @@ public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutRes
     Tags = new[] { "ServiceTemplateEndpoints" }
   )]
   [SwaggerResponse(201, "The service template was deleted")]
-  [SwaggerResponse(404, "A service template with the given name was not found")]
+  [SwaggerResponse(404, "A service template with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteServiceTemplate request,
     CancellationToken cancellationToken = new())

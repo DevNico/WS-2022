@@ -8,5 +8,9 @@
 	"files.watcherExclude": {
 		"**/target": true
 	},
-	"typescript.suggest.completeFunctionCalls": true
+	"typescript.suggest.completeFunctionCalls": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll": true,
+		"source.organizeImports": false
+	}
 }
