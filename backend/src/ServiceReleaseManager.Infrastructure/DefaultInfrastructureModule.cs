@@ -18,12 +18,14 @@ public class DefaultInfrastructureModule : Module
   private readonly List<Assembly> _assemblies = new();
   private readonly IConfiguration _configuration;
   private readonly bool _isDevelopment;
+  private readonly string _contentRootPath;
 
   public DefaultInfrastructureModule(bool isDevelopment, IConfiguration configuration,
-    Assembly? callingAssembly = null)
+    string contentRootPath, Assembly? callingAssembly = null)
   {
     _isDevelopment = isDevelopment;
     _configuration = configuration;
+    _contentRootPath = contentRootPath;
     var coreAssembly = Assembly.GetAssembly(typeof(Organisation));
     var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
     if (coreAssembly != null)
@@ -106,7 +108,9 @@ public class DefaultInfrastructureModule : Module
       .As<IKeycloakClient>()
       .InstancePerLifetimeScope();
 
-    builder.RegisterType<MetadataFormatValidator>()
+    builder.Register(c =>
+        new MetadataFormatValidator(c.Resolve<ILogger<MetadataFormatValidator>>(),
+          _contentRootPath))
       .As<IMetadataFormatValidator>()
       .InstancePerLifetimeScope();
   }
