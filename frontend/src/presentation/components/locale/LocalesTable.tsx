@@ -1,4 +1,4 @@
-import { LinearProgress } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,25 +9,47 @@ import { renderBoolAsSymbol } from '../../../common/dataGridUtils';
 import { useMutation, useQueryClient } from 'react-query';
 import { localeDelete } from '../../../api/locale/locale';
 import toast from 'react-hot-toast';
+import { getLocalesListQueryKey } from '../../../api/service/service';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useConfirm } from 'material-ui-confirm';
 
 export interface LocalesTableProps {
+	serviceRouteName: string;
 	locales: LocaleRecord[];
 	isLoading: boolean;
 	isError: boolean;
 }
 
 const LocalesTable: React.FC<LocalesTableProps> = ({
+	serviceRouteName,
 	locales,
 	isLoading,
 	isError,
 }) => {
 	const { t } = useTranslation();
 
+	const confirm = useConfirm();
 	const queryClient = useQueryClient();
 	const deleteLocale = useMutation(localeDelete);
 
-	const handleDelete = async () => {
-		// toast.promise();
+	const handleDelete = async (localeId: number) => {
+		const locale = locales.find((l) => l.id === localeId);
+		if (!locale) return;
+
+		await confirm({
+			title: t('locale.delete.confirm', { tag: locale.tag }),
+			confirmationText: t('common.confirmation.delete'),
+			confirmationButtonProps: { color: 'error' },
+		});
+
+		await toast.promise(deleteLocale.mutateAsync(locale.id!), {
+			loading: t('common.loading'),
+			success: t('locale.delete.success'),
+			error: t('locale.delete.error'),
+		});
+
+		queryClient.invalidateQueries(getLocalesListQueryKey(serviceRouteName));
 	};
 
 	const columns: GridColDef<OrganisationUserRecord>[] = [
@@ -62,11 +84,9 @@ const LocalesTable: React.FC<LocalesTableProps> = ({
 			headerName: t('locale.list.actions'),
 			renderCell: (rowData) => (
 				<>
-					{/* <RouterIconButton
-						to={homeRoute({}).organisation({ name: rowData.value })}
-					>
-						<VisibilityIcon />
-					</RouterIconButton> */}
+					<IconButton onClick={() => handleDelete(rowData.value)}>
+						<DeleteIcon />
+					</IconButton>
 				</>
 			),
 		},

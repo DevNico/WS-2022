@@ -54,6 +54,7 @@ const LocalesPage: React.FC = () => {
 				</Button>
 			</Stack>
 			<LocalesTable
+				serviceRouteName={name}
 				locales={data ?? []}
 				isLoading={isLoading}
 				isError={isError}

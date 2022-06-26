@@ -16,6 +16,9 @@
     }
   },
   "common": {
+    "confirmation": {
+      "delete": ""
+    },
     "error": {
       "loading": ""
     },
@@ -35,6 +38,11 @@
       "submit": "",
       "success": "",
       "title": ""
+    },
+    "delete": {
+      "confirm": "",
+      "error": "",
+      "success": ""
     },
     "list": {
       "actions": "",

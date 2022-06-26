@@ -23,6 +23,9 @@
       "loading": "",
       "submit": ""
     },
+    "confirmation": {
+      "delete": "Delete"
+    },
     "error": {
       "loading": "Failed to load data"
     },
@@ -44,6 +47,11 @@
       "submit": "Submit",
       "success": "Create new locale successfully",
       "title": "Create Locale"
+    },
+    "delete": {
+      "confirm": "Are you sure you want to delete the locale {{tag}}?",
+      "error": "Failed to delete locale",
+      "success": "Locale deleted"
     },
     "list": {
       "actions": "Actions",
