@@ -18,8 +18,8 @@ spec:
       restartPolicy: Always
       containers:
         - name: "$NAME"
-          image: "registry.k3s.devnico.cloud/service-release-manager:latest"
-          imagePullPolicy: Always
+          image: "$IMAGE"
+          imagePullPolicy: IfNotPresent
           resources: {}
           env:
             - name: ASPNETCORE_URLS

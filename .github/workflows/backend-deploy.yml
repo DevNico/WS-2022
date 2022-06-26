@@ -5,6 +5,9 @@ on:
         required: true
         type: string
 
+env:
+  IMAGE: "registry.k3s.devnico.cloud/service-release-manager:${{ github.sha }}"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,7 +42,9 @@ jobs:
       - run: docker login -u '${{ steps.secrets.outputs.registry_username }}' -p '${{ steps.secrets.outputs.registry_password }}' registry.k3s.devnico.cloud
         name: 🔒 Login to Docker Registry
 
-      - run: make
+      - run: |
+          docker build -t ${{ env.IMAGE }} .
+          docker push ${{ env.IMAGE }}
         name: 🔨 Build Backend Docker and Push to registry
 
       - uses: danielr1996/envsubst-action@b10d6e6eb5dba1c22527571460ceb83bc17c0b28
@@ -62,6 +67,7 @@ jobs:
           VERSION: ${{ github.sha }}
           ENVIRONMENT: dev
           HOSTNAME: api.dev.srm.devnico.cloud
+          IMAGE: ${{ env.IMAGE }}
         with:
           input: .deployment/deployment.tpl.yaml
           output: .deployment/deployment.yaml
