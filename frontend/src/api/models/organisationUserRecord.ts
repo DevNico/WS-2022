@@ -4,6 +4,7 @@
  * Service Release Manager API
  * OpenAPI spec version: v1
  */
+import type { OrganisationRoleRecord } from './organisationRoleRecord';
 
 export interface OrganisationUserRecord {
 	id?: number;
@@ -11,4 +12,5 @@ export interface OrganisationUserRecord {
 	email?: string | null;
 	firstName?: string | null;
 	lastName?: string | null;
+	organisationRole?: OrganisationRoleRecord;
 }

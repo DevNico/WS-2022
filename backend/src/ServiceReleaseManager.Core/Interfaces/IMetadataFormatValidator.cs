@@ -1,4 +1,6 @@
-﻿namespace ServiceReleaseManager.Core.Interfaces;
+﻿using Newtonsoft.Json;
+
+namespace ServiceReleaseManager.Core.Interfaces;
 
 public interface IMetadataFormatValidator
 {
@@ -20,4 +22,10 @@ public record MetadataArrayElement(
   int? MinLength,
   int? MaxLength,
   bool Required
-);
+)
+{
+  public static List<MetadataArrayElement> FromJson(string json)
+  {
+    return JsonConvert.DeserializeObject<List<MetadataArrayElement>>(json)!;
+  }
+}

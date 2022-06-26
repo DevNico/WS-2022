@@ -1,4 +1,5 @@
-﻿using ServiceReleaseManager.Core.OrganisationAggregate;
+﻿using ServiceReleaseManager.Api.Endpoints.OrganisationRoles;
+using ServiceReleaseManager.Core.OrganisationAggregate;
 
 namespace ServiceReleaseManager.Api.Endpoints.OrganisationUsers;
 
@@ -7,7 +8,8 @@ public record OrganisationUserRecord(
   string UserId,
   string Email,
   string FirstName,
-  string LastName
+  string LastName,
+  OrganisationRoleRecord OrganisationRole
 )
 {
   public static OrganisationUserRecord FromEntity(OrganisationUser user)
@@ -17,7 +19,8 @@ public record OrganisationUserRecord(
       UserId: user.UserId,
       Email: user.Email,
       FirstName: user.FirstName,
-      LastName: user.LastName
+      LastName: user.LastName,
+      OrganisationRole: OrganisationRoleRecord.FromEntity(user.Role)
     );
   }
 }

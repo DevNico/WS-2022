@@ -1,3 +1,4 @@
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import LinearProgress from '@mui/material/LinearProgress/LinearProgress';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
@@ -7,7 +8,6 @@ import { dateValueFormatter } from '../../../util';
 import { homeRoute } from '../../Router';
 import DataGridOverlay from '../DataGridOverlay';
 import RouterIconButton from '../RouterIconButton';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 
 export interface OrganisationsTableProps {
 	organisations: OrganisationRecord[];

@@ -63,6 +63,11 @@ public class OrganisationService : IOrganisationService
     var newOrganisation = new Organisation(routeName);
     var createdOrganisation =
       await _organisationRepository.AddAsync(newOrganisation, cancellationToken);
+
+    newOrganisation.Roles = OrganisationRole.GetDefaultRoles(newOrganisation.Id);
+    await _organisationRepository.UpdateAsync(newOrganisation, cancellationToken);
+    await _organisationRepository.SaveChangesAsync(cancellationToken);
+    
     return Result.Success(createdOrganisation);
   }
 

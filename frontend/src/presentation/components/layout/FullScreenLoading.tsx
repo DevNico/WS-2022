@@ -1,12 +1,12 @@
 import { CircularProgress } from '@mui/material';
 import React from 'react';
-import Center from './Center';
+import FullScreenCenter from './FullScreenCenter';
 
 const FullScreenLoading: React.FC = () => {
 	return (
-		<Center>
+		<FullScreenCenter>
 			<CircularProgress />
-		</Center>
+		</FullScreenCenter>
 	);
 };
 

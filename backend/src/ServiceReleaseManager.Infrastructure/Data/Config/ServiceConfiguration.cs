@@ -9,6 +9,17 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
   public void Configure(EntityTypeBuilder<Service> builder)
   {
     builder
+      .HasIndex(service => service.RouteName)
+      .IsUnique();
+
+
+    builder
+      .HasOne(service => service.ServiceTemplate)
+      .WithMany()
+      .HasForeignKey(service => service.ServiceTemplateId)
+      .IsRequired();
+
+    builder
       .HasMany(service => service.Locales)
       .WithOne()
       .HasForeignKey(l => l.ServiceId)

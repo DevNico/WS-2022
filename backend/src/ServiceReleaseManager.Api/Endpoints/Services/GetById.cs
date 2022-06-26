@@ -1,10 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
-using ServiceReleaseManager.Core.ServiceAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel;
-using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;

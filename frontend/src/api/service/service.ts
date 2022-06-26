@@ -5,25 +5,25 @@
  * OpenAPI spec version: v1
  */
 import {
-	useQuery,
-	useMutation,
-	UseQueryOptions,
-	UseMutationOptions,
-	QueryFunction,
 	MutationFunction,
-	UseQueryResult,
+	QueryFunction,
 	QueryKey,
+	useMutation,
+	UseMutationOptions,
+	useQuery,
+	UseQueryOptions,
+	UseQueryResult,
 } from 'react-query';
-import type {
-	ServiceRecord,
-	ErrorResponse,
-	CreateServiceRequest,
-	ReleaseRecord,
-	LocaleRecord,
-	ServiceUserRecord,
-	ListUsersByServiceId,
-} from '.././models';
 import { customInstance, ErrorType } from '.././axios';
+import type {
+	CreateServiceRequest,
+	ErrorResponse,
+	ListUsersByServiceId,
+	LocaleRecord,
+	ReleaseRecord,
+	ServiceRecord,
+	ServiceUserRecord,
+} from '.././models';
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (
@@ -192,6 +192,67 @@ export const useServiceGetById = <
 		TError,
 		TData
 	>(queryKey, queryFn, { enabled: !!serviceId, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * Get a service by its route name
+ * @summary Get a service
+ */
+export const serviceGetByRouteName = (
+	serviceRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceRecord>(
+		{ url: `/api/v1/services/${serviceRouteName}`, method: 'get', signal },
+		options
+	);
+};
+
+export const getServiceGetByRouteNameQueryKey = (serviceRouteName: string) => [
+	`/api/v1/services/${serviceRouteName}`,
+];
+
+export type ServiceGetByRouteNameQueryResult = NonNullable<
+	Awaited<ReturnType<typeof serviceGetByRouteName>>
+>;
+export type ServiceGetByRouteNameQueryError = ErrorType<void>;
+
+export const useServiceGetByRouteName = <
+	TData = Awaited<ReturnType<typeof serviceGetByRouteName>>,
+	TError = ErrorType<void>
+>(
+	serviceRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof serviceGetByRouteName>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getServiceGetByRouteNameQueryKey(serviceRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof serviceGetByRouteName>>
+	> = ({ signal }) =>
+		serviceGetByRouteName(serviceRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof serviceGetByRouteName>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!serviceRouteName, ...queryOptions });
 
 	return {
 		queryKey,

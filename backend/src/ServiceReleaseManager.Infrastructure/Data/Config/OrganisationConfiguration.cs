@@ -23,6 +23,12 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
       .WithOne()
       .HasForeignKey(user => user.OrganisationId)
       .IsRequired();
+    
+    builder
+      .HasMany(organisation => organisation.ServiceTemplates)
+      .WithOne(serviceTemplate => serviceTemplate.Organisation)
+      .HasForeignKey(serviceTemplate => serviceTemplate.OrganisationId)
+      .IsRequired();
 
     builder
       .HasMany(organisation => organisation.Services)

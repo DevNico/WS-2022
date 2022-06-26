@@ -8,5 +8,5 @@
 export interface CreateServiceRequest {
 	name: string;
 	description: string;
-	organisationId: number;
+	serviceTemplateId: number;
 }

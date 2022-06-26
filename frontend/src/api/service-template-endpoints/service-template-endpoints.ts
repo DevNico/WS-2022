@@ -5,22 +5,22 @@
  * OpenAPI spec version: v1
  */
 import {
-	useQuery,
-	useMutation,
-	UseQueryOptions,
-	UseMutationOptions,
-	QueryFunction,
 	MutationFunction,
-	UseQueryResult,
+	QueryFunction,
 	QueryKey,
+	useMutation,
+	UseMutationOptions,
+	useQuery,
+	UseQueryOptions,
+	UseQueryResult,
 } from 'react-query';
+import { customInstance, ErrorType } from '.././axios';
 import type {
-	ServiceTemplateRecord,
-	ErrorResponse,
 	CreateServiceTemplate,
+	ErrorResponse,
+	ServiceTemplateRecord,
 	UpdateServiceTemplate,
 } from '.././models';
-import { customInstance, ErrorType } from '.././axios';
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (
@@ -137,60 +137,6 @@ export const useServiceTemplateDelete = <
 	>(mutationFn, mutationOptions);
 };
 /**
- * List all service templates
- * @summary List all service templates
- */
-export const serviceTemplateList = (
-	options?: SecondParameter<typeof customInstance>,
-	signal?: AbortSignal
-) => {
-	return customInstance<ServiceTemplateRecord[]>(
-		{ url: `/api/v1/service-templates`, method: 'get', signal },
-		options
-	);
-};
-
-export const getServiceTemplateListQueryKey = () => [
-	`/api/v1/service-templates`,
-];
-
-export type ServiceTemplateListQueryResult = NonNullable<
-	Awaited<ReturnType<typeof serviceTemplateList>>
->;
-export type ServiceTemplateListQueryError = ErrorType<void>;
-
-export const useServiceTemplateList = <
-	TData = Awaited<ReturnType<typeof serviceTemplateList>>,
-	TError = ErrorType<void>
->(options?: {
-	query?: UseQueryOptions<
-		Awaited<ReturnType<typeof serviceTemplateList>>,
-		TError,
-		TData
-	>;
-	request?: SecondParameter<typeof customInstance>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
-
-	const queryKey = queryOptions?.queryKey ?? getServiceTemplateListQueryKey();
-
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof serviceTemplateList>>
-	> = ({ signal }) => serviceTemplateList(requestOptions, signal);
-
-	const query = useQuery<
-		Awaited<ReturnType<typeof serviceTemplateList>>,
-		TError,
-		TData
-	>(queryKey, queryFn, queryOptions);
-
-	return {
-		queryKey,
-		...query,
-	};
-};
-
-/**
  * Update a service template
  * @summary Update a service template
  */
@@ -248,17 +194,17 @@ export const useServiceTemplateUpdate = <
 	>(mutationFn, mutationOptions);
 };
 /**
- * Get a service template by its name
+ * Get a service template by its id
  * @summary Get a service template
  */
 export const serviceTemplateGet = (
-	serviceTemplateName: string,
+	serviceTemplateId: number,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
 	return customInstance<ServiceTemplateRecord>(
 		{
-			url: `/api/v1/service-templates/${serviceTemplateName}`,
+			url: `/api/v1/service-templates/${serviceTemplateId}`,
 			method: 'get',
 			signal,
 		},
@@ -266,8 +212,8 @@ export const serviceTemplateGet = (
 	);
 };
 
-export const getServiceTemplateGetQueryKey = (serviceTemplateName: string) => [
-	`/api/v1/service-templates/${serviceTemplateName}`,
+export const getServiceTemplateGetQueryKey = (serviceTemplateId: number) => [
+	`/api/v1/service-templates/${serviceTemplateId}`,
 ];
 
 export type ServiceTemplateGetQueryResult = NonNullable<
@@ -279,7 +225,7 @@ export const useServiceTemplateGet = <
 	TData = Awaited<ReturnType<typeof serviceTemplateGet>>,
 	TError = ErrorType<void>
 >(
-	serviceTemplateName: string,
+	serviceTemplateId: number,
 	options?: {
 		query?: UseQueryOptions<
 			Awaited<ReturnType<typeof serviceTemplateGet>>,
@@ -293,18 +239,83 @@ export const useServiceTemplateGet = <
 
 	const queryKey =
 		queryOptions?.queryKey ??
-		getServiceTemplateGetQueryKey(serviceTemplateName);
+		getServiceTemplateGetQueryKey(serviceTemplateId);
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof serviceTemplateGet>>
 	> = ({ signal }) =>
-		serviceTemplateGet(serviceTemplateName, requestOptions, signal);
+		serviceTemplateGet(serviceTemplateId, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof serviceTemplateGet>>,
 		TError,
 		TData
-	>(queryKey, queryFn, { enabled: !!serviceTemplateName, ...queryOptions });
+	>(queryKey, queryFn, { enabled: !!serviceTemplateId, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * List all service templates
+ * @summary List all service templates
+ */
+export const serviceTemplateList = (
+	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceTemplateRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/services-templates`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getServiceTemplateListQueryKey = (
+	organisationRouteName: string
+) => [`/api/v1/organisations/${organisationRouteName}/services-templates`];
+
+export type ServiceTemplateListQueryResult = NonNullable<
+	Awaited<ReturnType<typeof serviceTemplateList>>
+>;
+export type ServiceTemplateListQueryError = ErrorType<void>;
+
+export const useServiceTemplateList = <
+	TData = Awaited<ReturnType<typeof serviceTemplateList>>,
+	TError = ErrorType<void>
+>(
+	organisationRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof serviceTemplateList>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getServiceTemplateListQueryKey(organisationRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof serviceTemplateList>>
+	> = ({ signal }) =>
+		serviceTemplateList(organisationRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof serviceTemplateList>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
 
 	return {
 		queryKey,

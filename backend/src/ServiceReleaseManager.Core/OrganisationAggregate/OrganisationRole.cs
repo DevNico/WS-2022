@@ -18,6 +18,15 @@ public class OrganisationRole : EntityBase, IAggregateRoot
     UserDelete = userDelete;
   }
 
+  public static List<OrganisationRole> GetDefaultRoles(int organisationId)
+  {
+    return new List<OrganisationRole>
+    {
+      new(organisationId, "Admin", true, true, true, true, true),
+      new(organisationId, "User", false, false, true, false, false)
+    };
+  }
+
   [Required]
   [MinLength(5)]
   [MaxLength(50)]
@@ -41,9 +50,4 @@ public class OrganisationRole : EntityBase, IAggregateRoot
   public int OrganisationId { get; set; }
 
   public List<OrganisationUser> Users { get; set; } = new();
-
-  public static OrganisationRole Administrator(int organisationId)
-  {
-    return new OrganisationRole(organisationId, "Administrator", true, true, true, true, true);
-  }
 }

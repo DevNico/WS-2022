@@ -4,8 +4,10 @@ namespace ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 
 public sealed class ActiveServiceTemplatesSearchSpec : Specification<ServiceTemplate>
 {
-  public ActiveServiceTemplatesSearchSpec()
+  public ActiveServiceTemplatesSearchSpec(int organisationId)
   {
-    Query.Where(s => s.IsActive);
+    Query
+      .Where(s => s.OrganisationId == organisationId)
+      .Where(s => s.IsActive);
   }
 }

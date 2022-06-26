@@ -33,6 +33,8 @@ public class Organisation : EntityBase, IAggregateRoot
 
   public List<OrganisationUser> Users { get; set; } = new();
 
+  public List<ServiceTemplate> ServiceTemplates { get; set; } = new();
+
   public List<Service> Services { get; set; } = new();
 
   public List<ServiceRole> ServiceRoles { get; set; } = new();

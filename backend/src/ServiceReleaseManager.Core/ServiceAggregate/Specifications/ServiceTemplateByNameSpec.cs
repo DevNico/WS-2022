@@ -9,6 +9,6 @@ public sealed class ServiceTemplateByNameSpec : Specification<ServiceTemplate>,
   {
     Query
       .Where(s => s.IsActive == active)
-      .Where(s => s.Name == name);
+      .Where(s => s.Name == name.ToLower().Trim());
   }
 }

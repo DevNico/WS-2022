@@ -12,12 +12,18 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
   ServiceTemplateRecord>
 {
   private readonly IMetadataFormatValidator _metadataValidator;
+  private readonly IOrganisationService _organisationService;
   private readonly IRepository<ServiceTemplate> _repository;
 
-  public Create(IRepository<ServiceTemplate> repository, IMetadataFormatValidator metadataValidator)
+  public Create(
+    IRepository<ServiceTemplate> repository,
+    IMetadataFormatValidator metadataValidator,
+    IOrganisationService organisationService
+  )
   {
     _repository = repository;
     _metadataValidator = metadataValidator;
+    _organisationService = organisationService;
   }
 
   [HttpPost]
@@ -34,13 +40,15 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
     CreateServiceTemplate request,
     CancellationToken cancellationToken = new())
   {
-    if (string.IsNullOrWhiteSpace(request.Name) || request.Name.Length is 0 or > 50 ||
-        request.LocalizedMetadata == null || request.StaticMetadata == null)
+    var organisation =
+      await _organisationService.GetById(request.OrganisationId, cancellationToken);
+
+    if (!organisation.IsSuccess)
     {
-      return BadRequest(new ErrorResponse("A required parameter was null"));
+      return BadRequest(new ErrorResponse("Organisation not found"));
     }
 
-    var nameSpec = new ServiceTemplateByNameSpec(request.Name.Trim());
+    var nameSpec = new ServiceTemplateByNameSpec(request.Name);
     if (await _repository.CountAsync(nameSpec, cancellationToken) > 0)
     {
       return Conflict();
@@ -69,7 +77,12 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
     }
     else
     {
-      template = new ServiceTemplate(request.Name.Trim(), staticMetadata, localizedMetadata);
+      template = new ServiceTemplate(
+        request.Name,
+        staticMetadata,
+        localizedMetadata,
+        organisation.Value.Id
+      );
       template = await _repository.AddAsync(template, cancellationToken);
     }
 

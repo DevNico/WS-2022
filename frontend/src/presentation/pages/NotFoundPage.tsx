@@ -5,13 +5,13 @@ import Typography from '@mui/material/Typography/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import Center from '../components/layout/Center';
+import FullScreenCenter from '../components/layout/FullScreenCenter';
 
 const NotFoundPage: React.FC = () => {
 	const { t } = useTranslation();
 
 	return (
-		<Center>
+		<FullScreenCenter>
 			<Container maxWidth='sm'>
 				<Typography
 					variant='h1'
@@ -30,7 +30,7 @@ const NotFoundPage: React.FC = () => {
 					</Button>
 				</Grid>
 			</Container>
-		</Center>
+		</FullScreenCenter>
 	);
 };
 

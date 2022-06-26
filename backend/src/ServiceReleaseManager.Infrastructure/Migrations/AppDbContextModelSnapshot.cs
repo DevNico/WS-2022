@@ -295,12 +295,29 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<int>("OrganisationId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("OrganisationId1")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RouteName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ServiceTemplateId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrganisationId");
+
+                    b.HasIndex("OrganisationId1");
+
+                    b.HasIndex("RouteName")
+                        .IsUnique();
+
+                    b.HasIndex("ServiceTemplateId");
 
                     b.ToTable("Services");
                 });
@@ -378,6 +395,12 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<int>("OrganisationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OrganisationId1")
+                        .HasColumnType("integer");
+
                     b.Property<string>("StaticMetadata")
                         .IsRequired()
                         .HasColumnType("json");
@@ -389,6 +412,10 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("OrganisationId");
+
+                    b.HasIndex("OrganisationId1");
 
                     b.ToTable("ServiceTemplates");
                 });
@@ -512,6 +539,22 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", "Organisation")
+                        .WithMany()
+                        .HasForeignKey("OrganisationId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.ServiceTemplate", "ServiceTemplate")
+                        .WithMany()
+                        .HasForeignKey("ServiceTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organisation");
+
+                    b.Navigation("ServiceTemplate");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceRole", b =>
@@ -521,6 +564,21 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceTemplate", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", "Organisation")
+                        .WithMany()
+                        .HasForeignKey("OrganisationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServiceReleaseManager.Core.OrganisationAggregate.Organisation", null)
+                        .WithMany("ServiceTemplates")
+                        .HasForeignKey("OrganisationId1");
+
+                    b.Navigation("Organisation");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.ServiceUser", b =>
@@ -553,6 +611,8 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("Roles");
 
                     b.Navigation("ServiceRoles");
+
+                    b.Navigation("ServiceTemplates");
 
                     b.Navigation("Services");
 

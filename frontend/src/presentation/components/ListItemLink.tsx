@@ -2,12 +2,13 @@ import ListItem, { ListItemProps } from '@mui/material/ListItem/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText/ListItemText';
 import React from 'react';
-import { Link, useLocation, LinkProps } from 'react-router-dom';
+import { Link, LinkProps, useMatch } from 'react-router-dom';
 
 type ListItemLinkProps = ListItemProps &
 	Omit<LinkProps, 'to'> & {
 		to: { $: string };
 		text: string;
+		disableMatch?: boolean;
 		icon?: React.ReactElement;
 	};
 
@@ -15,16 +16,22 @@ const ListItemLink: React.FC<ListItemLinkProps> = ({
 	to,
 	text,
 	icon,
+	disableMatch,
 	...other
 }) => {
-	const location = useLocation();
+	let link = to.$;
+	if (!link.startsWith('/')) {
+		link = `/${link}`;
+	}
+
+	const hasMatch = useMatch({ path: link, end: false }) !== null;
 
 	return (
 		<ListItem
 			button
 			component={Link as any}
 			to={`/${to.$}`}
-			selected={location.pathname.slice(1) === to.$}
+			selected={!(disableMatch ?? false) && hasMatch}
 			{...other}
 		>
 			{icon && <ListItemIcon>{icon}</ListItemIcon>}

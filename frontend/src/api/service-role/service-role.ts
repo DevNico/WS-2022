@@ -5,22 +5,22 @@
  * OpenAPI spec version: v1
  */
 import {
-	useQuery,
-	useMutation,
-	UseQueryOptions,
-	UseMutationOptions,
-	QueryFunction,
 	MutationFunction,
-	UseQueryResult,
+	QueryFunction,
 	QueryKey,
+	useMutation,
+	UseMutationOptions,
+	useQuery,
+	UseQueryOptions,
+	UseQueryResult,
 } from 'react-query';
+import { customInstance, ErrorType } from '.././axios';
 import type {
-	ServiceRoleRecord,
 	CreateServiceRole,
 	DeleteServiceRole,
 	GetServiceRoleById,
+	ServiceRoleRecord,
 } from '.././models';
-import { customInstance, ErrorType } from '.././axios';
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (

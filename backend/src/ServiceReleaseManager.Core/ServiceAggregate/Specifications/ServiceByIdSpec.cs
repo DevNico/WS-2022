@@ -9,6 +9,7 @@ public sealed class ServiceByIdSpec : Specification<Service>, ISingleResultSpeci
     Query
       .Where(s => s.IsActive)
       .Where(s => s.Id == id)
+      .Include(s => s.Releases)
       .Include(s => s.Locales);
   }
 }

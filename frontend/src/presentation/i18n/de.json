@@ -1,5 +1,10 @@
 {
 	"admin": {
+		"drawer": {
+			"home": "",
+			"organisations": "",
+			"title": ""
+		},
 		"organisations": {
 			"title": ""
 		}
@@ -33,7 +38,11 @@
 			"updatedAt": ""
 		},
 		"drawer": {
+			"back": "",
+			"home": "",
 			"roles": "",
+			"serviceTemplates": "",
+			"services": "",
 			"title": "",
 			"users": ""
 		},
@@ -44,47 +53,47 @@
 				"organisation": "",
 				"permissions": "",
 				"service": "",
-				"serviceDelete": "",
-				"serviceWrite": "",
 				"success": "",
 				"title": "",
-				"user": "",
-				"userDelete": "",
-				"userRead": "",
-				"userWrite": ""
+				"user": ""
 			},
 			"list": {
 				"create": "",
 				"error": "",
 				"noData": "",
 				"title": ""
+			},
+			"model": {
+				"serviceDelete": "",
+				"serviceWrite": "",
+				"userDelete": "",
+				"userRead": "",
+				"userWrite": ""
 			}
 		},
 		"users": {
 			"create": {
 				"error": "",
-				"firstName": "",
-				"lastName": "",
 				"organisation": "",
-				"role": "",
 				"submit": "",
 				"success": "",
 				"title": ""
 			},
 			"list": {
 				"create": "",
-				"email": "",
 				"error": "",
-				"firstName": "",
-				"lastName": "",
-				"lastSignIn": "",
 				"noData": "",
 				"organisation": "",
 				"title": ""
+			},
+			"model": {
+				"email": "",
+				"firstName": "",
+				"lastName": "",
+				"role": ""
 			}
 		}
 	},
-	"organisation_drawer": {},
 	"organisations": {
 		"create": {
 			"error": "",
@@ -102,48 +111,51 @@
 			"noData": "Keine Organisationen gefunden"
 		}
 	},
-	"roles": {
+	"releases": {
 		"create": {
 			"error": "",
-			"name": "",
-			"organisation": "",
-			"permissions": "",
-			"serviceDelete": "",
-			"serviceWrite": "",
+			"submit": "",
+			"success": ""
+		}
+	},
+	"serviceTemplate": {
+		"create": {
+			"error": "",
+			"submit": "",
 			"success": "",
-			"title": "",
-			"userDelete": "",
-			"userRead": "",
-			"userWrite": ""
+			"title": ""
 		},
 		"list": {
 			"create": "",
-			"noData": ""
+			"error": "",
+			"noData": "",
+			"title": ""
+		},
+		"model": {
+			"localizedMetadata": "",
+			"name": "",
+			"staticMetadata": ""
 		}
+	},
+	"services": {
+		"create": {
+			"error": "",
+			"submit": "",
+			"success": "",
+			"title": ""
+		},
+		"drawer": {
+			"releases": ""
+		},
+		"model": {
+			"description": "",
+			"name": "",
+			"updatedAt": ""
+		},
+		"noneFound": ""
 	},
 	"unauthorizedPage": {
 		"subtitle": "",
 		"title": ""
-	},
-	"users": {
-		"create": {
-			"error": "",
-			"firstName": "",
-			"lastName": "",
-			"organisation": "",
-			"role": "",
-			"submit": "",
-			"success": ""
-		},
-		"list": {
-			"create": "",
-			"email": "",
-			"error": "",
-			"firstName": "",
-			"lastName": "",
-			"lastSignIn": "",
-			"noData": "",
-			"organisation": ""
-		}
 	}
 }

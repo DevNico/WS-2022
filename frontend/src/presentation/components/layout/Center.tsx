@@ -1,8 +1,7 @@
-import styled from '@mui/material/styles/styled';
-import React, { PropsWithChildren } from 'react';
-import Div100vh from 'react-div-100vh';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 
-const Centered = styled('div')`
+const Center = styled(Box)`
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -10,13 +9,5 @@ const Centered = styled('div')`
 	justify-content: center;
 	align-items: center;
 `;
-
-const Center: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-	return (
-		<Div100vh>
-			<Centered>{children}</Centered>
-		</Div100vh>
-	);
-};
 
 export default Center;

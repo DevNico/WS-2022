@@ -17,7 +17,7 @@ const CreateOrganisationDialog: React.FC<CreateOrganisationDialogProps> = ({
 	const { t } = useTranslation();
 
 	return (
-		<Dialog open={open} onClose={onClose} keepMounted>
+		<Dialog open={open} onClose={onClose}>
 			<DialogTitle>{t('organisations.create.title')}</DialogTitle>
 			<DialogContent>
 				<OrganisationForm onSubmitSuccess={onClose} />

@@ -21,7 +21,7 @@ public class GetByRouteName : EndpointBase.WithRequest<GetOrganisationByRouteNam
   [SwaggerOperation(
     Summary = "Gets a single Organisation",
     Description = "Gets a single Organisation by its route name",
-    OperationId = "Organisations.GetByName",
+    OperationId = "Organisations.GetByRouteName",
     Tags = new[] { "Organisation" })
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "Organisation found", typeof(OrganisationRecord))]

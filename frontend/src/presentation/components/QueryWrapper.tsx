@@ -1,10 +1,9 @@
 import React from 'react';
-import { UseQueryResult } from 'react-query';
-import { TaggedTemplateExpression } from 'typescript';
-import FullScreenLoading from './layout/FullScreenLoading';
-import FullScreenError from './layout/FullScreenError';
-import { ErrorType } from '../../api/axios';
 import { useTranslation } from 'react-i18next';
+import { UseQueryResult } from 'react-query';
+import { ErrorType } from '../../api/axios';
+import FullScreenError from './layout/FullScreenError';
+import FullScreenLoading from './layout/FullScreenLoading';
 
 export interface QueryWrapperProps<TData, TError> {
 	result: UseQueryResult<TData, TError>;

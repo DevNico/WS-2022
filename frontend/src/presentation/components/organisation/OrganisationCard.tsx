@@ -1,5 +1,4 @@
 import Card from '@mui/material/Card/Card';
-import CardActionArea from '@mui/material/CardActionArea/CardActionArea';
 import CardContent from '@mui/material/CardContent/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography/Typography';
@@ -37,7 +36,7 @@ const OrganisationCard: React.FC<OrganisationCardProps> = ({
 						<Typography variant='caption'>
 							{t('organisation.card.updatedAt', {
 								updatedAt: new Date(
-									organisation.createdAt!
+									organisation.updatedAt!
 								).toLocaleDateString(),
 								interpolation: { escapeValue: false },
 							})}
