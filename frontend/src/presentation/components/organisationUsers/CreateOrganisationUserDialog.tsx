@@ -18,7 +18,7 @@ const CreateOrganisationUserDialog: React.FC<
 	const { t } = useTranslation();
 
 	return (
-		<Dialog open={open} onClose={onClose} keepMounted>
+		<Dialog open={open} onClose={onClose}>
 			<DialogTitle>{t('organisation.users.create.title')}</DialogTitle>
 			<DialogContent>
 				<OrganisationUserForm

@@ -2,6 +2,7 @@ import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -77,22 +78,28 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
-			<Stack spacing={2} mt={1}>
-				<TextField
-					fullWidth
-					id='name'
-					name='name'
-					label={t('organisation.roles.create.name')}
-					value={formik.values.name}
-					onChange={formik.handleChange}
-					error={formik.touched.name && Boolean(formik.errors.name)}
-					helperText={formik.touched.name && formik.errors.name}
-					disabled={loading}
-				/>
-				<Typography variant='h6'>
-					{t('organisation.roles.create.permissions')}
-				</Typography>
-				<Stack direction='row' spacing={3}>
+			<Grid container spacing={2} justifyContent='center'>
+				<Grid item xs={12}>
+					<TextField
+						fullWidth
+						id='name'
+						name='name'
+						label={t('organisation.roles.create.name')}
+						value={formik.values.name}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.name && Boolean(formik.errors.name)
+						}
+						helperText={formik.touched.name && formik.errors.name}
+						disabled={loading}
+					/>
+				</Grid>
+				<Grid item xs={12}>
+					<Typography variant='h6'>
+						{t('organisation.roles.create.permissions')}
+					</Typography>
+				</Grid>
+				<Grid item sm={6} xs={12}>
 					<Stack>
 						<Typography variant='body2'>
 							{t('organisation.roles.create.service')}
@@ -106,7 +113,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.create.serviceWrite')}
+							label={t('organisation.roles.model.serviceWrite')}
 						/>
 						<FormControlLabel
 							disabled={loading}
@@ -117,9 +124,11 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.create.serviceDelete')}
+							label={t('organisation.roles.model.serviceDelete')}
 						/>
 					</Stack>
+				</Grid>
+				<Grid item sm={6} xs={12}>
 					<Stack>
 						<Typography variant='body2'>
 							{t('organisation.roles.create.user')}
@@ -133,7 +142,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.create.userRead')}
+							label={t('organisation.roles.model.userRead')}
 						/>
 						<FormControlLabel
 							disabled={loading}
@@ -144,7 +153,7 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.create.userWrite')}
+							label={t('organisation.roles.model.userWrite')}
 						/>
 						<FormControlLabel
 							disabled={loading}
@@ -155,18 +164,20 @@ const OrganisationRoleForm: React.FC<OrganisationRoleFormProps> = ({
 									onChange={formik.handleChange}
 								/>
 							}
-							label={t('organisation.roles.create.userDelete')}
+							label={t('organisation.roles.model.userDelete')}
 						/>
 					</Stack>
-				</Stack>
-				<LoadingButton
-					loading={loading}
-					type='submit'
-					variant='contained'
-				>
-					{t('common.submit')}
-				</LoadingButton>
-			</Stack>
+				</Grid>
+				<Grid item>
+					<LoadingButton
+						loading={loading}
+						type='submit'
+						variant='contained'
+					>
+						{t('common.submit')}
+					</LoadingButton>
+				</Grid>
+			</Grid>
 		</form>
 	);
 };

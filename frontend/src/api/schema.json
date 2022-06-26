@@ -1477,7 +1477,7 @@
 				"tags": ["Organisation"],
 				"summary": "Gets a single Organisation",
 				"description": "Gets a single Organisation by its route name",
-				"operationId": "Organisations.GetByName",
+				"operationId": "Organisations.GetByRouteName",
 				"parameters": [
 					{
 						"name": "OrganisationRouteName",
@@ -1694,6 +1694,112 @@
 					},
 					"404": {
 						"description": "The service template was not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisations/{OrganisationId}": {
+			"get": {
+				"tags": ["Organisation"],
+				"summary": "Gets a single Organisation",
+				"description": "Gets a single Organisation by its route name",
+				"operationId": "Organisations.GetById",
+				"parameters": [
+					{
+						"name": "OrganisationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Organisation found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrganisationRecord"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/services/{ServiceRouteName}": {
+			"get": {
+				"tags": ["Service"],
+				"summary": "Get a service",
+				"description": "Get a service by its route name",
+				"operationId": "Service.GetByRouteName",
+				"parameters": [
+					{
+						"name": "ServiceRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The service was found",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceRecord"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The service was not found"
 					},
 					"401": {
 						"description": "Unauthorized"
@@ -2695,6 +2801,9 @@
 					"lastName": {
 						"type": "string",
 						"nullable": true
+					},
+					"organisationRole": {
+						"$ref": "#/components/schemas/OrganisationRoleRecord"
 					}
 				},
 				"additionalProperties": false
@@ -2753,7 +2862,7 @@
 			"ServiceRecord": {
 				"type": "object",
 				"properties": {
-					"serviceId": {
+					"id": {
 						"type": "integer",
 						"format": "int32"
 					},
@@ -2761,9 +2870,28 @@
 						"type": "string",
 						"nullable": true
 					},
+					"routeName": {
+						"type": "string",
+						"nullable": true
+					},
 					"description": {
 						"type": "string",
 						"nullable": true
+					},
+					"latestRelease": {
+						"$ref": "#/components/schemas/ReleaseRecord"
+					},
+					"organisationId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
 					}
 				},
 				"additionalProperties": false

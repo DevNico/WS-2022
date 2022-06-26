@@ -18,7 +18,7 @@ const CreateOrganisationRoleDialog: React.FC<
 	const { t } = useTranslation();
 
 	return (
-		<Dialog open={open} onClose={onClose} keepMounted>
+		<Dialog open={open} onClose={onClose}>
 			<DialogTitle>{t('organisation.roles.create.title')}</DialogTitle>
 			<DialogContent>
 				<OrganisationRoleForm

@@ -12,6 +12,7 @@ public class Service : EntityBase, IAggregateRoot
   public Service(string name, string description, int organisationId)
   {
     Name = name;
+    RouteName = Name.Replace(" ", "-").ToLower();
     Description = description;
     OrganisationId = organisationId;
     IsActive = true;
@@ -21,6 +22,8 @@ public class Service : EntityBase, IAggregateRoot
   [MinLength(5)]
   [MaxLength(50)]
   public string Name { get; set; }
+
+  public String RouteName { get; }
 
   [Required]
   [MaxLength(200)]

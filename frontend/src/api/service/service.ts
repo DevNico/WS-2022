@@ -200,6 +200,67 @@ export const useServiceGetById = <
 };
 
 /**
+ * Get a service by its route name
+ * @summary Get a service
+ */
+export const serviceGetByRouteName = (
+	serviceRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceRecord>(
+		{ url: `/api/v1/services/${serviceRouteName}`, method: 'get', signal },
+		options
+	);
+};
+
+export const getServiceGetByRouteNameQueryKey = (serviceRouteName: string) => [
+	`/api/v1/services/${serviceRouteName}`,
+];
+
+export type ServiceGetByRouteNameQueryResult = NonNullable<
+	Awaited<ReturnType<typeof serviceGetByRouteName>>
+>;
+export type ServiceGetByRouteNameQueryError = ErrorType<void>;
+
+export const useServiceGetByRouteName = <
+	TData = Awaited<ReturnType<typeof serviceGetByRouteName>>,
+	TError = ErrorType<void>
+>(
+	serviceRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof serviceGetByRouteName>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getServiceGetByRouteNameQueryKey(serviceRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof serviceGetByRouteName>>
+	> = ({ signal }) =>
+		serviceGetByRouteName(serviceRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof serviceGetByRouteName>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!serviceRouteName, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
  * @summary Gets a list of all Releases
  */
 export const servicesListReleases = (

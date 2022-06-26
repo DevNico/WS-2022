@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
-    public partial class _20220625225515 : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -107,6 +107,7 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    RouteName = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     OrganisationId = table.Column<int>(type: "integer", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
@@ -354,6 +355,12 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                 name: "IX_Services_OrganisationId",
                 table: "Services",
                 column: "OrganisationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_RouteName",
+                table: "Services",
+                column: "RouteName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServiceTemplates_Name",

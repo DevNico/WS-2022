@@ -12,6 +12,11 @@ public interface IServiceService
 
   public Task<Result<Service>> GetById(int id, CancellationToken cancellationToken);
 
+  public Task<Result<Service>> GetByRouteName(
+    string serviceRouteName,
+    CancellationToken cancellationToken
+  );
+
   public Task<Result<Service>> GetByNameAndOrganisationId(string name, int organisationId,
     CancellationToken cancellationToken);
 

@@ -1,42 +1,35 @@
-import Card from '@mui/material/Card/Card';
+import Card, { CardProps } from '@mui/material/Card/Card';
 import CardContent from '@mui/material/CardContent/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { OrganisationRecord } from '../../../api/models';
+import { ServiceRecord } from '../../../api/models';
 import { homeRoute } from '../../Router';
 import RouterCardActionArea from '../RouterCardActionArea';
 
-export interface OrganisationCardProps {
-	organisation: OrganisationRecord;
+export interface ServiceCardProps extends CardProps {
+	service: ServiceRecord;
 }
 
-const OrganisationCard: React.FC<OrganisationCardProps> = ({
-	organisation,
-}) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ service, ...rest }) => {
 	const { t } = useTranslation();
 
 	return (
-		<Card variant='outlined'>
+		<Card variant='outlined' {...rest}>
 			<RouterCardActionArea
-				to={homeRoute({}).organisation({
-					name: organisation.routeName!,
-				})}
+				to={homeRoute({}).service({ name: service.routeName! })}
+				{...rest}
 			>
 				<CardContent>
 					<Stack>
 						<Typography variant='h5' gutterBottom>
-							{organisation.name!}
-						</Typography>
-
-						<Typography variant='caption'>
-							{organisation.routeName!}
+							{service.name!}
 						</Typography>
 						<Typography variant='caption'>
-							{t('organisation.card.updatedAt', {
+							{t('services.model.updatedAt', {
 								updatedAt: new Date(
-									organisation.updatedAt!
+									service.updatedAt!
 								).toLocaleDateString(),
 								interpolation: { escapeValue: false },
 							})}
@@ -48,4 +41,4 @@ const OrganisationCard: React.FC<OrganisationCardProps> = ({
 	);
 };
 
-export default OrganisationCard;
+export default ServiceCard;

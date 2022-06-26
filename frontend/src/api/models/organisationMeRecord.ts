@@ -4,15 +4,13 @@
  * Service Release Manager API
  * OpenAPI spec version: v1
  */
-import type { ReleaseRecord } from './releaseRecord';
+import type { OrganisationUserRecord } from './organisationUserRecord';
 
-export interface ServiceRecord {
+export interface OrganisationMeRecord {
 	id?: number;
 	name?: string | null;
 	routeName?: string | null;
-	description?: string | null;
-	latestRelease?: ReleaseRecord;
-	organisationId?: number;
 	updatedAt?: string;
 	createdAt?: string;
+	user?: OrganisationUserRecord;
 }

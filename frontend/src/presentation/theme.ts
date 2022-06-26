@@ -39,6 +39,17 @@ const theme = createTheme({
 				variant: 'contained',
 			},
 		},
+		MuiDialog: {
+			defaultProps: {
+				maxWidth: 'sm',
+				fullWidth: true,
+			},
+		},
+		MuiListItem: {
+			defaultProps: {
+				dense: true,
+			},
+		},
 	},
 });
 

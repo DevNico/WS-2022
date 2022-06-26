@@ -7,14 +7,14 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useRouteParams } from 'typesafe-routes';
 import { useOrganisationUserList } from '../../api/organisation-user/organisation-user';
-import { useOrganisationsGetByName } from '../../api/organisation/organisation';
+import { useOrganisationsGetByRouteName } from '../../api/organisation/organisation';
 import CreateOrganisationUserDialog from '../components/organisationUsers/CreateOrganisationUserDialog';
 import OrganisationUsersTable from '../components/organisationUsers/OrganisationUsersTable';
 import { organisationRoute } from '../Router';
 
 const OrganisationUsersPage: React.FC = () => {
 	const { name } = useRouteParams(organisationRoute);
-	const organisation = useOrganisationsGetByName(name);
+	const organisation = useOrganisationsGetByRouteName(name);
 
 	const { data, isLoading, isError, error } = useOrganisationUserList(name);
 	const { t } = useTranslation();

@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
-using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class Create : EndpointBase
-  .WithRequest<CreateServiceRequest>
-  .WithActionResult<ServiceRecord>
+public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionResult<ServiceRecord>
 {
   private readonly IServiceService _service;
 

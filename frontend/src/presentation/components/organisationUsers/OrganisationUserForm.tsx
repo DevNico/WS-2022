@@ -1,6 +1,7 @@
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import FormControl from '@mui/material/FormControl/FormControl';
 import FormHelperText from '@mui/material/FormHelperText/FormHelperText';
+import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import MenuItem from '@mui/material/MenuItem/MenuItem';
 import Select from '@mui/material/Select/Select';
@@ -23,6 +24,7 @@ import {
 	getOrganisationUserListQueryKey,
 	organisationUserCreate,
 } from '../../../api/organisation-user/organisation-user';
+import OrganisationRoleDetails from '../organisationRoles/OrganisationRoleDetails';
 
 interface CreateOrganisationUserFormProps {
 	organisation: OrganisationRecord;
@@ -48,7 +50,7 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 			.max(50)
 			.required('First name is required'),
 		lastName: yup.string().min(5).max(50).required('Last name is required'),
-		roleId: yup.number().required('Role is required'),
+		roleId: yup.number().positive('Role is required'),
 	});
 
 	const formik = useFormik<CreateOrganisationUserRequest>({
@@ -57,7 +59,7 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 			email: '',
 			firstName: '',
 			lastName: '',
-			roleId: '' as any,
+			roleId: -1,
 		},
 		validationSchema,
 		onSubmit: async (values) => {
@@ -82,29 +84,28 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
-			<Stack
-				spacing={2}
-				justifyContent='center'
-				alignItems='center'
-				mt={1}
-			>
-				<TextField
-					fullWidth
-					id='email'
-					name='email'
-					label='Email'
-					value={formik.values.email}
-					onChange={formik.handleChange}
-					error={formik.touched.email && Boolean(formik.errors.email)}
-					helperText={formik.touched.email && formik.errors.email}
-					disabled={loading}
-				/>
-				<Stack direction='row' spacing={2}>
+			<Grid container spacing={2} justifyContent='center'>
+				<Grid item xs={12}>
+					<TextField
+						fullWidth
+						id='email'
+						name='email'
+						label={t('organisation.users.model.email')}
+						value={formik.values.email}
+						onChange={formik.handleChange}
+						error={
+							formik.touched.email && Boolean(formik.errors.email)
+						}
+						helperText={formik.touched.email && formik.errors.email}
+						disabled={loading}
+					/>
+				</Grid>
+				<Grid item sm={6} xs={12}>
 					<TextField
 						fullWidth
 						id='firstName'
 						name='firstName'
-						label={t('organisation.users.create.firstName')}
+						label={t('organisation.users.model.firstName')}
 						value={formik.values.firstName}
 						onChange={formik.handleChange}
 						error={
@@ -116,11 +117,13 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 						}
 						disabled={loading}
 					/>
+				</Grid>
+				<Grid item sm={6} xs={12}>
 					<TextField
 						fullWidth
 						id='lastName'
 						name='lastName'
-						label={t('organisation.users.create.lastName')}
+						label={t('organisation.users.model.lastName')}
 						value={formik.values.lastName}
 						onChange={formik.handleChange}
 						error={
@@ -132,42 +135,55 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 						}
 						disabled={loading}
 					/>
-				</Stack>
-				<FormControl fullWidth disabled={loading}>
-					<InputLabel id='role-select-label'>
-						{t('organisation.users.create.role')}
-					</InputLabel>
-					<Select
-						labelId='role-select-label'
+				</Grid>
+				<Grid item xs={12}>
+					<TextField
+						fullWidth
+						select
 						id='roleId'
 						name='roleId'
-						disabled={!roles.data || roles.data.length === 0}
-						value={formik.values.roleId + ''}
+						label={t('organisation.users.model.role')}
+						value={
+							formik.values.roleId === -1
+								? ''
+								: formik.values.roleId
+						}
 						onChange={formik.handleChange}
 						error={
 							formik.touched.roleId &&
 							Boolean(formik.errors.roleId)
 						}
-						label={t('organisation.users.create.role')}
+						helperText={
+							formik.touched.roleId && formik.errors.roleId
+						}
+						disabled={loading}
 					>
 						{roles.data?.map((role) => (
 							<MenuItem value={role.id} key={role.id}>
 								{role.name}
 							</MenuItem>
 						))}
-					</Select>
-					<FormHelperText>
-						{formik.touched.roleId && formik.errors.roleId}
-					</FormHelperText>
-				</FormControl>
-				<LoadingButton
-					type='submit'
-					loading={loading}
-					variant='contained'
-				>
-					{t('organisation.users.create.submit')}
-				</LoadingButton>
-			</Stack>
+					</TextField>
+				</Grid>
+				<Grid item xs={12}>
+					<OrganisationRoleDetails
+						role={
+							roles.data?.filter(
+								(role) => role.id == formik.values.roleId
+							)[0]
+						}
+					/>
+				</Grid>
+				<Grid item>
+					<LoadingButton
+						type='submit'
+						loading={loading}
+						variant='contained'
+					>
+						{t('organisation.users.create.submit')}
+					</LoadingButton>
+				</Grid>
+			</Grid>
 		</form>
 	);
 };

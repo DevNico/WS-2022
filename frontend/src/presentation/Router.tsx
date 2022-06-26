@@ -7,10 +7,12 @@ import SuperAdminLayout from './layouts/SuperAdminLayout';
 import AdminOrganisationsPage from './pages/AdminOrganisationsPage';
 import ChooseOrganisationPage from './pages/ChooseOrganisationPage';
 import NotFoundPage from './pages/NotFoundPage';
-import OrganisationPage from './pages/OrganisationPage';
 import OrganisationRolesPage from './pages/OrganisationRolesPage';
 import OrganisationUsersPage from './pages/OrganisationUsersPage';
+import ReleasesPage from './pages/ReleasesPage';
+import ServicesPage from './pages/ServicesPage';
 
+// --- ADMIN ---
 export const adminOrganisationsRoute = route('organisations', {}, {});
 export const adminRoute = route(
 	'admin',
@@ -18,20 +20,26 @@ export const adminRoute = route(
 	{ organisations: adminOrganisationsRoute }
 );
 
-export const organisationUsersRoute = route(
-	'users',
-	{ name: stringParser },
-	{}
-);
-export const organisationRolesRoute = route(
-	'roles',
-	{ name: stringParser },
-	{}
-);
+// --- Organisation ---
+export const servicesRoute = route('services', {}, {});
+export const organisationUsersRoute = route('users', {}, {});
+export const organisationRolesRoute = route('roles', {}, {});
 export const organisationRoute = route(
 	'organisation/:name',
 	{ name: stringParser },
-	{ users: organisationUsersRoute, roles: organisationRolesRoute }
+	{
+		users: organisationUsersRoute,
+		roles: organisationRolesRoute,
+		services: servicesRoute,
+	}
+);
+
+// --- SERVICE ---
+export const releasesRoute = route('releases', {}, {});
+export const serviceRoute = route(
+	'service/:name',
+	{ name: stringParser },
+	{ releases: releasesRoute }
 );
 
 export const homeRoute = route(
@@ -40,6 +48,7 @@ export const homeRoute = route(
 	{
 		admin: adminRoute,
 		organisation: organisationRoute,
+		service: serviceRoute,
 	}
 );
 
@@ -55,7 +64,7 @@ const Router: React.FC = () => {
 				>
 					<Route
 						index
-						element={<Navigate to={organisationUsersRoute({}).$} />}
+						element={<Navigate to={servicesRoute({}).$} />}
 					/>
 					<Route
 						path={organisationUsersRoute.template}
@@ -64,6 +73,22 @@ const Router: React.FC = () => {
 					<Route
 						path={organisationRolesRoute.template}
 						element={<OrganisationRolesPage />}
+					/>
+					<Route
+						path={servicesRoute.template}
+						element={<ServicesPage />}
+					/>
+				</Route>
+
+				<Route path={serviceRoute.template}>
+					<Route
+						index
+						element={<Navigate to={releasesRoute({}).$} />}
+					/>
+
+					<Route
+						path={releasesRoute.template}
+						element={<ReleasesPage />}
 					/>
 				</Route>
 

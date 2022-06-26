@@ -14,6 +14,7 @@ import { drawerOpenState } from '../../store/generalState';
 import { isSuperAdminState } from '../../store/keycloakState';
 import RouterButton from '../RouterButton';
 import RouterLink from '../RouterLink';
+import { useDrawer } from './Drawer';
 
 const HomeAppBar: React.FC = () => {
 	const { keycloak } = useKeycloak();
@@ -33,18 +34,22 @@ const HomeAppBar: React.FC = () => {
 		closeUserMenu();
 	}, [keycloak]);
 
+	const drawer = useDrawer();
+
 	return (
 		<MuiAppBar position='relative' elevation={0}>
 			<Toolbar>
-				<IconButton
-					color='inherit'
-					aria-label='open drawer'
-					edge='start'
-					onClick={handleDrawerToggle}
-					sx={{ mr: 2, display: { sm: 'none' } }}
-				>
-					<MenuIcon />
-				</IconButton>
+				{drawer && (
+					<IconButton
+						color='inherit'
+						aria-label='open drawer'
+						edge='start'
+						onClick={handleDrawerToggle}
+						sx={{ mr: 2, display: { sm: 'none' } }}
+					>
+						<MenuIcon />
+					</IconButton>
+				)}
 				<RouterLink to={homeRoute({})} variant='h6' color='#FFFFFF'>
 					Service Release Manager
 				</RouterLink>

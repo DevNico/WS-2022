@@ -38,3 +38,4 @@ export * from './getServiceRoleById';
 export * from './serviceRoleRecord';
 export * from './serviceUserRecord';
 export * from './createServiceUserRequest';
+export * from './organisationMeRecord';

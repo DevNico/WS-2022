@@ -2,13 +2,13 @@
 
 namespace ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 
-public sealed class ServiceByIdSpec : Specification<Service>, ISingleResultSpecification
+public sealed class ServiceByRouteNameSpec : Specification<Service>, ISingleResultSpecification
 {
-  public ServiceByIdSpec(int id)
+  public ServiceByRouteNameSpec(string routeName)
   {
     Query
       .Where(s => s.IsActive)
-      .Where(s => s.Id == id)
+      .Where(s => s.RouteName == routeName.ToLower())
       .Include(s => s.Releases)
       .Include(s => s.Locales);
   }

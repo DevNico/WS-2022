@@ -12,8 +12,8 @@ using ServiceReleaseManager.Infrastructure.Data;
 namespace ServiceReleaseManager.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220625205607_20220625225515")]
-    partial class _20220625225515
+    [Migration("20220625235006_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -297,12 +297,19 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Property<int>("OrganisationId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("RouteName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrganisationId");
+
+                    b.HasIndex("RouteName")
+                        .IsUnique();
 
                     b.ToTable("Services");
                 });
