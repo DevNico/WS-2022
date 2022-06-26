@@ -150,6 +150,7 @@
 		"model": {
 			"description": "",
 			"name": "",
+			"template": "",
 			"updatedAt": ""
 		},
 		"noneFound": ""

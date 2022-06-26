@@ -160,6 +160,7 @@
 		"model": {
 			"description": "Description",
 			"name": "Name",
+			"template": "Template",
 			"updatedAt": "Last updated: {{updatedAt}}"
 		},
 		"noneFound": "No Services found"
