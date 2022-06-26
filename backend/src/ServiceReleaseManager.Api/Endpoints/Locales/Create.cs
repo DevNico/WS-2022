@@ -28,16 +28,15 @@ public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionRe
   [SwaggerResponse(400, "The request was invalid")]
   [SwaggerResponse(404, "The service was not found")]
   [SwaggerResponse(409, "The locale already exists")]
-  public override async Task<ActionResult<LocaleRecord>> HandleAsync(CreateLocaleRequest request,
+  public override async Task<ActionResult<LocaleRecord>> HandleAsync(
+    CreateLocaleRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (request.LanguageCode == null || request.CountryCode == null)
-    {
-      return BadRequest();
-    }
-
-    var locale = new Locale(request.CountryCode, request.LanguageCode,
-      request.IsDefault.GetValueOrDefault(false), request.ServiceId);
+    var locale = new Locale(
+      request.Tag,
+      request.IsDefault.GetValueOrDefault(false),
+      request.ServiceId
+    );
 
     var createResult = await _localeService.Create(locale, cancellationToken)
       .MapValue(LocaleRecord.FromEntity);

@@ -1831,19 +1831,18 @@
 				]
 			}
 		},
-		"/api/v1/services/{ServiceId}/locales": {
+		"/api/v1/services/{ServiceRouteName}/locales": {
 			"get": {
 				"tags": ["Service"],
 				"summary": "List all locales",
 				"operationId": "Locales.List",
 				"parameters": [
 					{
-						"name": "ServiceId",
+						"name": "ServiceRouteName",
 						"in": "path",
 						"required": true,
 						"schema": {
-							"type": "integer",
-							"format": "int32"
+							"type": "string"
 						}
 					}
 				],
@@ -2377,21 +2376,14 @@
 	"components": {
 		"schemas": {
 			"CreateLocaleRequest": {
-				"required": ["countryCode", "languageCode", "serviceId"],
+				"required": ["serviceId", "tag"],
 				"type": "object",
 				"properties": {
 					"serviceId": {
 						"type": "integer",
 						"format": "int32"
 					},
-					"languageCode": {
-						"maxLength": 2,
-						"minLength": 0,
-						"type": "string"
-					},
-					"countryCode": {
-						"maxLength": 2,
-						"minLength": 0,
+					"tag": {
 						"type": "string"
 					},
 					"isDefault": {
@@ -2687,11 +2679,7 @@
 						"type": "integer",
 						"format": "int32"
 					},
-					"languageCode": {
-						"type": "string",
-						"nullable": true
-					},
-					"countryCode": {
+					"tag": {
 						"type": "string",
 						"nullable": true
 					},

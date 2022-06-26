@@ -3,6 +3,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { OrganisationRoleRecord } from '../../../api/models';
+import { renderBoolAsSymbol } from '../../../common/dataGridUtils';
 import DataGridOverlay from '../DataGridOverlay';
 
 export interface OrganisationRolesTableProps {
@@ -17,12 +18,6 @@ const OrganisationRolesTable: React.FC<OrganisationRolesTableProps> = ({
 	isError,
 }) => {
 	const { t } = useTranslation();
-
-	const renderBoolAsSymbol = (
-		params: GridRenderCellParams<any, OrganisationRoleRecord, any>
-	) => {
-		return params.value ? '✔️' : '❌';
-	};
 
 	const columns: GridColDef<OrganisationRoleRecord>[] = [
 		{

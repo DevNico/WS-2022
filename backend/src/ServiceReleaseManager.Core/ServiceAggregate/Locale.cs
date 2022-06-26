@@ -7,10 +7,9 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class Locale : EntityBase, IAggregateRoot
 {
-  public Locale(string countryCode, string languageCode, bool isDefault, int serviceId)
+  public Locale(string tag, bool isDefault, int serviceId)
   {
-    CountryCode = countryCode;
-    LanguageCode = languageCode;
+    Tag = tag;
     IsDefault = isDefault;
     ServiceId = serviceId;
   }
@@ -20,12 +19,7 @@ public class Locale : EntityBase, IAggregateRoot
   public bool IsDefault { get; set; }
 
   [Required]
-  [StringLength(2)]
-  public string CountryCode { get; set; }
-
-  [Required]
-  [StringLength(2)]
-  public string LanguageCode { get; set; }
+  public string Tag { get; set; }
 
   public int ServiceId { get; set; }
 }

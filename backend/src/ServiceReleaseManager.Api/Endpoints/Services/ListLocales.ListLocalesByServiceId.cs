@@ -2,10 +2,10 @@
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class ListLocalesByServiceId
+public class ListLocalesByServiceRouteName
 {
-  public const string Route = "{ServiceId:int}/locales";
+  public const string Route = "{ServiceRouteName}/locales";
 
   [FromRoute]
-  public int ServiceId { get; set; } = default!;
+  public string ServiceRouteName { get; set; } = default!;
 }

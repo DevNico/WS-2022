@@ -13,6 +13,7 @@ import CreateServiceTemplatePage from './pages/organisation/CreateServiceTemplat
 import OrganisationRolesPage from './pages/organisation/OrganisationRolesPage';
 import OrganisationUsersPage from './pages/organisation/OrganisationUsersPage';
 import ServiceTemplatesPage from './pages/organisation/ServiceTemplatesPage';
+import LocalesPage from './pages/service/LocalesPage';
 import ReleasesPage from './pages/service/ReleasesPage';
 import ServicesPage from './pages/service/ServicesPage';
 
@@ -49,10 +50,11 @@ export const organisationRoute = route(
 
 // --- SERVICE ---
 export const releasesRoute = route('releases', {}, {});
+export const localesRoute = route('locales', {}, {});
 export const serviceRoute = route(
 	'service/:name',
 	{ name: stringParser },
-	{ releases: releasesRoute }
+	{ releases: releasesRoute, locales: localesRoute }
 );
 
 export const homeRoute = route(
@@ -111,6 +113,11 @@ const Router: React.FC = () => {
 					<Route
 						path={releasesRoute.template}
 						element={<ReleasesPage />}
+					/>
+
+					<Route
+						path={localesRoute.template}
+						element={<LocalesPage />}
 					/>
 				</Route>
 
