@@ -18,15 +18,17 @@ public class Service : EntityBase, IAggregateRoot
   public Service(
     string name,
     string description,
-    int serviceTemplateId,
-    int organisationId
+    ServiceTemplate template,
+    Organisation organisation
   )
   {
     Name = name;
     RouteName = Name.Replace(" ", "-").ToLower();
     Description = description;
-    ServiceTemplateId = serviceTemplateId;
-    OrganisationId = organisationId;
+    ServiceTemplate = template;
+    ServiceTemplateId = template.Id;
+    Organisation = organisation;
+    OrganisationId = organisation.Id;
     IsActive = true;
   }
 

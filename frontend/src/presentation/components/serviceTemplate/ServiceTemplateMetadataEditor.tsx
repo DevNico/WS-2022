@@ -21,12 +21,12 @@ const ServiceTemplateMetadataEditor: React.FC<
 		monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
 			validate: true,
 			allowComments: false,
+			enableSchemaRequest: true,
 			schemas: [
-				// {
-				// 	uri: 'https://server/schema.json',
-				// 	fileMatch: ['*.json'],
-				// 	schema: schema,
-				// },
+				{
+					uri: `${process.env.REACT_APP_API_BASE_URL}/static-files/service-template-schema.json`,
+					fileMatch: ['*'],
+				},
 			],
 		});
 	};

@@ -1,5 +1,6 @@
 import { CorporateFare } from '@mui/icons-material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBackIosNew';
+import LanguageIcon from '@mui/icons-material/Language';
 import List from '@mui/material/List/List';
 import ListSubheader from '@mui/material/ListSubheader/ListSubheader';
 import React from 'react';
@@ -39,8 +40,14 @@ const ServiceDrawer: React.FC = () => {
 					<ListSubheader>{service?.data?.name}</ListSubheader>
 					<ListItemLink
 						to={homeRoute({}).service({ name }).releases({})}
-						text={t('services.drawer.releases')}
+						text={t('service.drawer.releases')}
 						icon={<CorporateFare />}
+						onClick={handleDrawerToggle}
+					/>
+					<ListItemLink
+						to={homeRoute({}).service({ name }).locales({})}
+						text={t('service.drawer.locales')}
+						icon={<LanguageIcon />}
 						onClick={handleDrawerToggle}
 					/>
 				</List>

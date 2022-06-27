@@ -51,8 +51,8 @@ public class ServiceService : IServiceService
     var service = new Service(
       name: name,
       description: description,
-      serviceTemplateId: template.Id,
-      organisationId: template.OrganisationId
+      template,
+      template.Organisation
     );
 
     var created = await _serviceRepository.AddAsync(service, cancellationToken);

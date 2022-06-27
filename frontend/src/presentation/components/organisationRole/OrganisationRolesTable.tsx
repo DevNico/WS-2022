@@ -3,6 +3,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { OrganisationRoleRecord } from '../../../api/models';
+import { renderBoolAsSymbol } from '../../../common/dataGridUtils';
 import DataGridOverlay from '../DataGridOverlay';
 
 export interface OrganisationRolesTableProps {
@@ -18,50 +19,44 @@ const OrganisationRolesTable: React.FC<OrganisationRolesTableProps> = ({
 }) => {
 	const { t } = useTranslation();
 
-	const renderBoolAsSymbol = (
-		params: GridRenderCellParams<any, OrganisationRoleRecord, any>
-	) => {
-		return params.value ? '✔️' : '❌';
-	};
-
 	const columns: GridColDef<OrganisationRoleRecord>[] = [
 		{
 			field: 'name',
-			headerName: t('organisation.roles.create.name'),
+			headerName: t('organisationRole.create.name'),
 			hideable: false,
 			flex: 1,
 		},
 		{
 			field: 'serviceWrite',
-			headerName: t('organisation.roles.model.serviceWrite'),
+			headerName: t('organisationRole.model.serviceWrite'),
 			hideable: false,
 			flex: 1,
 			renderCell: renderBoolAsSymbol,
 		},
 		{
 			field: 'serviceDelete',
-			headerName: t('organisation.roles.model.serviceDelete'),
+			headerName: t('organisationRole.model.serviceDelete'),
 			hideable: false,
 			flex: 1,
 			renderCell: renderBoolAsSymbol,
 		},
 		{
 			field: 'userRead',
-			headerName: t('organisation.roles.model.userRead'),
+			headerName: t('organisationRole.model.userRead'),
 			hideable: false,
 			flex: 1,
 			renderCell: renderBoolAsSymbol,
 		},
 		{
 			field: 'userWrite',
-			headerName: t('organisation.roles.model.userWrite'),
+			headerName: t('organisationRole.model.userWrite'),
 			hideable: false,
 			flex: 1,
 			renderCell: renderBoolAsSymbol,
 		},
 		{
 			field: 'userDelete',
-			headerName: t('organisation.roles.model.userDelete'),
+			headerName: t('organisationRole.model.userDelete'),
 			hideable: false,
 			flex: 1,
 			renderCell: renderBoolAsSymbol,
@@ -79,8 +74,8 @@ const OrganisationRolesTable: React.FC<OrganisationRolesTableProps> = ({
 					<DataGridOverlay
 						text={
 							isError
-								? t('organisation.roles.list.error')
-								: t('organisation.roles.list.noData')
+								? t('organisationRole.list.error')
+								: t('organisationRole.list.noData')
 						}
 					/>
 				),

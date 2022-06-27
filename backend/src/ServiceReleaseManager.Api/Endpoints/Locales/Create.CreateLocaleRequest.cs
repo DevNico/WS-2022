@@ -9,12 +9,7 @@ public class CreateLocaleRequest
   public int ServiceId { get; set; } = default!;
 
   [Required]
-  [StringLength(2)]
-  public string? LanguageCode { get; set; } = default!;
-
-  [Required]
-  [StringLength(2)]
-  public string? CountryCode { get; set; } = default!;
+  public string Tag { get; set; } = default!;
 
   [DefaultValue(false)]
   public bool? IsDefault { get; set; } = default!;

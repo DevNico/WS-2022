@@ -5,25 +5,25 @@
  * OpenAPI spec version: v1
  */
 import {
-	MutationFunction,
-	QueryFunction,
-	QueryKey,
-	useMutation,
-	UseMutationOptions,
 	useQuery,
+	useMutation,
 	UseQueryOptions,
+	UseMutationOptions,
+	QueryFunction,
+	MutationFunction,
 	UseQueryResult,
+	QueryKey,
 } from 'react-query';
-import { customInstance, ErrorType } from '.././axios';
 import type {
-	CreateServiceRequest,
-	ErrorResponse,
-	ListUsersByServiceId,
-	LocaleRecord,
-	ReleaseRecord,
 	ServiceRecord,
+	ErrorResponse,
+	CreateServiceRequest,
+	ReleaseRecord,
+	LocaleRecord,
 	ServiceUserRecord,
+	ListUsersByServiceId,
 } from '.././models';
+import { customInstance, ErrorType } from '.././axios';
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (
@@ -326,18 +326,22 @@ export const useServicesListReleases = <
  * @summary List all locales
  */
 export const localesList = (
-	serviceId: number,
+	serviceRouteName: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
 	return customInstance<LocaleRecord[]>(
-		{ url: `/api/v1/services/${serviceId}/locales`, method: 'get', signal },
+		{
+			url: `/api/v1/services/${serviceRouteName}/locales`,
+			method: 'get',
+			signal,
+		},
 		options
 	);
 };
 
-export const getLocalesListQueryKey = (serviceId: number) => [
-	`/api/v1/services/${serviceId}/locales`,
+export const getLocalesListQueryKey = (serviceRouteName: string) => [
+	`/api/v1/services/${serviceRouteName}/locales`,
 ];
 
 export type LocalesListQueryResult = NonNullable<
@@ -349,7 +353,7 @@ export const useLocalesList = <
 	TData = Awaited<ReturnType<typeof localesList>>,
 	TError = ErrorType<void>
 >(
-	serviceId: number,
+	serviceRouteName: string,
 	options?: {
 		query?: UseQueryOptions<
 			Awaited<ReturnType<typeof localesList>>,
@@ -362,17 +366,17 @@ export const useLocalesList = <
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ?? getLocalesListQueryKey(serviceId);
+		queryOptions?.queryKey ?? getLocalesListQueryKey(serviceRouteName);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof localesList>>> = ({
 		signal,
-	}) => localesList(serviceId, requestOptions, signal);
+	}) => localesList(serviceRouteName, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof localesList>>,
 		TError,
 		TData
-	>(queryKey, queryFn, { enabled: !!serviceId, ...queryOptions });
+	>(queryKey, queryFn, { enabled: !!serviceRouteName, ...queryOptions });
 
 	return {
 		queryKey,

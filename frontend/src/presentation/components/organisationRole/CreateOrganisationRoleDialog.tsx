@@ -19,7 +19,7 @@ const CreateOrganisationRoleDialog: React.FC<
 
 	return (
 		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>{t('organisation.roles.create.title')}</DialogTitle>
+			<DialogTitle>{t('organisationRole.create.title')}</DialogTitle>
 			<DialogContent>
 				<OrganisationRoleForm
 					organisation={organisation}

@@ -60,9 +60,9 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 				loading: t('common.loading'),
 				success: () => {
 					formik.resetForm();
-					return t('organisation.users.create.success');
+					return t('organisationUser.create.success');
 				},
-				error: t('organisation.users.create.error', {
+				error: t('organisationUser.create.error', {
 					error:
 						(createUser.error as any)?.message ||
 						'No message available',
@@ -83,7 +83,7 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 						fullWidth
 						id='email'
 						name='email'
-						label={t('organisation.users.model.email')}
+						label={t('organisationUser.model.email')}
 						value={formik.values.email}
 						onChange={formik.handleChange}
 						error={
@@ -98,7 +98,7 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 						fullWidth
 						id='firstName'
 						name='firstName'
-						label={t('organisation.users.model.firstName')}
+						label={t('organisationUser.model.firstName')}
 						value={formik.values.firstName}
 						onChange={formik.handleChange}
 						error={
@@ -116,7 +116,7 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 						fullWidth
 						id='lastName'
 						name='lastName'
-						label={t('organisation.users.model.lastName')}
+						label={t('organisationUser.model.lastName')}
 						value={formik.values.lastName}
 						onChange={formik.handleChange}
 						error={
@@ -135,7 +135,7 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 						select
 						id='roleId'
 						name='roleId'
-						label={t('organisation.users.model.role')}
+						label={t('organisationUser.model.role')}
 						value={
 							formik.values.roleId === -1
 								? ''
@@ -173,7 +173,7 @@ const OrganisationUserForm: React.FC<CreateOrganisationUserFormProps> = ({
 						loading={loading}
 						variant='contained'
 					>
-						{t('organisation.users.create.submit')}
+						{t('organisationUser.create.submit')}
 					</LoadingButton>
 				</Grid>
 			</Grid>

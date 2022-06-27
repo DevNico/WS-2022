@@ -6,17 +6,19 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useRouteParams } from 'typesafe-routes';
-import { useOrganisationUserList } from '../../../api/organisation-user/organisation-user';
-import { useOrganisationsGetByRouteName } from '../../../api/organisation/organisation';
-import CreateOrganisationUserDialog from '../../components/organisationUser/CreateOrganisationUserDialog';
-import OrganisationUsersTable from '../../components/organisationUser/OrganisationUsersTable';
-import { organisationRoute } from '../../Router';
+import {
+	useLocalesList,
+	useServiceGetByRouteName,
+} from '../../../api/service/service';
+import CreateLocaleDialog from '../../components/locale/CreateLocaleDialog';
+import LocalesTable from '../../components/locale/LocalesTable';
+import { serviceRoute } from '../../Router';
 
-const OrganisationUsersPage: React.FC = () => {
-	const { name } = useRouteParams(organisationRoute);
-	const organisation = useOrganisationsGetByRouteName(name);
+const LocalesPage: React.FC = () => {
+	const { name } = useRouteParams(serviceRoute);
 
-	const { data, isLoading, isError, error } = useOrganisationUserList(name);
+	const service = useServiceGetByRouteName(name);
+	const { data, isLoading, isError, error } = useLocalesList(name);
 	const { t } = useTranslation();
 
 	if (isError) {
@@ -41,23 +43,24 @@ const OrganisationUsersPage: React.FC = () => {
 				mb={2}
 			>
 				<Typography variant='h4' component='h2'>
-					{t('organisationUser.list.title')}
+					{t('locale.list.title')}
 				</Typography>
 				<Button
 					onClick={handleOpenCreateDialog}
 					startIcon={<AddIcon />}
 					sx={{ width: 'max-content' }}
 				>
-					{t('organisationUser.list.create')}
+					{t('locale.list.create')}
 				</Button>
 			</Stack>
-			<OrganisationUsersTable
-				users={data ?? []}
+			<LocalesTable
+				serviceRouteName={name}
+				locales={data ?? []}
 				isLoading={isLoading}
 				isError={isError}
 			/>
-			<CreateOrganisationUserDialog
-				organisation={organisation.data!}
+			<CreateLocaleDialog
+				service={service.data!}
 				open={createDialogOpen}
 				onClose={handleCloseCreateDialog}
 			/>
@@ -65,4 +68,4 @@ const OrganisationUsersPage: React.FC = () => {
 	);
 };
 
-export default OrganisationUsersPage;
+export default LocalesPage;

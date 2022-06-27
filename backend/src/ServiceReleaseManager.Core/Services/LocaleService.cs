@@ -24,17 +24,18 @@ public class LocaleService : ILocaleService
     return ResultHelper.NullableSuccessNotFound(locale);
   }
 
-  public async Task<Result<List<Locale>>> ListByServiceId(int serviceId,
+  public async Task<Result<List<Locale>>> ListByServiceRouteName(
+    string serviceRouteName,
     CancellationToken cancellationToken)
   {
-    var service = await _serviceService.GetById(serviceId, cancellationToken);
+    var service = await _serviceService.GetByRouteName(serviceRouteName, cancellationToken);
     if (!service.IsSuccess)
     {
       return Result<List<Locale>>.NotFound();
     }
 
     var locales = await _localeRepository.ListAsync(cancellationToken);
-    var spec = new LocalesByServiceIdSpec(serviceId);
+    var spec = new LocalesByServiceIdSpec(service.Value.Id);
     var localesByServiceId = spec.Evaluate(locales);
 
     return Result.Success(localesByServiceId.ToList());
@@ -48,11 +49,26 @@ public class LocaleService : ILocaleService
       return Result.NotFound();
     }
 
-    var existingLocale =
-      await _getLocaleByCodes(locale.CountryCode, locale.LanguageCode, cancellationToken);
+    var existingLocale = await _getLocaleByTag(
+      locale.ServiceId,
+      locale.Tag,
+      cancellationToken
+    );
     if (existingLocale.IsSuccess)
     {
       return Result.Error("Locale already exists");
+    }
+
+    if (locale.IsDefault)
+    {
+      var defaultLocaleResult = await _getDefaultLocale(locale.ServiceId, cancellationToken);
+
+      if (defaultLocaleResult.IsSuccess)
+      {
+        var defaultLocale = defaultLocaleResult.Value;
+        defaultLocale.IsDefault = false;
+        await _localeRepository.UpdateAsync(defaultLocale, cancellationToken);
+      }
     }
 
     var createdLocale = await _localeRepository.AddAsync(locale, cancellationToken);
@@ -77,10 +93,22 @@ public class LocaleService : ILocaleService
     return Result.Success();
   }
 
-  private async Task<Result<Locale>> _getLocaleByCodes(string countryCode, string languageCode,
+  private async Task<Result<Locale>> _getLocaleByTag(
+    int serviceId,
+    string tag,
     CancellationToken cancellationToken)
   {
-    var spec = new LocaleByCodesSpec(countryCode, languageCode);
+    var spec = new LocaleByTagSpec(serviceId, tag);
+    var locale = await _localeRepository.GetBySpecAsync(spec, cancellationToken);
+    return ResultHelper.NullableSuccessNotFound(locale);
+  }
+
+  private async Task<Result<Locale>> _getDefaultLocale(
+    int serviceId,
+    CancellationToken cancellationToken
+  )
+  {
+    var spec = new DefaultLocaleSpec(serviceId);
     var locale = await _localeRepository.GetBySpecAsync(spec, cancellationToken);
     return ResultHelper.NullableSuccessNotFound(locale);
   }

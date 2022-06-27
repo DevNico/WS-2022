@@ -18,7 +18,7 @@ const CreateOrganisationDialog: React.FC<CreateOrganisationDialogProps> = ({
 
 	return (
 		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>{t('organisations.create.title')}</DialogTitle>
+			<DialogTitle>{t('organisation.create.title')}</DialogTitle>
 			<DialogContent>
 				<OrganisationForm onSubmitSuccess={onClose} />
 			</DialogContent>

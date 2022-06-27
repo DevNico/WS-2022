@@ -27,7 +27,7 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 
 	const queryClient = useQueryClient();
 	const createRelease = useMutation(releaseCreate);
-	const locales = useLocalesList(service.id!);
+	const locales = useLocalesList(service.routeName!);
 	const isLoading = createRelease.isLoading || locales.isLoading;
 
 	const validationSchema = yup.object({
@@ -54,9 +54,9 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 				loading: t('common.loading'),
 				success: () => {
 					formik.resetForm();
-					return t('releases.create.success');
+					return t('release.create.success');
 				},
-				error: t('releases.create.error', {
+				error: t('release.create.error', {
 					error:
 						(createRelease.error as any)?.message ||
 						'No message available',
@@ -94,7 +94,7 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 						loading={isLoading}
 						variant='contained'
 					>
-						{t('releases.create.submit')}
+						{t('release.create.submit')}
 					</LoadingButton>
 				</Grid>
 			</Grid>

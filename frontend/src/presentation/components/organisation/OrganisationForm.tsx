@@ -38,9 +38,9 @@ const OrganisationForm: React.FC<OrganisationFormProps> = ({
 				loading: t('common.loading'),
 				success: () => {
 					formik.resetForm();
-					return t('organisations.create.success');
+					return t('organisation.create.success');
 				},
-				error: t('organisations.create.error', {
+				error: t('organisation.create.error', {
 					error:
 						(createOrganisation.error as any)?.message ||
 						'No message available',
@@ -63,7 +63,7 @@ const OrganisationForm: React.FC<OrganisationFormProps> = ({
 					fullWidth
 					id='name'
 					name='name'
-					label={t('organisations.create.name')}
+					label={t('organisation.create.name')}
 					value={formik.values.name}
 					onChange={formik.handleChange}
 					error={formik.touched.name && Boolean(formik.errors.name)}
@@ -75,7 +75,7 @@ const OrganisationForm: React.FC<OrganisationFormProps> = ({
 					loading={createOrganisation.isLoading}
 					variant='contained'
 				>
-					{t('organisations.create.submit')}
+					{t('organisation.create.submit')}
 				</LoadingButton>
 			</Stack>
 		</form>
