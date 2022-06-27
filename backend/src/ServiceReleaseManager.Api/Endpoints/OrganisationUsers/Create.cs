@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Organisation;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -15,6 +17,7 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
   private readonly IKeycloakClient _keycloakClient;
   private readonly ILogger<Create> _logger;
   private readonly IReadRepository<OrganisationRole> _organisationRoleRepository;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IOrganisationService _organisationService;
   private readonly IOrganisationUserService _organisationUserService;
 
@@ -23,13 +26,16 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     IKeycloakClient keycloakClient,
     ILogger<Create> logger,
     IOrganisationService organisationService,
-    IReadRepository<OrganisationRole> organisationRoleRepository)
+    IReadRepository<OrganisationRole> organisationRoleRepository,
+    IServiceManagerAuthorizationService authorizationService
+    )
   {
     _organisationUserService = organisationUserService;
     _keycloakClient = keycloakClient;
     _logger = logger;
     _organisationService = organisationService;
     _organisationRoleRepository = organisationRoleRepository;
+    _authorizationService = authorizationService;
   }
 
   private async Task<KeycloakUserFetchResult> GetKeycloakUser(string email)
@@ -76,6 +82,11 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     [FromBody] CreateOrganisationUserRequest request,
     CancellationToken cancellationToken = new())
   {
+    if(! await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationId, OrganisationUserOperations.OrganisationUser_Create, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var organisationResult =
       await _organisationService.GetById(request.OrganisationId, cancellationToken);
     if (!organisationResult.IsSuccess)
@@ -90,7 +101,6 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     {
       return BadRequest();
     }
-
 
     var keycloakUser = await GetKeycloakUser(request.Email);
     if (keycloakUser.RequestFailed)

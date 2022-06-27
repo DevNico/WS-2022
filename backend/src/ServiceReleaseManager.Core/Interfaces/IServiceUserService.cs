@@ -5,6 +5,8 @@ namespace ServiceReleaseManager.Core.Interfaces;
 
 public interface IServiceUserService
 {
+  public Task<ServiceUser?> getByOrganisationUserId(int organisationUserId, CancellationToken cancellationToken);
+
   public Task<Result<List<ServiceUser>>> GetByServiceId(int serviceId,
     CancellationToken cancellationToken);
   

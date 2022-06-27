@@ -128,6 +128,9 @@ builder.Services.Configure<ServiceConfig>(serviceConfig =>
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultCoreModule());
+  containerBuilder.RegisterType<ServiceManagerAuthorizationService>()
+    .As<IServiceManagerAuthorizationService>()
+    .SingleInstance();
   containerBuilder.RegisterModule(
     new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development", config,
       builder.Environment.ContentRootPath));

@@ -18,4 +18,6 @@ public interface IOrganisationUserService
     organisationRouteName, CancellationToken cancellationToken);
 
   public Task<Result> Delete(int organisationUserId, CancellationToken cancellationToken);
+
+  public Task<List<OrganisationUser>?> GetUsers(int organisationId, CancellationToken cancellationToken);
 }

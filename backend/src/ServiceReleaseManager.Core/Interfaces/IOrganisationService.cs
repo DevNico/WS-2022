@@ -7,8 +7,10 @@ public interface IOrganisationService
 {
   public Task<Result<Organisation>> GetById(int id, CancellationToken cancellationToken);
 
-  public Task<Result<Organisation>> GetByRouteName(string routeName,
+  public Task<Result<Organisation>> GetByRouteNameRequest(string routeName,
     CancellationToken cancellationToken);
+
+  public Task<Organisation?> GetByRouteName(string routeName, CancellationToken cancellationToken);
 
   public Task<Result<List<Organisation>>> List(bool includeDeactivated,
     CancellationToken cancellationToken);

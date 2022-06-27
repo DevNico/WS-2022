@@ -24,7 +24,7 @@ public class OrganisationService : IOrganisationService
     return ResultHelper.NullableSuccessNotFound(organisation);
   }
 
-  public async Task<Result<Organisation>> GetByRouteName(string routeName,
+  public async Task<Result<Organisation>> GetByRouteNameRequest(string routeName,
     CancellationToken cancellationToken)
   {
     var spec = new OrganisationByRouteNameSpec(routeName);
@@ -94,5 +94,11 @@ public class OrganisationService : IOrganisationService
     await _organisationRepository.SaveChangesAsync(cancellationToken);
 
     return Result.Success();
+  }
+
+  public async Task<Organisation?> GetByRouteName(string routeName, CancellationToken cancellationToken)
+  {
+    var spec = new OrganisationByRouteNameSpec(routeName);
+    return await _organisationRepository.GetBySpecAsync(spec, cancellationToken);
   }
 }

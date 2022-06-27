@@ -52,7 +52,7 @@ public class OrganisationUserService : IOrganisationUserService
     organisationRouteName, CancellationToken cancellationToken)
   {
     var organisation = await
-      _organisationService.GetByRouteName(organisationRouteName, cancellationToken);
+      _organisationService.GetByRouteNameRequest(organisationRouteName, cancellationToken);
 
     if (!organisation.IsSuccess)
     {
@@ -88,5 +88,15 @@ public class OrganisationUserService : IOrganisationUserService
     await _organisationUserRepository.SaveChangesAsync(cancellationToken);
 
     return Result.Success();
+  }
+
+  public async Task<List<OrganisationUser>?> GetUsers(int
+    organisationId, CancellationToken cancellationToken)
+  {
+
+    var spec = new OrganisationUserByOrganisationIdSpec(organisationId);
+    var users = await _organisationUserRepository.ListAsync(spec, cancellationToken);
+
+    return users;
   }
 }

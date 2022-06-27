@@ -18,7 +18,7 @@ public class ListMe : EndpointBase.WithoutRequest.WithActionResult<List<Organisa
   }
 
   [HttpGet("me")]
-  [Authorize(Roles = "superAdmin")]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Get all Organisations the current user is a member of",
     OperationId = "Organisations.Me",
