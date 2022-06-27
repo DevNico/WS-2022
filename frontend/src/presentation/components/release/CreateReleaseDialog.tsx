@@ -3,17 +3,17 @@ import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { OrganisationRecord } from '../../../api/models';
-import ServiceForm from './ServiceForm';
+import { ServiceRecord } from '../../../api/models';
+import ReleaseForm from './ReleaseForm';
 
-export interface CreateServiceDialogProps {
-	organisation: OrganisationRecord;
+export interface CreateReleaseDialogProps {
+	service: ServiceRecord;
 	open: boolean;
 	onClose: () => void;
 }
 
-const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({
-	organisation,
+const CreateReleaseDialog: React.FC<CreateReleaseDialogProps> = ({
+	service,
 	open,
 	onClose,
 }) => {
@@ -21,15 +21,12 @@ const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({
 
 	return (
 		<Dialog open={open} onClose={onClose}>
-			<DialogTitle>{t('service.create.title')}</DialogTitle>
+			<DialogTitle>{t('release.create.title')}</DialogTitle>
 			<DialogContent>
-				<ServiceForm
-					onSubmitSuccess={onClose}
-					organisation={organisation}
-				/>
+				<ReleaseForm service={service} onSubmitSuccess={onClose} />
 			</DialogContent>
 		</Dialog>
 	);
 };
 
-export default CreateServiceDialog;
+export default CreateReleaseDialog;

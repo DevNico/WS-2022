@@ -49,9 +49,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 				loading: t('common.loading'),
 				success: () => {
 					formik.resetForm();
-					return t('services.create.success');
+					return t('service.create.success');
 				},
-				error: t('services.create.error', {
+				error: t('service.create.error', {
 					error:
 						(createService.error as any)?.message ||
 						'No message available',
@@ -76,7 +76,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 					fullWidth
 					id='name'
 					name='name'
-					label={t('services.model.name')}
+					label={t('service.model.name')}
 					value={formik.values.name}
 					onChange={formik.handleChange}
 					error={formik.touched.name && Boolean(formik.errors.name)}
@@ -87,7 +87,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 					fullWidth
 					id='description'
 					name='description'
-					label={t('services.model.description')}
+					label={t('service.model.description')}
 					value={formik.values.description}
 					onChange={formik.handleChange}
 					error={
@@ -106,7 +106,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 					select
 					id='serviceTemplateId'
 					name='serviceTemplateId'
-					label={t('services.model.template')}
+					label={t('service.model.template')}
 					value={
 						formik.values.serviceTemplateId === -1
 							? ''
@@ -134,7 +134,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 					loading={createService.isLoading}
 					variant='contained'
 				>
-					{t('services.create.submit')}
+					{t('service.create.submit')}
 				</LoadingButton>
 			</Stack>
 		</form>

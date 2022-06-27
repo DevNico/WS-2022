@@ -27,7 +27,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, ...rest }) => {
 							{service.name!}
 						</Typography>
 						<Typography variant='caption'>
-							{t('services.model.updatedAt', {
+							{t('service.model.updatedAt', {
 								updatedAt: new Date(
 									service.updatedAt!
 								).toLocaleDateString(),

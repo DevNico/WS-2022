@@ -40,13 +40,13 @@ const ServiceDrawer: React.FC = () => {
 					<ListSubheader>{service?.data?.name}</ListSubheader>
 					<ListItemLink
 						to={homeRoute({}).service({ name }).releases({})}
-						text={t('services.drawer.releases')}
+						text={t('service.drawer.releases')}
 						icon={<CorporateFare />}
 						onClick={handleDrawerToggle}
 					/>
 					<ListItemLink
 						to={homeRoute({}).service({ name }).locales({})}
-						text={t('services.drawer.locales')}
+						text={t('service.drawer.locales')}
 						icon={<LanguageIcon />}
 						onClick={handleDrawerToggle}
 					/>

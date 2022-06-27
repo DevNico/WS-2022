@@ -1,192 +1,182 @@
 {
-  "admin": {
-    "drawer": {
-      "home": "",
-      "organisations": "",
-      "title": ""
-    },
-    "organisations": {
-      "title": ""
-    }
-  },
-  "appbar": {
-    "admin": "",
-    "usermenu": {
-      "logout": "Abmelden"
-    }
-  },
-  "common": {
-    "confirmation": {
-      "delete": ""
-    },
-    "error": {
-      "loading": ""
-    },
-    "loading": "",
-    "submit": ""
-  },
-  "common.retry": "Erneut versuchen",
-  "home.noOrganisations": "Keine Organisationen gefunden, Sie müssen zuerst zu einer Organisation eingeladen werden!",
-  "homeLayout": {
-    "organisations": "Organisationen",
-    "roles": "",
-    "users": "Benutzer"
-  },
-  "locale": {
-    "create": {
-      "error": "",
-      "submit": "",
-      "success": "",
-      "title": ""
-    },
-    "delete": {
-      "confirm": "",
-      "error": "",
-      "success": ""
-    },
-    "list": {
-      "actions": "",
-      "create": "",
-      "error": "",
-      "noData": "",
-      "title": ""
-    },
-    "model": {
-      "country": "",
-      "isDefault": "",
-      "language": "",
-      "tag": ""
-    }
-  },
-  "login": "Anmelden",
-  "notFoundPage.goToHome": "Zurück zur Startseite",
-  "notFoundPage.subtitle": "Leider konnten wir die von Ihnen gesuchte Seite nicht finden. Vielleicht haben Sie sich bei der URL vertippt? Überprüfen Sie bitte Ihre Rechtschreibung.",
-  "notFoundPage.title": "Die Seite wurde nicht gefunden",
-  "organisation": {
-    "card": {
-      "updatedAt": ""
-    },
-    "drawer": {
-      "back": "",
-      "home": "",
-      "roles": "",
-      "serviceTemplates": "",
-      "services": "",
-      "title": "",
-      "users": ""
-    },
-    "roles": {
-      "create": {
-        "error": "",
-        "name": "",
-        "organisation": "",
-        "permissions": "",
-        "service": "",
-        "success": "",
-        "title": "",
-        "user": ""
-      },
-      "list": {
-        "create": "",
-        "error": "",
-        "noData": "",
-        "title": ""
-      },
-      "model": {
-        "serviceDelete": "",
-        "serviceWrite": "",
-        "userDelete": "",
-        "userRead": "",
-        "userWrite": ""
-      }
-    },
-    "users": {
-      "create": {
-        "error": "",
-        "organisation": "",
-        "submit": "",
-        "success": "",
-        "title": ""
-      },
-      "list": {
-        "create": "",
-        "error": "",
-        "noData": "",
-        "organisation": "",
-        "title": ""
-      },
-      "model": {
-        "email": "",
-        "firstName": "",
-        "lastName": "",
-        "role": ""
-      }
-    }
-  },
-  "organisations": {
-    "create": {
-      "error": "",
-      "name": "",
-      "submit": "",
-      "success": "",
-      "title": ""
-    },
-    "list": {
-      "actions": "",
-      "create": "Organisation erstellen",
-      "createdAt": "Erstellt am",
-      "description": "",
-      "name": "",
-      "noData": "Keine Organisationen gefunden"
-    }
-  },
-  "releases": {
-    "create": {
-      "error": "",
-      "submit": "",
-      "success": ""
-    }
-  },
-  "serviceTemplate": {
-    "create": {
-      "error": "",
-      "submit": "",
-      "success": "",
-      "title": ""
-    },
-    "list": {
-      "create": "",
-      "error": "",
-      "noData": "",
-      "title": ""
-    },
-    "model": {
-      "localizedMetadata": "",
-      "name": "",
-      "staticMetadata": ""
-    }
-  },
-  "services": {
-    "create": {
-      "error": "",
-      "submit": "",
-      "success": "",
-      "title": ""
-    },
-    "drawer": {
-      "locales": "",
-      "releases": ""
-    },
-    "model": {
-      "description": "",
-      "name": "",
-      "template": "",
-      "updatedAt": ""
-    },
-    "noneFound": ""
-  },
-  "unauthorizedPage": {
-    "subtitle": "",
-    "title": ""
-  }
+	"admin": {
+		"drawer": {
+			"home": "Home",
+			"organisations": "Organisationen",
+			"title": "Admin-Bereich"
+		},
+		"organisation": {
+			"title": "Organisationen"
+		}
+	},
+	"appbar": {
+		"admin": "Admin-Bereich",
+		"usermenu": {
+			"logout": "Abmelden"
+		}
+	},
+	"common": {
+		"confirmation": {
+			"delete": "Löschen"
+		},
+		"error": {
+			"loading": "Daten konnten nicht geladen werden"
+		},
+		"loading": "Wird geladen",
+		"retry": "Erneut versuchen",
+		"submit": "Absenden"
+	},
+	"home": {
+		"noOrganisations": "Keine Organisationen gefunden, Sie müssen zuerst zu einer Organisation eingeladen werden!"
+	},
+	"locale": {
+		"create": {
+			"error": "Sprache konnte nicht erstellt werden: {{error}}",
+			"submit": "Absenden",
+			"success": "Neues Sprache erfolgreich erstellt",
+			"title": "Sprache erstellen"
+		},
+		"delete": {
+			"confirm": "Möchten Sie die Sprache {{tag}} wirklich löschen?",
+			"error": "Sprache konnte nicht gelöscht werden",
+			"success": "Sprache gelöscht"
+		},
+		"list": {
+			"actions": "Aktionen",
+			"create": "Sprache erstellen",
+			"error": "Sprache konnten nicht geladen werden",
+			"noData": "Keine Sprache gefunden",
+			"title": "Sprachen"
+		},
+		"model": {
+			"isDefault": "Default",
+			"language": "Sprache",
+			"tag": "Tag"
+		}
+	},
+	"notFoundPage": {
+		"goToHome": "Zurück zur Startseite",
+		"subtitle": "Leider konnten wir die von Ihnen gesuchte Seite nicht finden. Vielleicht haben Sie sich bei der URL vertippt? Überprüfen Sie bitte Ihre Rechtschreibung.",
+		"title": "Die Seite wurde nicht gefunden"
+	},
+	"organisation": {
+		"card": {
+			"updatedAt": "Zuletzt aktualisiert am: {{updatedAt}}"
+		},
+		"create": {
+			"error": "Neue Organisation konnte nicht erstellt werden: {{error}}",
+			"name": "Name",
+			"submit": "Absenden",
+			"success": "Organisation erfolgreich erstellt",
+			"title": "Erstellen Sie eine neue Organisation"
+		},
+		"drawer": {
+			"home": "Home",
+			"roles": "Rollen",
+			"serviceTemplates": "Service-Vorlagen",
+			"services": "Services",
+			"users": "Benutzer"
+		},
+		"list": {
+			"actions": "Aktionen",
+			"create": "Organisation erstellen",
+			"createdAt": "Erstellt am",
+			"description": "Beschreibung",
+			"name": "Name",
+			"noData": "Keine Organisationen gefunden"
+		}
+	},
+	"organisationRole": {
+		"create": {
+			"error": "Neue Rolle konnte nicht erstellt werden: {{error}}",
+			"name": "Name",
+			"permissions": "Rollenberechtigungen auswählen",
+			"service": "Service",
+			"success": "Rolle erfolgreich erstellt",
+			"title": "Neue Rolle erstellen",
+			"user": "Benutzer"
+		},
+		"list": {
+			"create": "Neue Rolle erstellen",
+			"error": "Die Rollen konnten nicht geladen werden",
+			"noData": "Keine Rollen gefunden",
+			"title": "Organisationsrollen"
+		},
+		"model": {
+			"serviceDelete": "Service löschen",
+			"serviceWrite": "Service erstellen",
+			"userDelete": "Benutzer löschen",
+			"userRead": "Benutzer lesen",
+			"userWrite": "Benutzer erstellen"
+		}
+	},
+	"organisationUser": {
+		"create": {
+			"error": "Benutzer konnte nicht erstellt werden: {{error}}",
+			"submit": "Absenden",
+			"success": "Benutzer erfolgreich erstellt",
+			"title": "Benutzer erstellen"
+		},
+		"list": {
+			"create": "Benutzer erstellen",
+			"error": "Benutzer konnten nicht geladen werden",
+			"noData": "Keine Benutzer gefunden",
+			"title": "Benutzer der Organisation"
+		},
+		"model": {
+			"email": "Email",
+			"firstName": "Vorname",
+			"lastName": "Nachname",
+			"role": "Rolle"
+		}
+	},
+	"release": {
+		"create": {
+			"error": "Fehler beim Erstellen eines neuen Release: {{error}}",
+			"submit": "Absenden",
+			"success": "Release erfolgreich erstellt",
+			"title": "Release erstellen"
+		},
+		"list": {
+			"create": "Release erstellen",
+			"title": "Releases"
+		}
+	},
+	"service": {
+		"create": {
+			"error": "Service konnte nicht erstellt werden: {{error}}",
+			"submit": "Absenden",
+			"success": "Service erfolgreich erstellt",
+			"title": "Service erstellen"
+		},
+		"drawer": {
+			"locales": "Sprachen",
+			"releases": "Releases"
+		},
+		"model": {
+			"description": "Beschreibung",
+			"name": "Name",
+			"template": "Vorlage",
+			"updatedAt": "Zuletzt aktualisiert am: {{updatedAt}}"
+		}
+	},
+	"serviceTemplate": {
+		"create": {
+			"error": "Service-Vorlage konnte nicht erstellt werden: {{error}}",
+			"submit": "Absenden",
+			"success": "Service-Vorlage erfolgreich erstellt",
+			"title": "Service-Vorlage erstellen"
+		},
+		"list": {
+			"create": "Service-Vorlage erstellen",
+			"error": "Service-Vorlage konnten nicht geladen werden",
+			"noData": "Keine Service-Vorlagen gefunden",
+			"title": "Service-Vorlagen"
+		},
+		"model": {
+			"localizedMetadata": "Lokalisierte Metadaten",
+			"name": "Name",
+			"staticMetadata": "Statische Metadaten"
+		}
+	}
 }

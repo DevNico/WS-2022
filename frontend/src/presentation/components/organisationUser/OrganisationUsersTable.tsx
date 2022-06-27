@@ -21,25 +21,25 @@ const OrganisationUsersTable: React.FC<OrganisationUsersTableProps> = ({
 	const columns: GridColDef<OrganisationUserRecord>[] = [
 		{
 			field: 'email',
-			headerName: t('organisation.users.model.email'),
+			headerName: t('organisationUser.model.email'),
 			hideable: false,
 			flex: 1,
 		},
 		{
 			field: 'firstName',
-			headerName: t('organisation.users.model.firstName'),
+			headerName: t('organisationUser.model.firstName'),
 			hideable: false,
 			flex: 1,
 		},
 		{
 			field: 'lastName',
-			headerName: t('organisation.users.model.lastName'),
+			headerName: t('organisationUser.model.lastName'),
 			hideable: false,
 			flex: 1,
 		},
 		{
 			field: 'organisationRole',
-			headerName: t('organisation.users.model.role'),
+			headerName: t('organisationUser.model.role'),
 			hideable: false,
 			flex: 1,
 			valueGetter: (params) => {
@@ -60,8 +60,8 @@ const OrganisationUsersTable: React.FC<OrganisationUsersTableProps> = ({
 					<DataGridOverlay
 						text={
 							isError
-								? t('organisation.users.list.error')
-								: t('organisation.users.list.noData')
+								? t('organisationUser.list.error')
+								: t('organisationUser.list.noData')
 						}
 					/>
 				),
