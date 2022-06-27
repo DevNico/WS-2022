@@ -6,43 +6,43 @@ using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.Organisations;
+namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplatesRequest>.WithActionResult<List<ServiceTemplateRecord>>
+public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplatesRequest>.
+  WithActionResult<List<ServiceTemplateRecord>>
 {
   private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
-  private readonly IOrganisationService _organisationService;
+  private readonly IServiceService _serviceService;
 
   public ListServiceTemplates(
-    IRepository<ServiceTemplate> serviceTemplateRepository,
-    IOrganisationService organisationService
-  )
+    IRepository<ServiceTemplate> serviceTemplateRepository, IServiceService serviceService)
   {
     _serviceTemplateRepository = serviceTemplateRepository;
-    _organisationService = organisationService;
+    _serviceService = serviceService;
   }
 
   [HttpGet(ListServiceTemplatesRequest.Route)]
   [SwaggerOperation(
     Summary = "List all service templates",
     Description = "List all service templates",
-    OperationId = "ServiceTemplate.List",
-    Tags = new[] { "ServiceTemplateEndpoints" }
+    OperationId = "Service.ListServiceTemplates",
+    Tags = new[] { "Service" }
   )]
   [SwaggerResponse(200, "Success", typeof(List<ServiceTemplateRecord>))]
+  [SwaggerResponse(404, "Not found")]
   public override async Task<ActionResult<List<ServiceTemplateRecord>>> HandleAsync(
     [FromRoute] ListServiceTemplatesRequest request,
     CancellationToken cancellationToken = new())
   {
-    var organisation =
-      await _organisationService.GetByRouteName(request.OrganisationRouteName, cancellationToken);
+    var service =
+      await _serviceService.GetByRouteName(request.ServiceRouteName, cancellationToken);
 
-    if (!organisation.IsSuccess)
+    if (!service.IsSuccess)
     {
-      return BadRequest();
+      return NotFound();
     }
 
-    var spec = new ActiveServiceTemplatesSearchSpec(organisation.Value.Id);
+    var spec = new ActiveServiceTemplatesSearchSpec(service.Value.OrganisationId);
     var templates = await _serviceTemplateRepository.ListAsync(spec, cancellationToken);
     var response = templates.ConvertAll(ServiceTemplateRecord.FromEntity);
 

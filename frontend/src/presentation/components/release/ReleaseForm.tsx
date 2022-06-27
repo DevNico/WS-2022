@@ -7,12 +7,34 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from 'react-query';
 import * as yup from 'yup';
-import { CreateReleaseRequest, ServiceRecord } from '../../../api/models';
+import {
+	CreateReleaseRequest,
+	ServiceRecord,
+	ServiceTemplateRecord,
+} from '../../../api/models';
 import {
 	getReleasesListQueryKey,
 	releaseCreate,
 } from '../../../api/release-endpoints/release-endpoints';
-import { useLocalesList } from '../../../api/service/service';
+import {
+	getServicesListReleasesQueryKey,
+	useLocalesList,
+	useServiceListServiceTemplates,
+} from '../../../api/service/service';
+import GeneratedServiceTemplateForm from './GeneratedServiceTemplateForm';
+import {
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	SelectChangeEvent,
+	Stack,
+	Typography,
+} from '@mui/material';
+import {
+	createYupSchemaFromServiceTemplateMetadata,
+	formikDefaultValuesFromServiceTemplateMetadata,
+} from '../../../common/serviceTemplateMetadataUtil';
 
 interface CreateReleaseFormProps {
 	service: ServiceRecord;
@@ -24,33 +46,43 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 	onSubmitSuccess,
 }) => {
 	const { t } = useTranslation();
+	const [selectedTemplate, setSelectedTemplate] =
+		React.useState<ServiceTemplateRecord | null>(null);
 
 	const queryClient = useQueryClient();
 	const createRelease = useMutation(releaseCreate);
 	const locales = useLocalesList(service.routeName!);
-	const isLoading = createRelease.isLoading || locales.isLoading;
+	const serviceTemplates = useServiceListServiceTemplates(service.routeName!);
+	const isLoading =
+		createRelease.isLoading ||
+		locales.isLoading ||
+		serviceTemplates.isLoading;
 
 	const validationSchema = yup.object({
-		email: yup.string().email().required(),
-		firstName: yup
-			.string()
-			.min(5)
-			.max(50)
-			.required('First name is required'),
-		lastName: yup.string().min(5).max(50).required('Last name is required'),
-		roleId: yup.number().positive('Role is required'),
+		version: yup.string().min(2).max(50).required(),
+		staticMetadata: createYupSchemaFromServiceTemplateMetadata(
+			selectedTemplate?.staticMetadata ?? []
+		),
 	});
 
-	const formik = useFormik<CreateReleaseRequest>({
+	const formik = useFormik({
 		initialValues: {
 			serviceId: service.id!,
 			version: '',
-			metaData: '',
-			localisedMetadataList: [],
+			staticMetadata: formikDefaultValuesFromServiceTemplateMetadata(
+				selectedTemplate?.staticMetadata ?? []
+			),
 		},
 		validationSchema,
 		onSubmit: async (values) => {
-			await toast.promise(createRelease.mutateAsync(values), {
+			const request: CreateReleaseRequest = {
+				serviceId: values.serviceId,
+				version: values.version,
+				metaData: JSON.stringify(values.staticMetadata),
+				localisedMetadataList: [],
+			};
+
+			await toast.promise(createRelease.mutateAsync(request), {
 				loading: t('common.loading'),
 				success: () => {
 					formik.resetForm();
@@ -62,42 +94,86 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 						'No message available',
 				}),
 			});
-			queryClient.invalidateQueries(getReleasesListQueryKey(service.id!));
+			await queryClient.invalidateQueries(
+				getServicesListReleasesQueryKey(service.id!)
+			);
 			onSubmitSuccess();
 		},
 	});
 
+	const handleServiceTemplateSelect = (event: SelectChangeEvent) => {
+		setSelectedTemplate(
+			serviceTemplates.data?.find((t) => t.name === event.target.value) ||
+				null
+		);
+	};
+
 	return (
 		<form onSubmit={formik.handleSubmit}>
-			<Grid container spacing={2} justifyContent='center'>
-				<Grid item xs={12}>
-					<TextField
-						fullWidth
-						id='version'
-						name='version'
-						label='Email'
-						value={formik.values.version}
-						onChange={formik.handleChange}
-						error={
-							formik.touched.version &&
-							Boolean(formik.errors.version)
+			<Stack
+				spacing={2}
+				justifyContent='center'
+				alignItems='center'
+				sx={{ marginTop: 2 }}
+			>
+				<TextField
+					fullWidth
+					id='version'
+					name='version'
+					label='Version'
+					value={formik.values.version}
+					onChange={formik.handleChange}
+					error={
+						formik.touched.version && Boolean(formik.errors.version)
+					}
+					helperText={formik.touched.version && formik.errors.version}
+					disabled={isLoading}
+				/>
+				<FormControl fullWidth>
+					<InputLabel id='template-select-label'>
+						{t('release.create.selectServiceTemplate')}
+					</InputLabel>
+					<Select
+						value={selectedTemplate?.name ?? ''}
+						labelId='template-select-label'
+						id='template-select'
+						label={t('release.create.selectServiceTemplate')}
+						disabled={
+							isLoading || serviceTemplates.data?.length === 0
 						}
-						helperText={
-							formik.touched.version && formik.errors.version
-						}
-						disabled={isLoading}
-					/>
-				</Grid>
-				<Grid item>
-					<LoadingButton
-						type='submit'
-						loading={isLoading}
-						variant='contained'
+						onChange={handleServiceTemplateSelect}
 					>
-						{t('release.create.submit')}
-					</LoadingButton>
-				</Grid>
-			</Grid>
+						{serviceTemplates.data?.map((template, index) => (
+							<MenuItem key={index} value={template.name!}>
+								{template.name}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+				{selectedTemplate?.name && (
+					<>
+						<Typography>
+							{t('release.create.staticMetadata')}
+						</Typography>
+						<GeneratedServiceTemplateForm
+							template={selectedTemplate?.staticMetadata ?? []}
+							formik={{
+								values: formik.values.staticMetadata,
+								errors: formik.errors.staticMetadata || {},
+								touched: formik.touched.staticMetadata || {},
+								handleChange: formik.handleChange,
+							}}
+						/>
+					</>
+				)}
+				<LoadingButton
+					type='submit'
+					loading={isLoading}
+					variant='contained'
+				>
+					{t('release.create.submit')}
+				</LoadingButton>
+			</Stack>
 		</form>
 	);
 };

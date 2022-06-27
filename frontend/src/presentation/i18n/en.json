@@ -135,11 +135,23 @@
 			"error": "Error creating new release: {{error}}",
 			"submit": "Submit",
 			"success": "Release created successfully",
-			"title": "Create Release"
+			"title": "Create Release",
+			"selectServiceTemplate": "Service Template",
+			"staticMetadata": "Static Metadata",
+			"localizedMetadata": "Localized Metadata"
 		},
 		"list": {
 			"create": "Create Release",
 			"title": "Releases"
+		},
+		"delete": {
+			"confirm": "Are you sure you want to delete the release {{name}}?",
+			"error": "Failed to delete release",
+			"success": "Release deleted successfully"
+		},
+		"model": {
+			"version": "Version",
+			"createdAt": "Created At"
 		}
 	},
 	"service": {
@@ -176,7 +188,13 @@
 		"model": {
 			"localizedMetadata": "Localized Metadata",
 			"name": "Name",
-			"staticMetadata": "Static Metadata"
+			"staticMetadata": "Static Metadata",
+			"actions": "Actions"
+		},
+		"delete": {
+			"confirm": "Are you sure you want to delete the service template {{name}}?",
+			"error": "Failed to delete service template",
+			"success": "Service template deleted"
 		}
 	}
 }

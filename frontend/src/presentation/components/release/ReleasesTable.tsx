@@ -2,28 +2,27 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LocaleRecord } from '../../../api/models';
+import { ReleaseRecord } from '../../../api/models';
 import DataGridOverlay from '../DataGridOverlay';
-import localeCodes from 'locale-codes';
-import { renderBoolAsSymbol } from '../../../common/dataGridUtils';
 import { useMutation, useQueryClient } from 'react-query';
-import { localeDelete } from '../../../api/locale/locale';
 import toast from 'react-hot-toast';
-import { getLocalesListQueryKey } from '../../../api/service/service';
+import { getServicesListReleasesQueryKey } from '../../../api/service/service';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useConfirm } from 'material-ui-confirm';
+import { releaseDelete } from '../../../api/release/release';
+import { dateValueFormatter } from '../../../util';
 
 export interface LocalesTableProps {
-	serviceRouteName: string;
-	locales: LocaleRecord[];
+	serviceId: number;
+	releases: ReleaseRecord[];
 	isLoading: boolean;
 	isError: boolean;
 }
 
-const LocalesTable: React.FC<LocalesTableProps> = ({
-	serviceRouteName,
-	locales,
+const ReleasesTable: React.FC<LocalesTableProps> = ({
+	serviceId,
+	releases,
 	isLoading,
 	isError,
 }) => {
@@ -31,53 +30,42 @@ const LocalesTable: React.FC<LocalesTableProps> = ({
 
 	const confirm = useConfirm();
 	const queryClient = useQueryClient();
-	const deleteLocale = useMutation(localeDelete);
+	const deleteRelease = useMutation(releaseDelete);
 
-	const handleDelete = async (localeId: number) => {
-		const locale = locales.find((l) => l.id === localeId);
-		if (!locale) return;
+	const handleDelete = async (releaseId: number) => {
+		const release = releases.find((r) => r.id === releaseId);
+		if (!release) return;
 
 		await confirm({
-			title: t('locale.delete.confirm', { tag: locale.tag }),
+			title: t('release.delete.confirm', { name: release.version }),
 			confirmationText: t('common.confirmation.delete'),
 			confirmationButtonProps: { color: 'error' },
 		});
 
-		await toast.promise(deleteLocale.mutateAsync(locale.id!), {
+		await toast.promise(deleteRelease.mutateAsync(release.id!), {
 			loading: t('common.loading'),
-			success: t('locale.delete.success'),
-			error: t('locale.delete.error'),
+			success: t('release.delete.success'),
+			error: t('release.delete.error'),
 		});
 
-		queryClient.invalidateQueries(getLocalesListQueryKey(serviceRouteName));
+		await queryClient.invalidateQueries(
+			getServicesListReleasesQueryKey(serviceId)
+		);
 	};
 
-	const columns: GridColDef<LocaleRecord>[] = [
+	const columns: GridColDef<ReleaseRecord>[] = [
 		{
-			field: 'tag',
-			headerName: t('locale.model.tag'),
+			field: 'version',
+			headerName: t('release.model.version'),
 			hideable: false,
 			maxWidth: 100,
 		},
 		{
-			field: 'tag2',
-			headerName: t('locale.model.language'),
+			field: 'createdAt',
+			headerName: t('release.model.createdAt'),
 			hideable: false,
 			flex: 1,
-			valueGetter: (params) => {
-				const locale = localeCodes.getByTag(params.value);
-
-				return `${locale.name} ${
-					locale.location ? `(${locale.location})` : ''
-				}`;
-			},
-		},
-		{
-			field: 'isDefault',
-			headerName: t('locale.model.isDefault'),
-			hideable: false,
-			flex: 1,
-			renderCell: renderBoolAsSymbol,
+			valueFormatter: dateValueFormatter,
 		},
 		{
 			field: 'id',
@@ -97,7 +85,7 @@ const LocalesTable: React.FC<LocalesTableProps> = ({
 			sx={{ minHeight: '500px' }}
 			getRowId={(row) => row.id!}
 			columns={columns}
-			rows={locales.map((locale) => ({ ...locale, tag2: locale.tag }))}
+			rows={releases}
 			components={{
 				LoadingOverlay: LinearProgress,
 				NoRowsOverlay: () => (
@@ -117,4 +105,4 @@ const LocalesTable: React.FC<LocalesTableProps> = ({
 	);
 };
 
-export default LocalesTable;
+export default ReleasesTable;

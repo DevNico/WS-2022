@@ -27,7 +27,7 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
     Summary = "Update a service template",
     Description = "Update a service template",
     OperationId = "ServiceTemplate.Update",
-    Tags = new[] { "ServiceTemplateEndpoints" }
+    Tags = new[] { "ServiceTemplate" }
   )]
   [SwaggerResponse(200, "The service template was updated", typeof(ServiceTemplateRecord))]
   [SwaggerResponse(400, "The request was invalid", typeof(ErrorResponse))]

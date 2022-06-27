@@ -20,6 +20,7 @@ import type {
 	CreateServiceRequest,
 	ReleaseRecord,
 	LocaleRecord,
+	ServiceTemplateRecord,
 	ServiceUserRecord,
 	ListUsersByServiceId,
 } from '.././models';
@@ -428,6 +429,71 @@ export const useServiceMe = <
 		TError,
 		TData
 	>(queryKey, queryFn, queryOptions);
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * List all service templates
+ * @summary List all service templates
+ */
+export const serviceListServiceTemplates = (
+	serviceRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceTemplateRecord[]>(
+		{
+			url: `/api/v1/services/${serviceRouteName}/services-templates`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getServiceListServiceTemplatesQueryKey = (
+	serviceRouteName: string
+) => [`/api/v1/services/${serviceRouteName}/services-templates`];
+
+export type ServiceListServiceTemplatesQueryResult = NonNullable<
+	Awaited<ReturnType<typeof serviceListServiceTemplates>>
+>;
+export type ServiceListServiceTemplatesQueryError = ErrorType<void>;
+
+export const useServiceListServiceTemplates = <
+	TData = Awaited<ReturnType<typeof serviceListServiceTemplates>>,
+	TError = ErrorType<void>
+>(
+	serviceRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof serviceListServiceTemplates>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getServiceListServiceTemplatesQueryKey(serviceRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof serviceListServiceTemplates>>
+	> = ({ signal }) =>
+		serviceListServiceTemplates(serviceRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof serviceListServiceTemplates>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!serviceRouteName, ...queryOptions });
 
 	return {
 		queryKey,

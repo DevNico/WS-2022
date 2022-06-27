@@ -15,12 +15,12 @@ public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutRes
     _repository = repository;
   }
 
-  [HttpDelete]
+  [HttpDelete(DeleteServiceTemplate.Route)]
   [SwaggerOperation(
     Description = "Deletes a service template by its id",
     Summary = "Deletes a service template",
     OperationId = "ServiceTemplate.Delete",
-    Tags = new[] { "ServiceTemplateEndpoints" }
+    Tags = new[] { "ServiceTemplate" }
   )]
   [SwaggerResponse(201, "The service template was deleted")]
   [SwaggerResponse(404, "A service template with the given id was not found")]
