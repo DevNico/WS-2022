@@ -1,6 +1,4 @@
 ﻿using System.Security.Claims;
-using ServiceReleaseManager.Api.Authorization;
-using ServiceReleaseManager.Core.OrganisationAggregate;
 
 namespace ServiceReleaseManager.Api.Authorization;
 
@@ -9,7 +7,7 @@ public interface IServiceManagerAuthorizationService
   public Task<bool> EvaluateOrganisationAuthorization(ClaimsPrincipal claimsPrincipal, string organisationRouteName,
     OrganisationAuthorizationRequirement requirement, CancellationToken cancellationToken);
 
-  public Task<bool> EvaluateOrganisationAuthorization(ClaimsPrincipal claimsPrincipal, int orhanisationId,
+  public Task<bool> EvaluateOrganisationAuthorization(ClaimsPrincipal claimsPrincipal, int organisationId,
     OrganisationAuthorizationRequirement requirement, CancellationToken cancellationToken);
 
   public Task<bool> EvaluateOrganisationAuthorizationServiceId(ClaimsPrincipal claimsPrincipal, int serviceId,

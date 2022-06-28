@@ -1,6 +1,6 @@
 ﻿namespace ServiceReleaseManager.Api.Authorization.Operations.Organisation;
 
-public class OrganisationUserOperations
+public static class OrganisationUserOperations
 {
   public static readonly OrganisationAuthorizationRequirement OrganisationUser_Create = new OrganisationAuthorizationRequirement
   {
@@ -25,5 +25,4 @@ public class OrganisationUserOperations
     Name = nameof(OrganisationUser_Delete),
     EvaluationFunction = (r => r.UserDelete)
   };
-
 }

@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 

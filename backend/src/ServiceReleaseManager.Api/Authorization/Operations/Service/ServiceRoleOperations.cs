@@ -1,12 +1,13 @@
 ﻿namespace ServiceReleaseManager.Api.Authorization.Operations.Service;
 
-public class ServiceRoleOperations
+public static class ServiceRoleOperations
 {
   public static readonly OrganisationAuthorizationRequirement ServiceRole_Create = new OrganisationAuthorizationRequirement
   {
     Name = nameof(ServiceRole_Create),
     EvaluationFunction = (r => r.ServiceWrite)
   };
+  
   public static readonly OrganisationAuthorizationRequirement ServiceRole_Read = new OrganisationAuthorizationRequirement
   {
     Name = nameof(ServiceRole_Read),
