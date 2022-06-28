@@ -31,6 +31,10 @@ public class DefaultCoreModule : Module
     builder.RegisterType<ReleaseService>()
       .As<IReleaseService>()
       .InstancePerLifetimeScope();
+    
+    builder.RegisterType<ReleaseTriggerService>()
+      .As<IReleaseTriggerService>()
+      .InstancePerLifetimeScope();
 
     builder.RegisterType<ServiceUserService>()
       .As<IServiceUserService>()

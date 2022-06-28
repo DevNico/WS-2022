@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using ServiceReleaseManager.Core.OrganisationAggregate;
+using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -21,6 +22,7 @@ public class AppDbContext : DbContext
   public DbSet<OrganisationUser> OrganisationUsers => Set<OrganisationUser>();
   public DbSet<Service> Services => Set<Service>();
   public DbSet<ServiceTemplate> ServiceTemplates => Set<ServiceTemplate>();
+  public DbSet<ReleaseTrigger> ReleaseTriggers => Set<ReleaseTrigger>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
