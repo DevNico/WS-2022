@@ -20,31 +20,19 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
-// eslint-disable-next-line
-type SecondParameter<T extends (...args: any) => any> = T extends (
-	config: any,
-	args: infer P
-) => any
-	? P
-	: never;
-
 /**
  * Creates a new OrganisationRole
  * @summary Creates a new OrganisationRole
  */
 export const organisationRoleCreate = (
-	createOrganisationRoleRequest: CreateOrganisationRoleRequest,
-	options?: SecondParameter<typeof customInstance>
+	createOrganisationRoleRequest: CreateOrganisationRoleRequest
 ) => {
-	return customInstance<OrganisationRoleRecord>(
-		{
-			url: `/api/v1/organisation-roles`,
-			method: 'post',
-			headers: { 'Content-Type': 'application/json' },
-			data: createOrganisationRoleRequest,
-		},
-		options
-	);
+	return customInstance<OrganisationRoleRecord>({
+		url: `/api/v1/organisation-roles`,
+		method: 'post',
+		headers: { 'Content-Type': 'application/json' },
+		data: createOrganisationRoleRequest,
+	});
 };
 
 export type OrganisationRoleCreateMutationResult = NonNullable<
@@ -63,10 +51,8 @@ export const useOrganisationRoleCreate = <
 		{ data: CreateOrganisationRoleRequest },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof organisationRoleCreate>>,
@@ -74,7 +60,7 @@ export const useOrganisationRoleCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return organisationRoleCreate(data, requestOptions);
+		return organisationRoleCreate(data);
 	};
 
 	return useMutation<
@@ -88,17 +74,11 @@ export const useOrganisationRoleCreate = <
  * Deletes a OrganisationRole
  * @summary Deletes a OrganisationRole
  */
-export const organisationRolesDelete = (
-	organisationRoleId: number,
-	options?: SecondParameter<typeof customInstance>
-) => {
-	return customInstance<void>(
-		{
-			url: `/api/v1/organisation-roles/${organisationRoleId}`,
-			method: 'delete',
-		},
-		options
-	);
+export const organisationRolesDelete = (organisationRoleId: number) => {
+	return customInstance<void>({
+		url: `/api/v1/organisation-roles/${organisationRoleId}`,
+		method: 'delete',
+	});
 };
 
 export type OrganisationRolesDeleteMutationResult = NonNullable<
@@ -117,10 +97,8 @@ export const useOrganisationRolesDelete = <
 		{ organisationRoleId: number },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof organisationRolesDelete>>,
@@ -128,7 +106,7 @@ export const useOrganisationRolesDelete = <
 	> = (props) => {
 		const { organisationRoleId } = props ?? {};
 
-		return organisationRolesDelete(organisationRoleId, requestOptions);
+		return organisationRolesDelete(organisationRoleId);
 	};
 
 	return useMutation<
@@ -143,17 +121,13 @@ export const useOrganisationRolesDelete = <
  */
 export const organisationRolesList = (
 	organisationRouteName: string,
-	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<OrganisationRoleRecord[]>(
-		{
-			url: `/api/v1/organisations/${organisationRouteName}/roles`,
-			method: 'get',
-			signal,
-		},
-		options
-	);
+	return customInstance<OrganisationRoleRecord[]>({
+		url: `/api/v1/organisations/${organisationRouteName}/roles`,
+		method: 'get',
+		signal,
+	});
 };
 
 export const getOrganisationRolesListQueryKey = (
@@ -176,10 +150,9 @@ export const useOrganisationRolesList = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -187,8 +160,7 @@ export const useOrganisationRolesList = <
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationRolesList>>
-	> = ({ signal }) =>
-		organisationRolesList(organisationRouteName, requestOptions, signal);
+	> = ({ signal }) => organisationRolesList(organisationRouteName, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationRolesList>>,

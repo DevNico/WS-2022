@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class ListServiceTemplatesRequest
+public class ListServiceTemplateRequest
 {
-  public const string Route = "{ServiceRouteName}/services-templates";
+  public const string Route = "{ServiceRouteName}/services-template";
 
   [Required]
   [FromRoute]

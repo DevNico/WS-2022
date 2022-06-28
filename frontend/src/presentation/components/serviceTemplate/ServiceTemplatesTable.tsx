@@ -7,13 +7,10 @@ import DataGridOverlay from '../DataGridOverlay';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import toast from 'react-hot-toast';
-import { getLocalesListQueryKey } from '../../../api/service/service';
 import { useConfirm } from 'material-ui-confirm';
 import { useMutation, useQueryClient } from 'react-query';
-import {
-	getServiceTemplateListQueryKey,
-	serviceTemplateDelete,
-} from '../../../api/service-template-endpoints/service-template-endpoints';
+import { serviceTemplateDelete } from '../../../api/service-template/service-template';
+import { getOrganisationListServiceTemplatesQueryKey } from "../../../api/organisation/organisation";
 
 export interface ServiceTemplatesTableProps {
 	organisationRouteName: string;
@@ -50,7 +47,7 @@ const ServiceTemplatesTable: React.FC<ServiceTemplatesTableProps> = ({
 		});
 
 		await queryClient.invalidateQueries(
-			getServiceTemplateListQueryKey(organisationRouteName)
+			getOrganisationListServiceTemplatesQueryKey(organisationRouteName)
 		);
 	};
 

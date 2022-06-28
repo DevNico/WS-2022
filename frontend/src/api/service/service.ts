@@ -26,31 +26,17 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
-// eslint-disable-next-line
-type SecondParameter<T extends (...args: any) => any> = T extends (
-	config: any,
-	args: infer P
-) => any
-	? P
-	: never;
-
 /**
  * Create a service
  * @summary Create a service
  */
-export const serviceCreate = (
-	createServiceRequest: CreateServiceRequest,
-	options?: SecondParameter<typeof customInstance>
-) => {
-	return customInstance<ServiceRecord>(
-		{
-			url: `/api/v1/services`,
-			method: 'post',
-			headers: { 'Content-Type': 'application/json' },
-			data: createServiceRequest,
-		},
-		options
-	);
+export const serviceCreate = (createServiceRequest: CreateServiceRequest) => {
+	return customInstance<ServiceRecord>({
+		url: `/api/v1/services`,
+		method: 'post',
+		headers: { 'Content-Type': 'application/json' },
+		data: createServiceRequest,
+	});
 };
 
 export type ServiceCreateMutationResult = NonNullable<
@@ -69,10 +55,8 @@ export const useServiceCreate = <
 		{ data: CreateServiceRequest },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceCreate>>,
@@ -80,7 +64,7 @@ export const useServiceCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return serviceCreate(data, requestOptions);
+		return serviceCreate(data);
 	};
 
 	return useMutation<
@@ -94,14 +78,11 @@ export const useServiceCreate = <
  * Deletes a service
  * @summary Deletes a service by its id
  */
-export const serviceDelete = (
-	serviceId: number,
-	options?: SecondParameter<typeof customInstance>
-) => {
-	return customInstance<void>(
-		{ url: `/api/v1/services/${serviceId}`, method: 'delete' },
-		options
-	);
+export const serviceDelete = (serviceId: number) => {
+	return customInstance<void>({
+		url: `/api/v1/services/${serviceId}`,
+		method: 'delete',
+	});
 };
 
 export type ServiceDeleteMutationResult = NonNullable<
@@ -120,10 +101,8 @@ export const useServiceDelete = <
 		{ serviceId: number },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceDelete>>,
@@ -131,7 +110,7 @@ export const useServiceDelete = <
 	> = (props) => {
 		const { serviceId } = props ?? {};
 
-		return serviceDelete(serviceId, requestOptions);
+		return serviceDelete(serviceId);
 	};
 
 	return useMutation<
@@ -145,15 +124,12 @@ export const useServiceDelete = <
  * Get a service by its id
  * @summary Get a service
  */
-export const serviceGetById = (
-	serviceId: number,
-	options?: SecondParameter<typeof customInstance>,
-	signal?: AbortSignal
-) => {
-	return customInstance<ServiceRecord>(
-		{ url: `/api/v1/services/${serviceId}`, method: 'get', signal },
-		options
-	);
+export const serviceGetById = (serviceId: number, signal?: AbortSignal) => {
+	return customInstance<ServiceRecord>({
+		url: `/api/v1/services/${serviceId}`,
+		method: 'get',
+		signal,
+	});
 };
 
 export const getServiceGetByIdQueryKey = (serviceId: number) => [
@@ -176,17 +152,16 @@ export const useServiceGetById = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ?? getServiceGetByIdQueryKey(serviceId);
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof serviceGetById>>
-	> = ({ signal }) => serviceGetById(serviceId, requestOptions, signal);
+	> = ({ signal }) => serviceGetById(serviceId, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof serviceGetById>>,
@@ -206,13 +181,13 @@ export const useServiceGetById = <
  */
 export const serviceGetByRouteName = (
 	serviceRouteName: string,
-	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceRecord>(
-		{ url: `/api/v1/services/${serviceRouteName}`, method: 'get', signal },
-		options
-	);
+	return customInstance<ServiceRecord>({
+		url: `/api/v1/services/${serviceRouteName}`,
+		method: 'get',
+		signal,
+	});
 };
 
 export const getServiceGetByRouteNameQueryKey = (serviceRouteName: string) => [
@@ -235,10 +210,9 @@ export const useServiceGetByRouteName = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -246,8 +220,7 @@ export const useServiceGetByRouteName = <
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof serviceGetByRouteName>>
-	> = ({ signal }) =>
-		serviceGetByRouteName(serviceRouteName, requestOptions, signal);
+	> = ({ signal }) => serviceGetByRouteName(serviceRouteName, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof serviceGetByRouteName>>,
@@ -266,17 +239,13 @@ export const useServiceGetByRouteName = <
  */
 export const servicesListReleases = (
 	serviceId: number,
-	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ReleaseRecord[]>(
-		{
-			url: `/api/v1/services/${serviceId}/releases`,
-			method: 'get',
-			signal,
-		},
-		options
-	);
+	return customInstance<ReleaseRecord[]>({
+		url: `/api/v1/services/${serviceId}/releases`,
+		method: 'get',
+		signal,
+	});
 };
 
 export const getServicesListReleasesQueryKey = (serviceId: number) => [
@@ -299,17 +268,16 @@ export const useServicesListReleases = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ?? getServicesListReleasesQueryKey(serviceId);
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof servicesListReleases>>
-	> = ({ signal }) => servicesListReleases(serviceId, requestOptions, signal);
+	> = ({ signal }) => servicesListReleases(serviceId, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof servicesListReleases>>,
@@ -326,19 +294,12 @@ export const useServicesListReleases = <
 /**
  * @summary List all locales
  */
-export const localesList = (
-	serviceRouteName: string,
-	options?: SecondParameter<typeof customInstance>,
-	signal?: AbortSignal
-) => {
-	return customInstance<LocaleRecord[]>(
-		{
-			url: `/api/v1/services/${serviceRouteName}/locales`,
-			method: 'get',
-			signal,
-		},
-		options
-	);
+export const localesList = (serviceRouteName: string, signal?: AbortSignal) => {
+	return customInstance<LocaleRecord[]>({
+		url: `/api/v1/services/${serviceRouteName}/locales`,
+		method: 'get',
+		signal,
+	});
 };
 
 export const getLocalesListQueryKey = (serviceRouteName: string) => [
@@ -361,17 +322,16 @@ export const useLocalesList = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ?? getLocalesListQueryKey(serviceRouteName);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof localesList>>> = ({
 		signal,
-	}) => localesList(serviceRouteName, requestOptions, signal);
+	}) => localesList(serviceRouteName, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof localesList>>,
@@ -388,14 +348,12 @@ export const useLocalesList = <
 /**
  * @summary Get the services this user can access
  */
-export const serviceMe = (
-	options?: SecondParameter<typeof customInstance>,
-	signal?: AbortSignal
-) => {
-	return customInstance<ServiceRecord[]>(
-		{ url: `/api/v1/services/me`, method: 'get', signal },
-		options
-	);
+export const serviceMe = (signal?: AbortSignal) => {
+	return customInstance<ServiceRecord[]>({
+		url: `/api/v1/services/me`,
+		method: 'get',
+		signal,
+	});
 };
 
 export const getServiceMeQueryKey = () => [`/api/v1/services/me`];
@@ -414,15 +372,14 @@ export const useServiceMe = <
 		TError,
 		TData
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey = queryOptions?.queryKey ?? getServiceMeQueryKey();
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof serviceMe>>> = ({
 		signal,
-	}) => serviceMe(requestOptions, signal);
+	}) => serviceMe(signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof serviceMe>>,
@@ -437,60 +394,54 @@ export const useServiceMe = <
 };
 
 /**
- * List all service templates
- * @summary List all service templates
+ * Get the service's service template
+ * @summary Get the service's service template
  */
-export const serviceListServiceTemplates = (
+export const serviceGetServiceTemplate = (
 	serviceRouteName: string,
-	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceTemplateRecord[]>(
-		{
-			url: `/api/v1/services/${serviceRouteName}/services-templates`,
-			method: 'get',
-			signal,
-		},
-		options
-	);
+	return customInstance<ServiceTemplateRecord>({
+		url: `/api/v1/services/${serviceRouteName}/services-template`,
+		method: 'get',
+		signal,
+	});
 };
 
-export const getServiceListServiceTemplatesQueryKey = (
+export const getServiceGetServiceTemplateQueryKey = (
 	serviceRouteName: string
-) => [`/api/v1/services/${serviceRouteName}/services-templates`];
+) => [`/api/v1/services/${serviceRouteName}/services-template`];
 
-export type ServiceListServiceTemplatesQueryResult = NonNullable<
-	Awaited<ReturnType<typeof serviceListServiceTemplates>>
+export type ServiceGetServiceTemplateQueryResult = NonNullable<
+	Awaited<ReturnType<typeof serviceGetServiceTemplate>>
 >;
-export type ServiceListServiceTemplatesQueryError = ErrorType<void>;
+export type ServiceGetServiceTemplateQueryError = ErrorType<void>;
 
-export const useServiceListServiceTemplates = <
-	TData = Awaited<ReturnType<typeof serviceListServiceTemplates>>,
+export const useServiceGetServiceTemplate = <
+	TData = Awaited<ReturnType<typeof serviceGetServiceTemplate>>,
 	TError = ErrorType<void>
 >(
 	serviceRouteName: string,
 	options?: {
 		query?: UseQueryOptions<
-			Awaited<ReturnType<typeof serviceListServiceTemplates>>,
+			Awaited<ReturnType<typeof serviceGetServiceTemplate>>,
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
-		getServiceListServiceTemplatesQueryKey(serviceRouteName);
+		getServiceGetServiceTemplateQueryKey(serviceRouteName);
 
 	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof serviceListServiceTemplates>>
-	> = ({ signal }) =>
-		serviceListServiceTemplates(serviceRouteName, requestOptions, signal);
+		Awaited<ReturnType<typeof serviceGetServiceTemplate>>
+	> = ({ signal }) => serviceGetServiceTemplate(serviceRouteName, signal);
 
 	const query = useQuery<
-		Awaited<ReturnType<typeof serviceListServiceTemplates>>,
+		Awaited<ReturnType<typeof serviceGetServiceTemplate>>,
 		TError,
 		TData
 	>(queryKey, queryFn, { enabled: !!serviceRouteName, ...queryOptions });
@@ -507,18 +458,14 @@ export const useServiceListServiceTemplates = <
 export const servicesListUsers = (
 	serviceId: string,
 	listUsersByServiceId: ListUsersByServiceId,
-	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceUserRecord[]>(
-		{
-			url: `/api/v1/services/${serviceId}/users`,
-			method: 'get',
-			signal,
-			headers: { 'Content-Type': 'application/json' },
-		},
-		options
-	);
+	return customInstance<ServiceUserRecord[]>({
+		url: `/api/v1/services/${serviceId}/users`,
+		method: 'get',
+		signal,
+		headers: { 'Content-Type': 'application/json' },
+	});
 };
 
 export const getServicesListUsersQueryKey = (
@@ -543,10 +490,9 @@ export const useServicesListUsers = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -555,12 +501,7 @@ export const useServicesListUsers = <
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof servicesListUsers>>
 	> = ({ signal }) =>
-		servicesListUsers(
-			serviceId,
-			listUsersByServiceId,
-			requestOptions,
-			signal
-		);
+		servicesListUsers(serviceId, listUsersByServiceId, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof servicesListUsers>>,

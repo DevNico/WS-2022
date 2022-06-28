@@ -22,30 +22,16 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
-// eslint-disable-next-line
-type SecondParameter<T extends (...args: any) => any> = T extends (
-	config: any,
-	args: infer P
-) => any
-	? P
-	: never;
-
 /**
  * @summary Creates a new service role
  */
-export const serviceRoleCreate = (
-	createServiceRole: CreateServiceRole,
-	options?: SecondParameter<typeof customInstance>
-) => {
-	return customInstance<ServiceRoleRecord>(
-		{
-			url: `/api/v1/service-roles`,
-			method: 'post',
-			headers: { 'Content-Type': 'application/json' },
-			data: createServiceRole,
-		},
-		options
-	);
+export const serviceRoleCreate = (createServiceRole: CreateServiceRole) => {
+	return customInstance<ServiceRoleRecord>({
+		url: `/api/v1/service-roles`,
+		method: 'post',
+		headers: { 'Content-Type': 'application/json' },
+		data: createServiceRole,
+	});
 };
 
 export type ServiceRoleCreateMutationResult = NonNullable<
@@ -64,10 +50,8 @@ export const useServiceRoleCreate = <
 		{ data: CreateServiceRole },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceRoleCreate>>,
@@ -75,7 +59,7 @@ export const useServiceRoleCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return serviceRoleCreate(data, requestOptions);
+		return serviceRoleCreate(data);
 	};
 
 	return useMutation<
@@ -90,18 +74,14 @@ export const useServiceRoleCreate = <
  */
 export const serviceRoleDelete = (
 	serviceRoleId: string,
-	deleteServiceRole: DeleteServiceRole,
-	options?: SecondParameter<typeof customInstance>
+	deleteServiceRole: DeleteServiceRole
 ) => {
-	return customInstance<void>(
-		{
-			url: `/api/v1/service-roles/${serviceRoleId}`,
-			method: 'delete',
-			headers: { 'Content-Type': 'application/json' },
-			data: deleteServiceRole,
-		},
-		options
-	);
+	return customInstance<void>({
+		url: `/api/v1/service-roles/${serviceRoleId}`,
+		method: 'delete',
+		headers: { 'Content-Type': 'application/json' },
+		data: deleteServiceRole,
+	});
 };
 
 export type ServiceRoleDeleteMutationResult = NonNullable<
@@ -120,10 +100,8 @@ export const useServiceRoleDelete = <
 		{ serviceRoleId: string; data: DeleteServiceRole },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceRoleDelete>>,
@@ -131,7 +109,7 @@ export const useServiceRoleDelete = <
 	> = (props) => {
 		const { serviceRoleId, data } = props ?? {};
 
-		return serviceRoleDelete(serviceRoleId, data, requestOptions);
+		return serviceRoleDelete(serviceRoleId, data);
 	};
 
 	return useMutation<
@@ -147,18 +125,14 @@ export const useServiceRoleDelete = <
 export const serviceRoleGetById = (
 	serviceRoleId: string,
 	getServiceRoleById: GetServiceRoleById,
-	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceRoleRecord>(
-		{
-			url: `/api/v1/service-roles/${serviceRoleId}`,
-			method: 'get',
-			signal,
-			headers: { 'Content-Type': 'application/json' },
-		},
-		options
-	);
+	return customInstance<ServiceRoleRecord>({
+		url: `/api/v1/service-roles/${serviceRoleId}`,
+		method: 'get',
+		signal,
+		headers: { 'Content-Type': 'application/json' },
+	});
 };
 
 export const getServiceRoleGetByIdQueryKey = (
@@ -183,10 +157,9 @@ export const useServiceRoleGetById = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -195,12 +168,7 @@ export const useServiceRoleGetById = <
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof serviceRoleGetById>>
 	> = ({ signal }) =>
-		serviceRoleGetById(
-			serviceRoleId,
-			getServiceRoleById,
-			requestOptions,
-			signal
-		);
+		serviceRoleGetById(serviceRoleId, getServiceRoleById, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof serviceRoleGetById>>,

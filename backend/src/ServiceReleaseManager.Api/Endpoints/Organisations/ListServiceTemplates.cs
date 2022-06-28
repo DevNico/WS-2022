@@ -6,27 +6,27 @@ using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceReleaseManager.Api.Endpoints.Services;
+namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 
 public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplatesRequest>.
   WithActionResult<List<ServiceTemplateRecord>>
 {
   private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
-  private readonly IServiceService _serviceService;
+  private readonly IOrganisationService _organisationService;
 
-  public ListServiceTemplates(
-    IRepository<ServiceTemplate> serviceTemplateRepository, IServiceService serviceService)
+  public ListServiceTemplates(IRepository<ServiceTemplate> serviceTemplateRepository,
+    IOrganisationService organisationService)
   {
     _serviceTemplateRepository = serviceTemplateRepository;
-    _serviceService = serviceService;
+    _organisationService = organisationService;
   }
 
   [HttpGet(ListServiceTemplatesRequest.Route)]
   [SwaggerOperation(
     Summary = "List all service templates",
     Description = "List all service templates",
-    OperationId = "Service.ListServiceTemplates",
-    Tags = new[] { "Service" }
+    OperationId = "Organisation.ListServiceTemplates",
+    Tags = new[] { "Organisation" }
   )]
   [SwaggerResponse(200, "Success", typeof(List<ServiceTemplateRecord>))]
   [SwaggerResponse(404, "Not found")]
@@ -34,15 +34,15 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
     [FromRoute] ListServiceTemplatesRequest request,
     CancellationToken cancellationToken = new())
   {
-    var service =
-      await _serviceService.GetByRouteName(request.ServiceRouteName, cancellationToken);
+    var organisation =
+      await _organisationService.GetByRouteName(request.OrganisationRouteName, cancellationToken);
 
-    if (!service.IsSuccess)
+    if (!organisation.IsSuccess)
     {
       return NotFound();
     }
 
-    var spec = new ActiveServiceTemplatesSearchSpec(service.Value.OrganisationId);
+    var spec = new ActiveServiceTemplatesSearchSpec(organisation.Value.Id);
     var templates = await _serviceTemplateRepository.ListAsync(spec, cancellationToken);
     var response = templates.ConvertAll(ServiceTemplateRecord.FromEntity);
 

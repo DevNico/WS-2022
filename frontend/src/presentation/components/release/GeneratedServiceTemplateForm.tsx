@@ -1,6 +1,6 @@
 import React from 'react';
 import { MetadataArrayElement } from '../../../api/models';
-import { Checkbox, FormControlLabel, Stack, TextField } from '@mui/material';
+import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 
 interface Formik {
 	values: Record<string, any>;
@@ -12,6 +12,7 @@ interface Formik {
 interface FormElementProps {
 	item: MetadataArrayElement;
 	formik: Formik;
+	prefix: string;
 	disabled?: boolean;
 }
 
@@ -19,15 +20,20 @@ const FormElement: React.FC<FormElementProps> = ({
 	item,
 	formik,
 	disabled,
+	prefix
 }) => {
+	const nameWithPrefix = `${prefix}.${item.name}`;
+	const v = (value: Record<string, any> | undefined) => value ? value : {};
+
 	switch (item.type) {
 		case 'checkbox':
 			return (
 				<FormControlLabel
 					control={
 						<Checkbox
-							checked={formik.values[item.name!]}
+							checked={v(formik.values[prefix])[item.name!]}
 							onChange={formik.handleChange}
+							name={nameWithPrefix}
 						/>
 					}
 					label={item.label}
@@ -38,17 +44,17 @@ const FormElement: React.FC<FormElementProps> = ({
 			return (
 				<TextField
 					label={item.label}
-					id={item.name!}
-					name={item.name!}
+					id={nameWithPrefix}
+					name={nameWithPrefix}
 					fullWidth
-					value={formik.values[item.name!]}
+					value={v(formik.values[prefix])[item.name!] ?? ''}
 					onChange={formik.handleChange}
 					error={
-						formik.touched[item.name!] &&
-						Boolean(formik.errors[item.name!])
+						v(formik.touched[prefix])[item.name!]&&
+						Boolean(v(formik.errors[prefix])[item.name!])
 					}
 					helperText={
-						formik.touched[item.name!] && formik.errors[item.name!]
+						v(formik.touched[prefix])[item.name!] && v(formik.errors[prefix])[item.name!]
 					}
 					disabled={disabled}
 				/>
@@ -60,11 +66,12 @@ interface GeneratedServiceTemplateFormProps {
 	template: MetadataArrayElement[];
 	formik: Formik;
 	disabled?: boolean;
+	prefix: string;
 }
 
 const GeneratedServiceTemplateForm: React.FC<
 	GeneratedServiceTemplateFormProps
-> = ({ template, formik, disabled }) => {
+> = ({ template, formik, disabled, prefix }) => {
 	return (
 		<>
 			{template.map((item, index) => (
@@ -73,6 +80,7 @@ const GeneratedServiceTemplateForm: React.FC<
 					key={index}
 					item={item}
 					disabled={disabled}
+					prefix={prefix}
 				/>
 			))}
 		</>

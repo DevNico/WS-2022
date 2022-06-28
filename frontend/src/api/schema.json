@@ -2231,15 +2231,69 @@
 				]
 			}
 		},
-		"/api/v1/services/{ServiceRouteName}/services-templates": {
+		"/api/v1/services/{ServiceRouteName}/services-template": {
 			"get": {
 				"tags": ["Service"],
-				"summary": "List all service templates",
-				"description": "List all service templates",
-				"operationId": "Service.ListServiceTemplates",
+				"summary": "Get the service's service template",
+				"description": "Get the service's service template",
+				"operationId": "Service.GetServiceTemplate",
 				"parameters": [
 					{
 						"name": "ServiceRouteName",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"text/plain": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							},
+							"text/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceTemplateRecord"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found"
+					},
+					"401": {
+						"description": "Unauthorized"
+					},
+					"403": {
+						"description": "Forbidden"
+					}
+				},
+				"security": [
+					{
+						"OAuth2": ["OAuth2"]
+					}
+				]
+			}
+		},
+		"/api/v1/organisations/{OrganisationRouteName}/services-templates": {
+			"get": {
+				"tags": ["Organisation"],
+				"summary": "List all service templates",
+				"description": "List all service templates",
+				"operationId": "Organisation.ListServiceTemplates",
+				"parameters": [
+					{
+						"name": "OrganisationRouteName",
 						"in": "path",
 						"required": true,
 						"schema": {

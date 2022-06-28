@@ -1,5 +1,4 @@
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField/TextField';
 import { useFormik } from 'formik';
 import React from 'react';
@@ -10,24 +9,13 @@ import * as yup from 'yup';
 import {
 	CreateReleaseRequest,
 	ServiceRecord,
-	ServiceTemplateRecord,
 } from '../../../api/models';
 import {
-	getReleasesListQueryKey,
-	releaseCreate,
-} from '../../../api/release-endpoints/release-endpoints';
-import {
 	getServicesListReleasesQueryKey,
-	useLocalesList,
-	useServiceListServiceTemplates,
-} from '../../../api/service/service';
+	useLocalesList, useServiceGetServiceTemplate
+} from "../../../api/service/service";
 import GeneratedServiceTemplateForm from './GeneratedServiceTemplateForm';
 import {
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	SelectChangeEvent,
 	Stack,
 	Typography,
 } from '@mui/material';
@@ -35,6 +23,7 @@ import {
 	createYupSchemaFromServiceTemplateMetadata,
 	formikDefaultValuesFromServiceTemplateMetadata,
 } from '../../../common/serviceTemplateMetadataUtil';
+import { releaseCreate } from '../../../api/release/release';
 
 interface CreateReleaseFormProps {
 	service: ServiceRecord;
@@ -46,22 +35,20 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 	onSubmitSuccess,
 }) => {
 	const { t } = useTranslation();
-	const [selectedTemplate, setSelectedTemplate] =
-		React.useState<ServiceTemplateRecord | null>(null);
 
 	const queryClient = useQueryClient();
 	const createRelease = useMutation(releaseCreate);
 	const locales = useLocalesList(service.routeName!);
-	const serviceTemplates = useServiceListServiceTemplates(service.routeName!);
+	const serviceTemplate = useServiceGetServiceTemplate(service.routeName!);
 	const isLoading =
 		createRelease.isLoading ||
 		locales.isLoading ||
-		serviceTemplates.isLoading;
+		serviceTemplate.isLoading;
 
 	const validationSchema = yup.object({
 		version: yup.string().min(2).max(50).required(),
 		staticMetadata: createYupSchemaFromServiceTemplateMetadata(
-			selectedTemplate?.staticMetadata ?? []
+			serviceTemplate.data?.staticMetadata ?? []
 		),
 	});
 
@@ -70,7 +57,7 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 			serviceId: service.id!,
 			version: '',
 			staticMetadata: formikDefaultValuesFromServiceTemplateMetadata(
-				selectedTemplate?.staticMetadata ?? []
+				serviceTemplate.data?.staticMetadata ?? []
 			),
 		},
 		validationSchema,
@@ -101,13 +88,6 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 		},
 	});
 
-	const handleServiceTemplateSelect = (event: SelectChangeEvent) => {
-		setSelectedTemplate(
-			serviceTemplates.data?.find((t) => t.name === event.target.value) ||
-				null
-		);
-	};
-
 	return (
 		<form onSubmit={formik.handleSubmit}>
 			<Stack
@@ -129,40 +109,15 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 					helperText={formik.touched.version && formik.errors.version}
 					disabled={isLoading}
 				/>
-				<FormControl fullWidth>
-					<InputLabel id='template-select-label'>
-						{t('release.create.selectServiceTemplate')}
-					</InputLabel>
-					<Select
-						value={selectedTemplate?.name ?? ''}
-						labelId='template-select-label'
-						id='template-select'
-						label={t('release.create.selectServiceTemplate')}
-						disabled={
-							isLoading || serviceTemplates.data?.length === 0
-						}
-						onChange={handleServiceTemplateSelect}
-					>
-						{serviceTemplates.data?.map((template, index) => (
-							<MenuItem key={index} value={template.name!}>
-								{template.name}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				{selectedTemplate?.name && (
+				{serviceTemplate.data?.name && (
 					<>
 						<Typography>
 							{t('release.create.staticMetadata')}
 						</Typography>
 						<GeneratedServiceTemplateForm
-							template={selectedTemplate?.staticMetadata ?? []}
-							formik={{
-								values: formik.values.staticMetadata,
-								errors: formik.errors.staticMetadata || {},
-								touched: formik.touched.staticMetadata || {},
-								handleChange: formik.handleChange,
-							}}
+							template={serviceTemplate.data?.staticMetadata ?? []}
+							prefix="staticMetadata"
+							formik={formik}
 						/>
 					</>
 				)}

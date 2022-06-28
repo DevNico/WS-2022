@@ -7,14 +7,15 @@ import { useRouteParams } from 'typesafe-routes';
 import RouterButton from '../../components/RouterButton';
 import { homeRoute, organisationRoute } from '../../Router';
 import ServiceTemplatesTable from '../../components/serviceTemplate/ServiceTemplatesTable';
-import { useServiceTemplateList } from '../../../api/service-template-endpoints/service-template-endpoints';
 import toast from 'react-hot-toast';
+import { useOrganisationListServiceTemplates } from '../../../api/organisation/organisation';
 
 const ServiceTemplatesPage: React.FC = () => {
 	const { name } = useRouteParams(organisationRoute);
 	const { t } = useTranslation();
 
-	const { data, isLoading, isError, error } = useServiceTemplateList(name);
+	const { data, isLoading, isError, error } =
+		useOrganisationListServiceTemplates(name);
 
 	if (isError) {
 		toast.error(error?.message);

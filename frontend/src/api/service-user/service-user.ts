@@ -21,30 +21,18 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
-// eslint-disable-next-line
-type SecondParameter<T extends (...args: any) => any> = T extends (
-	config: any,
-	args: infer P
-) => any
-	? P
-	: never;
-
 /**
  * @summary Create a new service user
  */
 export const serviceUserCreate = (
-	createServiceUserRequest: CreateServiceUserRequest,
-	options?: SecondParameter<typeof customInstance>
+	createServiceUserRequest: CreateServiceUserRequest
 ) => {
-	return customInstance<ServiceUserRecord>(
-		{
-			url: `/api/v1/service-users`,
-			method: 'post',
-			headers: { 'Content-Type': 'application/json' },
-			data: createServiceUserRequest,
-		},
-		options
-	);
+	return customInstance<ServiceUserRecord>({
+		url: `/api/v1/service-users`,
+		method: 'post',
+		headers: { 'Content-Type': 'application/json' },
+		data: createServiceUserRequest,
+	});
 };
 
 export type ServiceUserCreateMutationResult = NonNullable<
@@ -63,10 +51,8 @@ export const useServiceUserCreate = <
 		{ data: CreateServiceUserRequest },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceUserCreate>>,
@@ -74,7 +60,7 @@ export const useServiceUserCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return serviceUserCreate(data, requestOptions);
+		return serviceUserCreate(data);
 	};
 
 	return useMutation<
@@ -87,14 +73,11 @@ export const useServiceUserCreate = <
 /**
  * @summary Deletes a service user
  */
-export const serviceUserDelete = (
-	serviceUserId: number,
-	options?: SecondParameter<typeof customInstance>
-) => {
-	return customInstance<void>(
-		{ url: `/api/v1/service-users/${serviceUserId}`, method: 'delete' },
-		options
-	);
+export const serviceUserDelete = (serviceUserId: number) => {
+	return customInstance<void>({
+		url: `/api/v1/service-users/${serviceUserId}`,
+		method: 'delete',
+	});
 };
 
 export type ServiceUserDeleteMutationResult = NonNullable<
@@ -113,10 +96,8 @@ export const useServiceUserDelete = <
 		{ serviceUserId: number },
 		TContext
 	>;
-	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
+	const { mutation: mutationOptions } = options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceUserDelete>>,
@@ -124,7 +105,7 @@ export const useServiceUserDelete = <
 	> = (props) => {
 		const { serviceUserId } = props ?? {};
 
-		return serviceUserDelete(serviceUserId, requestOptions);
+		return serviceUserDelete(serviceUserId);
 	};
 
 	return useMutation<
@@ -139,17 +120,13 @@ export const useServiceUserDelete = <
  */
 export const serviceUserGetById = (
 	serviceUserId: number,
-	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceUserRecord>(
-		{
-			url: `/api/v1/service-users/${serviceUserId}`,
-			method: 'get',
-			signal,
-		},
-		options
-	);
+	return customInstance<ServiceUserRecord>({
+		url: `/api/v1/service-users/${serviceUserId}`,
+		method: 'get',
+		signal,
+	});
 };
 
 export const getServiceUserGetByIdQueryKey = (serviceUserId: number) => [
@@ -172,18 +149,16 @@ export const useServiceUserGetById = <
 			TError,
 			TData
 		>;
-		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
+	const { query: queryOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ?? getServiceUserGetByIdQueryKey(serviceUserId);
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof serviceUserGetById>>
-	> = ({ signal }) =>
-		serviceUserGetById(serviceUserId, requestOptions, signal);
+	> = ({ signal }) => serviceUserGetById(serviceUserId, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof serviceUserGetById>>,
