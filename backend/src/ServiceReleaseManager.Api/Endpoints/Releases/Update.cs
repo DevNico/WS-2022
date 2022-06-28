@@ -1,6 +1,8 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Release;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
@@ -15,15 +17,18 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
   private readonly IRepository<Locale> _localeRepository;
   private readonly IRepository<Release> _releaseRepository;
   private readonly IRepository<Service> _serviceRepository;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
   public Update(
     IRepository<Release> releaseRepository,
     IRepository<Locale> localeRepository,
-    IRepository<Service> serviceRepository)
+    IRepository<Service> serviceRepository, 
+    IServiceManagerAuthorizationService authorizationService)
   {
     _releaseRepository = releaseRepository;
     _localeRepository = localeRepository;
     _serviceRepository = serviceRepository;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost(UpdateReleaseRequest.Route)]
@@ -48,7 +53,7 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
     {
       return NotFound();
     }
-    
+
     if (release.ApprovedAt != null)
     {
       return Conflict("Release is approved and cannot be updated");
@@ -71,8 +76,26 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
       return BadRequest("Locale id not found");
     }
 
+    if (await _authorizationService.EvaluateServiceAuthorization(User, release.ServiceId,
+      ReleaseOperations.Release_MetadataEdit, cancellationToken))
+    {
+      release.Metadata = request.MetaData;
+    }
 
-    release.Metadata = request.MetaData;
+    if (await _authorizationService.EvaluateServiceAuthorization(User, release.ServiceId,
+      ReleaseOperations.Release_LocalizedMetadataEdit, cancellationToken))
+    {
+      updateLocalizedMetadata(request, release, localeById);
+    }
+
+    await _releaseRepository.SaveChangesAsync(cancellationToken);
+
+    var response = ReleaseRecord.FromEntity(release);
+    return Ok(response);
+  }
+
+  private void updateLocalizedMetadata(UpdateReleaseRequest request, Release release, Dictionary<int, Locale> localeById)
+  {
     foreach (var localisedMetadata in request.LocalisedMetadataList)
     {
       var existing =
@@ -91,10 +114,5 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
         existing.Metadata = localisedMetadata.Metadata;
       }
     }
-
-    await _releaseRepository.SaveChangesAsync(cancellationToken);
-
-    var response = ReleaseRecord.FromEntity(release);
-    return Ok(response);
   }
 }

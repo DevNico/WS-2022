@@ -55,6 +55,17 @@ public class ServiceManagerAuthorizationService : IServiceManagerAuthorizationSe
     return await EvaluateOrganisationAuthorization(claimsPrincipal, service.Value.OrganisationId, requirement, cancellationToken);
   }
 
+  public async Task<bool> EvaluateOrganisationAuthorizationServiceRouteName(ClaimsPrincipal claimsPrincipal, string serviceRouteName,
+    OrganisationAuthorizationRequirement requirement, CancellationToken cancellationToken)
+  {
+    if (isSuperUser(claimsPrincipal)) return true;
+
+    var service = await _serviceService.GetByRouteName(serviceRouteName, cancellationToken);
+    if (!service.IsSuccess) return false;
+
+    return await EvaluateOrganisationAuthorization(claimsPrincipal, service.Value.OrganisationId, requirement, cancellationToken);
+  }
+
   public async Task<bool> EvaluateServiceAuthorization(ClaimsPrincipal claimsPrincipal, int serviceId,
     ServiceAuthorizationRequirement requirement, CancellationToken cancellationToken)
   {
@@ -68,6 +79,16 @@ public class ServiceManagerAuthorizationService : IServiceManagerAuthorizationSe
     if(!serviceUser.IsSuccess) return false;
     var result = await _authorizationService.AuthorizeAsync(claimsPrincipal, serviceUser.Value.ServiceRole, requirement);
     return result.Succeeded;
+  }
+
+  public async Task<bool> EvaluateServiceAuthorization(ClaimsPrincipal claimsPrincipal, string serviceRouteName, ServiceAuthorizationRequirement requirement, CancellationToken cancellationToken)
+  {
+    if (isSuperUser(claimsPrincipal)) return true;
+
+    var service = await _serviceService.GetByRouteName(serviceRouteName, cancellationToken);
+    if (!service.IsSuccess) return false;
+
+    return await EvaluateServiceAuthorization(claimsPrincipal, service.Value.Id, requirement, cancellationToken);
   }
 
   private async Task<OrganisationUser?> getOrganisationUser(ClaimsPrincipal claimsPrincipal, int organisationId, CancellationToken cancellationToken)

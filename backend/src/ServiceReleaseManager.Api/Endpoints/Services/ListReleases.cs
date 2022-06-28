@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Release;
 using ServiceReleaseManager.Api.Endpoints.Releases;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
@@ -12,10 +14,12 @@ public class List : EndpointBase
   .WithActionResult<List<ReleaseRecord>>
 {
   private readonly IReleaseService _service;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public List(IReleaseService service)
+  public List(IReleaseService service, IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
+    _authorizationService = authorizationService;
   }
 
   [HttpGet(ListReleasesByServiceId.Route)]
@@ -30,6 +34,12 @@ public class List : EndpointBase
     [FromRoute] ListReleasesByServiceId request,
     CancellationToken cancellationToken = new())
   {
+    if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
+      ReleaseOperations.Release_List, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var releases = await _service.GetByServiceId(request.ServiceId, cancellationToken);
     return this.ToActionResult(releases.MapValue(r => r.ConvertAll(ReleaseRecord.FromEntity)));
   }

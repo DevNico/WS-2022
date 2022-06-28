@@ -114,4 +114,11 @@ public class ServiceService : IServiceService
 
     return Result.Success();
   }
+
+  public async Task<ServiceTemplate?> GetServiceTemplate(int serviceTemplateId, CancellationToken cancellationToken)
+  {
+    var templateSpec = new ServiceTemplateByIdSpec(serviceTemplateId);
+    return await _serviceTemplateRepository.GetBySpecAsync(templateSpec, cancellationToken);
+
+  }
 }

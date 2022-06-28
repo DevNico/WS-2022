@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -10,10 +12,12 @@ public class Delete : EndpointBase
   .WithoutResult
 {
   private readonly IServiceService _service;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Delete(IServiceService service)
+  public Delete(IServiceService service, IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
+    _authorizationService = authorizationService;
   }
 
   [HttpDelete(DeleteServiceRequest.Route)]
@@ -29,6 +33,14 @@ public class Delete : EndpointBase
     [FromRoute] DeleteServiceRequest request, 
     CancellationToken cancellationToken = new())
   {
+    var service = await _service.GetById(request.ServiceId, cancellationToken);
+
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User, service.Value.OrganisationId,
+      ServiceOperations.Service_Delete, cancellationToken))
+    {
+      return NotFound();
+    }
+
     var result = await _service.Deactivate(request.ServiceId, cancellationToken);
     return this.ToActionResult(result);
   }

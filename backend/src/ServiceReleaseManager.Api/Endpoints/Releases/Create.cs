@@ -2,6 +2,8 @@
 using Ardalis.Specification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Release;
 using ServiceReleaseManager.Api.Endpoints.ReleaseEndpoints;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate.Specifications;
@@ -18,15 +20,18 @@ public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithAc
   private readonly IRepository<Locale> _localeRepository;
   private readonly IRepository<Release> _releaseRepository;
   private readonly IRepository<Service> _serviceRepository;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
   public Create(
     IRepository<Release> releaseRepository,
     IRepository<Locale> localeRepository,
-    IRepository<Service> serviceRepository)
+    IRepository<Service> serviceRepository,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _releaseRepository = releaseRepository;
     _localeRepository = localeRepository;
     _serviceRepository = serviceRepository;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost(CreateReleaseRequest.Route)]
@@ -52,7 +57,13 @@ public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithAc
     {
       return BadRequest("Service id not found");
     }
-    
+
+    if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
+      ReleaseOperations.Release_Create, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var activeReleaseSpec = new ActiveReleaseByServiceIdSpec(service.Id);
     var activeRelease =
       await _releaseRepository.GetBySpecAsync(activeReleaseSpec, cancellationToken);
