@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
-using ServiceReleaseManager.Api.Authorization.Operations.Release;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;

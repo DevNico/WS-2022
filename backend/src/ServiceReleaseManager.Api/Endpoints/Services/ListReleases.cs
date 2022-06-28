@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
-using ServiceReleaseManager.Api.Authorization.Operations.Release;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Api.Endpoints.Releases;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
