@@ -52,6 +52,9 @@ builder.Services.AddApiVersioning(options =>
   options.ReportApiVersions = true;
 });
 
+builder.Services.AddSingleton<IAuthorizationHandler, OrganisationAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, ServiceAuthorizationHandler>();
+
 var connectionString = config.GetConnectionString("Default");
 builder.Services.AddDbContext(connectionString);
 builder.Services.AddControllers(options => options.UseKebabCaseNamespaceRouteToken());
