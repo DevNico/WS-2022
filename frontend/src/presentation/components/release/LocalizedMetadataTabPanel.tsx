@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Stack } from '@mui/material';
-import { useFormik } from 'formik';
 import TabPanel from '../TabPanel';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,7 +8,6 @@ import { LocaleRecord, MetadataArrayElement } from '../../../api/models';
 import LocalizedMetadataCard from './LocalizedMetadataCard';
 
 interface LocalizedMetadataTabPanelProps {
-	formik: ReturnType<typeof useFormik>;
 	index: number;
 	value: number;
 	loading: boolean;
@@ -20,7 +18,6 @@ interface LocalizedMetadataTabPanelProps {
 }
 
 const LocalizedMetadataTabPanel: React.FC<LocalizedMetadataTabPanelProps> = ({
-	formik,
 	metadata,
 	locales,
 	index,
@@ -35,6 +32,10 @@ const LocalizedMetadataTabPanel: React.FC<LocalizedMetadataTabPanelProps> = ({
 		LocaleRecord[]
 	>([]);
 	const { t } = useTranslation();
+
+	if (selectedLocales.length === 0 && localesCopy.length !== locales.length) {
+		setLocalesCopy(locales);
+	}
 
 	const handleAddLocale = (localeId?: number) => {
 		setLocaleDialogOpen(false);
@@ -59,7 +60,6 @@ const LocalizedMetadataTabPanel: React.FC<LocalizedMetadataTabPanelProps> = ({
 				<Stack spacing={2} justifyContent='center' alignItems='center'>
 					{selectedLocales.map((locale) => (
 						<LocalizedMetadataCard
-							formik={formik}
 							key={locale.id}
 							metadata={metadata}
 							locale={locale}

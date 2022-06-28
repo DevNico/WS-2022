@@ -12,17 +12,14 @@ import { LocaleRecord, MetadataArrayElement } from '../../../api/models';
 import { useTranslation } from 'react-i18next';
 import { Delete } from '@mui/icons-material';
 import GeneratedServiceTemplateForm from './GeneratedServiceTemplateForm';
-import { useFormik } from 'formik';
 
 interface LocalizedMetadataCardProps {
 	metadata: MetadataArrayElement[];
 	locale: LocaleRecord;
 	onDelete: () => void;
-	formik: ReturnType<typeof useFormik>;
 }
 
 const LocalizedMetadataCard: React.FC<LocalizedMetadataCardProps> = ({
-	formik,
 	metadata,
 	locale,
 	onDelete,
@@ -40,7 +37,6 @@ const LocalizedMetadataCard: React.FC<LocalizedMetadataCardProps> = ({
 					</Typography>
 					<GeneratedServiceTemplateForm
 						template={metadata}
-						formik={formik}
 						prefix={'locale-' + locale.tag}
 					/>
 				</Stack>
