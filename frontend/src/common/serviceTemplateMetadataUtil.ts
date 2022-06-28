@@ -59,3 +59,14 @@ export function formikDefaultValuesFromServiceTemplateMetadata(
 
 	return defaultValues;
 }
+
+export function formikTouchedFromServiceTemplateMetadata(
+	metadata: MetadataArrayElement[]
+): Record<string, boolean> {
+	const touched: Record<string, boolean> = {};
+	metadata.forEach((element) => {
+		touched[element.name!] = element.type === 'string' && element.required!;
+	});
+
+	return touched;
+}

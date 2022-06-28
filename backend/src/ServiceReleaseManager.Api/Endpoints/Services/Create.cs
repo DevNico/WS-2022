@@ -1,7 +1,9 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
+using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
+using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
@@ -9,10 +11,12 @@ namespace ServiceReleaseManager.Api.Endpoints.Services;
 public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionResult<ServiceRecord>
 {
   private readonly IServiceService _service;
+  private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
 
-  public Create(IServiceService service)
+  public Create(IServiceService service, IRepository<ServiceTemplate> serviceTemplateRepository)
   {
     _service = service;
+    _serviceTemplateRepository = serviceTemplateRepository;
   }
 
   [HttpPost]
@@ -29,9 +33,16 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
   public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request,
     CancellationToken cancellationToken = new())
   {
+    var serviceTemplate =
+      await _serviceTemplateRepository.GetByIdAsync(request.ServiceTemplateId, cancellationToken);
+    if (serviceTemplate == null)
+    {
+      return BadRequest();
+    }
+    
     var found = await _service.GetByNameAndOrganisationId(
       request.Name,
-      request.ServiceTemplateId,
+      serviceTemplate.OrganisationId,
       cancellationToken
     );
 

@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { useConfirm } from 'material-ui-confirm';
 import { useMutation, useQueryClient } from 'react-query';
 import { serviceTemplateDelete } from '../../../api/service-template/service-template';
-import { getOrganisationListServiceTemplatesQueryKey } from "../../../api/organisation/organisation";
+import { getOrganisationListServiceTemplatesQueryKey } from '../../../api/organisation/organisation';
 
 export interface ServiceTemplatesTableProps {
 	organisationRouteName: string;

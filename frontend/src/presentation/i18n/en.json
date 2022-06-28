@@ -24,7 +24,8 @@
 		},
 		"loading": "Loading",
 		"retry": "Try again",
-		"submit": "Submit"
+		"submit": "Submit",
+		"delete": "Delete"
 	},
 	"home": {
 		"noOrganisations": "No organizations found, you need to be invited to one to start using the application."
@@ -136,9 +137,15 @@
 			"submit": "Submit",
 			"success": "Release created successfully",
 			"title": "Create Release",
+			"basicInformation": "Basic Information",
 			"selectServiceTemplate": "Service Template",
 			"staticMetadata": "Static Metadata",
-			"localizedMetadata": "Localized Metadata"
+			"editStaticMetadata": "Edit Static Metadata",
+			"localizedMetadata": "Localized Metadata",
+			"emptyTemplate": "No data available",
+			"addLocalizedMetadata": "Add localized metadata",
+			"locale": "Locale",
+			"localizedMetadataFor": "Localized Metadata for locale '{{locale}}'"
 		},
 		"list": {
 			"create": "Create Release",
