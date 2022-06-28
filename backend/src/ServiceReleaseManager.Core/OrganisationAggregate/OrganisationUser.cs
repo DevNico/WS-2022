@@ -35,7 +35,7 @@ public class OrganisationUser : EntityBase, IAggregateRoot
   }
 
   [Required]
-  public String UserId { get; }
+  public String UserId { get; set; }
 
   [Required]
   [EmailAddress]
