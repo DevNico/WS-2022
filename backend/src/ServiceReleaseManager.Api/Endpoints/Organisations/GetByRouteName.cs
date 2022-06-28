@@ -30,7 +30,7 @@ public class GetByRouteName : EndpointBase.WithRequest<GetOrganisationByRouteNam
     CancellationToken cancellationToken = new())
   {
     var result =
-      await _organisationService.GetByRouteNameRequest(request.OrganisationRouteName,
+      await _organisationService.GetByRouteName(request.OrganisationRouteName,
         cancellationToken);
 
     return this.ToActionResult(result.MapValue(OrganisationRecord.FromEntity));

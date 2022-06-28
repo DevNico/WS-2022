@@ -5,6 +5,6 @@ namespace ServiceReleaseManager.Api.Authorization;
 
 public class OrganisationAuthorizationRequirement : OperationAuthorizationRequirement
 {
-  public Func<OrganisationRole?, bool>? EvaluationFunction { get; init; }
+  public Func<OrganisationRole, bool>? EvaluationFunction { get; init; }
 
 }

@@ -11,13 +11,13 @@ public class ServiceTemplateOperations
   public static OrganisationAuthorizationRequirement ServiceTemplate_Read = new OrganisationAuthorizationRequirement
   {
     Name = nameof(ServiceTemplate_Read),
-    EvaluationFunction = (r => r.ServiceWrite)
+    EvaluationFunction = (r => true)
   };
 
   public static OrganisationAuthorizationRequirement ServiceTemplate_List = new OrganisationAuthorizationRequirement
   {
     Name = nameof(ServiceTemplate_List),
-    EvaluationFunction = (r => r.ServiceWrite)
+    EvaluationFunction = (r => true)
   };
 
   public static OrganisationAuthorizationRequirement ServiceTemplate_Delete = new OrganisationAuthorizationRequirement

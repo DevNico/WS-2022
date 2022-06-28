@@ -12,10 +12,10 @@ public interface IServiceManagerAuthorizationService
   Task<bool> EvaluateOrganisationAuthorization(ClaimsPrincipal claimsPrincipal, int orhanisationId,
     OrganisationAuthorizationRequirement requirement, CancellationToken cancellationToken);
 
-  Task<bool> EvaluateServiceAuthorization(ClaimsPrincipal claimsPrincipal, int organisationId,
-    ServiceAuthorizationRequirement requirement, CancellationToken cancellationToken);
+  public Task<bool> EvaluateOrganisationAuthorizationServiceId(ClaimsPrincipal claimsPrincipal, int serviceId,
+    OrganisationAuthorizationRequirement requirement, CancellationToken cancellationToken);
 
-  Task<bool> EvaluateServiceAuthorization(ClaimsPrincipal claimsPrincipal, string organisationRouteName,
+  Task<bool> EvaluateServiceAuthorization(ClaimsPrincipal claimsPrincipal, int serviceId,
     ServiceAuthorizationRequirement requirement, CancellationToken cancellationToken);
 
 }

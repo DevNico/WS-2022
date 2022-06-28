@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
@@ -14,12 +16,15 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
   ServiceTemplateRecord>
 {
   private readonly IMetadataFormatValidator _metadataValidator;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IRepository<ServiceTemplate> _repository;
 
-  public Update(IRepository<ServiceTemplate> repository, IMetadataFormatValidator metadataValidator)
+  public Update(IRepository<ServiceTemplate> repository, IMetadataFormatValidator metadataValidator,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _repository = repository;
     _metadataValidator = metadataValidator;
+    _authorizationService = authorizationService;
   }
 
   [HttpPatch]
@@ -39,6 +44,12 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
     var idSpec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
     var serviceTemplate = await _repository.GetBySpecAsync(idSpec, cancellationToken);
     if (serviceTemplate == null)
+    {
+      return NotFound();
+    }
+
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+      serviceTemplate.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create, cancellationToken))
     {
       return NotFound();
     }

@@ -52,7 +52,7 @@ public class OrganisationUserService : IOrganisationUserService
     organisationRouteName, CancellationToken cancellationToken)
   {
     var organisation = await
-      _organisationService.GetByRouteNameRequest(organisationRouteName, cancellationToken);
+      _organisationService.GetByRouteName(organisationRouteName, cancellationToken);
 
     if (!organisation.IsSuccess)
     {

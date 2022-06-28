@@ -23,12 +23,6 @@ public class ServiceUserService : IServiceUserService
     _serviceRoleService = serviceRoleService;
   }
 
-  public async Task<ServiceUser?> getByOrganisationUserId(int organisationUserId, CancellationToken cancellationToken)
-  {
-    var spec = new ServiceUserByOrganisationUserIdSpec(organisationUserId);
-    return await _repository.GetBySpecAsync(spec, cancellationToken);
-  }
-
   public async Task<Result<List<ServiceUser>>> GetByServiceId(int serviceId,
     CancellationToken cancellationToken)
   {

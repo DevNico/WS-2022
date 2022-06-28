@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -9,10 +11,12 @@ namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutResult
 {
   private readonly IRepository<ServiceTemplate> _repository;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Delete(IRepository<ServiceTemplate> repository)
+  public Delete(IRepository<ServiceTemplate> repository, IServiceManagerAuthorizationService authorizationService)
   {
     _repository = repository;
+    _authorizationService = authorizationService;
   }
 
   [HttpDelete]
@@ -31,6 +35,12 @@ public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutRes
     var spec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
     var toDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
     if (toDelete == null)
+    {
+      return NotFound();
+    }
+
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+      toDelete.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Delete, cancellationToken))
     {
       return NotFound();
     }

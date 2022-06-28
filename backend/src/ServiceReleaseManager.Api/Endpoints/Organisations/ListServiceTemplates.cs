@@ -45,7 +45,7 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
     }
 
     var organisation =
-      await _organisationService.GetByRouteNameRequest(request.OrganisationRouteName, cancellationToken);
+      await _organisationService.GetByRouteName(request.OrganisationRouteName, cancellationToken);
 
     if (!organisation.IsSuccess)
     {

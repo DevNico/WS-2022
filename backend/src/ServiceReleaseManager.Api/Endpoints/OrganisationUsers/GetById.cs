@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Organisation;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,10 +12,12 @@ public class GetById : EndpointBase.WithRequest<GetOrganisationUserByIdRequest>.
   OrganisationUserRecord>
 {
   private readonly IOrganisationUserService _organisationUserService;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetById(IOrganisationUserService organisationUserService)
+  public GetById(IOrganisationUserService organisationUserService, IServiceManagerAuthorizationService authorizationService)
   {
     _organisationUserService = organisationUserService;
+    _authorizationService = authorizationService;
   }
 
   [HttpGet(GetOrganisationUserByIdRequest.Route)]
@@ -27,6 +31,13 @@ public class GetById : EndpointBase.WithRequest<GetOrganisationUserByIdRequest>.
     [FromRoute] GetOrganisationUserByIdRequest request,
     CancellationToken cancellationToken = new())
   {
+    var user = await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
+
+    if (!user.IsSuccess  || !await _authorizationService.EvaluateOrganisationAuthorization(User, user.Value.OrganisationId, OrganisationUserOperations.OrganisationUser_Read, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var result =
       await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
 
