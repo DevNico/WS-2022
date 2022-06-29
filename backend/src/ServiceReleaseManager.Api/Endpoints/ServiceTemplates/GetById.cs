@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -10,10 +12,13 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionRe
   ServiceTemplateRecord>
 {
   private readonly IRepository<ServiceTemplate> _repository;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Get(IRepository<ServiceTemplate> repository)
+  public Get(IRepository<ServiceTemplate> repository,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _repository = repository;
+    _authorizationService = authorizationService;
   }
 
   [HttpGet(GetServiceTemplateById.Route)]
@@ -31,7 +36,15 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionRe
   {
     var spec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
     var template = await _repository.GetBySpecAsync(spec, cancellationToken);
+
     if (template == null)
+    {
+      return NotFound();
+    }
+
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          template.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Read,
+          cancellationToken))
     {
       return NotFound();
     }

@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,10 +12,12 @@ public class
   GetById : EndpointBase.WithRequest<GetServiceByIdRequest>.WithActionResult<ServiceRecord>
 {
   private readonly IServiceService _service;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetById(IServiceService service)
+  public GetById(IServiceService service, IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
+    _authorizationService = authorizationService;
   }
 
   [HttpGet(GetServiceByIdRequest.Route)]
@@ -30,6 +34,14 @@ public class
     CancellationToken cancellationToken = new())
   {
     var service = await _service.GetById(request.ServiceId, cancellationToken);
+
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          service.Value.OrganisationId,
+          ServiceOperations.Service_Read, cancellationToken))
+    {
+      return NotFound();
+    }
+
     return this.ToActionResult(service.MapValue(ServiceRecord.FromEntity));
   }
 }

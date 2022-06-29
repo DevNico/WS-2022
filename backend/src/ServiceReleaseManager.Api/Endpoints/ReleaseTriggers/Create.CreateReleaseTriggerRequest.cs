@@ -12,7 +12,7 @@ public class CreateReleaseTriggerRequest
 
   [Required, MaxLength(250)]
   public string Url { get; set; } = default!;
-  
+
   [Required]
   public int ServiceId { get; set; }
 }

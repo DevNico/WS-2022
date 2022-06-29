@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
@@ -11,10 +13,13 @@ public class
     ServiceRecord>
 {
   private readonly IServiceService _service;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetServiceByRouteName(IServiceService service)
+  public GetServiceByRouteName(IServiceService service,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
+    _authorizationService = authorizationService;
   }
 
   [HttpGet(GetServiceByRouteNameRequest.Route)]
@@ -33,6 +38,14 @@ public class
     var service =
       await _service.GetByRouteName(
         request.ServiceRouteName, cancellationToken);
+
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          service.Value.OrganisationId,
+          ServiceOperations.Service_Read, cancellationToken))
+    {
+      return NotFound();
+    }
+
     return this.ToActionResult(service.MapValue(ServiceRecord.FromEntity));
   }
 }

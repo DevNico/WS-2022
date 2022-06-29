@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -12,10 +14,13 @@ public class Create : EndpointBase
   .WithActionResult<ServiceRoleRecord>
 {
   private readonly IServiceRoleService _service;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(IServiceRoleService service)
+  public Create(IServiceRoleService service,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost]
@@ -29,6 +34,12 @@ public class Create : EndpointBase
   public override async Task<ActionResult<ServiceRoleRecord>> HandleAsync(CreateServiceRole request,
     CancellationToken cancellationToken = new())
   {
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          request.OrganisationId, ServiceRoleOperations.ServiceRole_Create, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var found = await _service.GetByName(request.Name, cancellationToken);
     if (found.IsSuccess && found.Value.Exists(r => r.OrganisationId == request.OrganisationId))
     {

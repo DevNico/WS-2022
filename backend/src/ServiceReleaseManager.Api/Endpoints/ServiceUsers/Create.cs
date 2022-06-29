@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
@@ -11,10 +13,13 @@ public class Create : EndpointBase
   .WithActionResult<ServiceUserRecord>
 {
   private readonly IServiceUserService _service;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(IServiceUserService service)
+  public Create(IServiceUserService service,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost]
@@ -29,6 +34,12 @@ public class Create : EndpointBase
     CreateServiceUserRequest request,
     CancellationToken cancellationToken = new())
   {
+    if (!await _authorizationService.EvaluateOrganisationAuthorizationServiceId(User,
+          request.ServiceId, ServiceUserOperations.ServiceUser_Create, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var user = await _service.Create(request.ServiceId, request.ServiceRoleId,
       request.OrganisationUserId, cancellationToken);
     return this.ToActionResult(user.MapValue(ServiceUserRecord.FromEntity));

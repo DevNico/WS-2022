@@ -45,4 +45,3 @@ public class Create : EndpointBase
     return this.ToActionResult(created.MapValue(ReleaseTriggerRecord.FromEntity));
   }
 }
-

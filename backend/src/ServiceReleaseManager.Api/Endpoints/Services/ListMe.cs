@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Ardalis.Result.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
@@ -21,6 +22,7 @@ public class ListMe : EndpointBase
   }
 
   [HttpGet("me")]
+  [Authorize]
   [SwaggerOperation(
     Summary = "Get the services this user can access",
     OperationId = "Service.Me",

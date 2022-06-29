@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Api.Endpoints.ServiceRoles;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
@@ -13,11 +15,14 @@ public class ListServiceRoles : EndpointBase
 {
   private readonly IServiceRoleService _service;
   private readonly IOrganisationService _organisationService;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public ListServiceRoles(IServiceRoleService service, IOrganisationService organisationService)
+  public ListServiceRoles(IServiceRoleService service, IOrganisationService organisationService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
     _organisationService = organisationService;
+    _authorizationService = authorizationService;
   }
 
   [HttpGet(ListServiceRolesRequest.Route)]
@@ -32,6 +37,12 @@ public class ListServiceRoles : EndpointBase
     [FromRoute] ListServiceRolesRequest request,
     CancellationToken cancellationToken = new())
   {
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          request.OrganisationRouteName, ServiceRoleOperations.ServiceRole_List, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var organisation =
       await _organisationService.GetByRouteName(request.OrganisationRouteName, cancellationToken);
     if (!organisation.IsSuccess)

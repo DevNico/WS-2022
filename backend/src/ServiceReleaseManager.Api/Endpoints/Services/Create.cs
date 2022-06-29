@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -12,6 +14,7 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
 {
   private readonly IServiceService _service;
   private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
   public Create(IServiceService service, IRepository<ServiceTemplate> serviceTemplateRepository)
   {
@@ -40,6 +43,14 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
       return BadRequest();
     }
     
+    var template = await _service.GetServiceTemplate(request.ServiceTemplateId, cancellationToken);
+
+    if (template == null || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          template.OrganisationId, ServiceOperations.Service_Create, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var found = await _service.GetByNameAndOrganisationId(
       request.Name,
       serviceTemplate.OrganisationId,

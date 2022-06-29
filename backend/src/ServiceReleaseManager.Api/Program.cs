@@ -52,6 +52,9 @@ builder.Services.AddApiVersioning(options =>
   options.ReportApiVersions = true;
 });
 
+builder.Services.AddSingleton<IAuthorizationHandler, OrganisationAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, ServiceAuthorizationHandler>();
+
 var connectionString = config.GetConnectionString("Default");
 builder.Services.AddDbContext(connectionString);
 builder.Services.AddControllers(options => options.UseKebabCaseNamespaceRouteToken());
@@ -128,6 +131,9 @@ builder.Services.Configure<ServiceConfig>(serviceConfig =>
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
   containerBuilder.RegisterModule(new DefaultCoreModule());
+  containerBuilder.RegisterType<ServiceManagerAuthorizationService>()
+    .As<IServiceManagerAuthorizationService>()
+    .SingleInstance();
   containerBuilder.RegisterModule(
     new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development", config,
       builder.Environment.ContentRootPath));

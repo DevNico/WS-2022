@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
@@ -13,12 +15,17 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
 {
   private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
   private readonly IOrganisationService _organisationService;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public ListServiceTemplates(IRepository<ServiceTemplate> serviceTemplateRepository,
-    IOrganisationService organisationService)
+  public ListServiceTemplates(
+    IRepository<ServiceTemplate> serviceTemplateRepository,
+    IOrganisationService organisationService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _serviceTemplateRepository = serviceTemplateRepository;
     _organisationService = organisationService;
+    _authorizationService = authorizationService;
   }
 
   [HttpGet(ListServiceTemplatesRequest.Route)]
@@ -34,12 +41,19 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
     [FromRoute] ListServiceTemplatesRequest request,
     CancellationToken cancellationToken = new())
   {
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          request.OrganisationRouteName, ServiceTemplateOperations.ServiceTemplate_List,
+          cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var organisation =
       await _organisationService.GetByRouteName(request.OrganisationRouteName, cancellationToken);
 
     if (!organisation.IsSuccess)
     {
-      return NotFound();
+      return BadRequest();
     }
 
     var spec = new ActiveServiceTemplatesSearchSpec(organisation.Value.Id);
