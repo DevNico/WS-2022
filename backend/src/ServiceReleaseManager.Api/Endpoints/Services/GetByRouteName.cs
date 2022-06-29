@@ -43,7 +43,7 @@ public class
           service.Value.OrganisationId,
           ServiceOperations.Service_Read, cancellationToken))
     {
-      return NotFound();
+      return Unauthorized();
     }
 
     return this.ToActionResult(service.MapValue(ServiceRecord.FromEntity));

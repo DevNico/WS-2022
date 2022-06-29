@@ -9,11 +9,9 @@ import { useMutation, useQueryClient } from 'react-query';
 import * as yup from 'yup';
 import { CreateServiceTemplate, OrganisationRecord } from '../../../api/models';
 import { useOrganisationRolesList } from '../../../api/organisation-role/organisation-role';
-import {
-	getServiceTemplateListQueryKey,
-	serviceTemplateCreate,
-} from '../../../api/service-template-endpoints/service-template-endpoints';
 import ServiceTemplateMetadataEditor from './ServiceTemplateMetadataEditor';
+import { serviceTemplateCreate } from '../../../api/service-template/service-template';
+import { getOrganisationListServiceTemplatesQueryKey } from '../../../api/organisation/organisation';
 
 interface ServiceTemplateFormProps {
 	organisation: OrganisationRecord;
@@ -71,8 +69,10 @@ const ServiceTemplateForm: React.FC<ServiceTemplateFormProps> = ({
 					}),
 				}
 			);
-			queryClient.invalidateQueries(
-				getServiceTemplateListQueryKey(organisation.routeName!)
+			await queryClient.invalidateQueries(
+				getOrganisationListServiceTemplatesQueryKey(
+					organisation.routeName!
+				)
 			);
 			onSubmitSuccess();
 		},

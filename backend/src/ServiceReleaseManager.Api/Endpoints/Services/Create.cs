@@ -33,17 +33,20 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
   public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request,
     CancellationToken cancellationToken = new())
   {
-    var template = await _service.GetServiceTemplate(request.ServiceTemplateId, cancellationToken);
+    var serviceTemplate =
+      await _service.GetServiceTemplate(request.ServiceTemplateId, cancellationToken);
 
-    if (template == null || !await _authorizationService.EvaluateOrganisationAuthorization(User,
-          template.OrganisationId, ServiceOperations.Service_Create, cancellationToken))
+    if (!serviceTemplate.IsSuccess ||
+        !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          serviceTemplate.Value.OrganisationId, ServiceOperations.Service_Create,
+          cancellationToken))
     {
       return Unauthorized();
     }
 
     var found = await _service.GetByNameAndOrganisationId(
       request.Name,
-      request.ServiceTemplateId,
+      serviceTemplate.Value.OrganisationId,
       cancellationToken
     );
 

@@ -5,6 +5,9 @@
  * OpenAPI spec version: v1
  */
 
-export interface ListServiceTemplatesRequest {
-	organisationRouteName: string;
+export interface CreateReleaseTriggerRequest {
+	name: string;
+	event: string;
+	url: string;
+	serviceId: number;
 }

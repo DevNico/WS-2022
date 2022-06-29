@@ -1,6 +1,5 @@
 ﻿using Ardalis.Result;
 using ServiceReleaseManager.Core.Interfaces;
-using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
 using ServiceReleaseManager.SharedKernel;
@@ -12,16 +11,13 @@ public class ServiceService : IServiceService
 {
   private readonly IRepository<Service> _serviceRepository;
   private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
-  private readonly IRepository<Organisation> _organisationRepository;
 
   public ServiceService(
     IRepository<Service> serviceRepository,
-    IRepository<Organisation> organisationRepository,
     IRepository<ServiceTemplate> serviceTemplateRepository
   )
   {
     _serviceRepository = serviceRepository;
-    _organisationRepository = organisationRepository;
     _serviceTemplateRepository = serviceTemplateRepository;
   }
 
@@ -61,11 +57,11 @@ public class ServiceService : IServiceService
     return Result.Success(created);
   }
 
-  public async Task<Result<List<Service>>> GetByOrganisationUserIds(
-    ICollection<int> organisationUserIds,
+  public async Task<Result<List<Service>>> GetByOrganisationUserId(
+    int organisationUserId,
     CancellationToken cancellationToken)
   {
-    var spec = new ServicesByOrganisationUserIdsSpec(organisationUserIds);
+    var spec = new ServicesByOrganisationUserIdSpec(organisationUserId);
     var result = await _serviceRepository.ListAsync(spec, cancellationToken);
 
     return Result.Success(result);
@@ -115,10 +111,12 @@ public class ServiceService : IServiceService
     return Result.Success();
   }
 
-  public async Task<ServiceTemplate?> GetServiceTemplate(int serviceTemplateId, CancellationToken cancellationToken)
+  public async Task<Result<ServiceTemplate>> GetServiceTemplate(int serviceTemplateId,
+    CancellationToken cancellationToken)
   {
     var templateSpec = new ServiceTemplateByIdSpec(serviceTemplateId);
-    return await _serviceTemplateRepository.GetBySpecAsync(templateSpec, cancellationToken);
+    var result = await _serviceTemplateRepository.GetBySpecAsync(templateSpec, cancellationToken);
 
+    return ResultHelper.NullableSuccessNotFound(result);
   }
 }

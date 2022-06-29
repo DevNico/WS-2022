@@ -39,7 +39,7 @@ public class Delete : EndpointBase
           service.Value.OrganisationId,
           ServiceOperations.Service_Delete, cancellationToken))
     {
-      return NotFound();
+      return Unauthorized();
     }
 
     var result = await _service.Deactivate(request.ServiceId, cancellationToken);
