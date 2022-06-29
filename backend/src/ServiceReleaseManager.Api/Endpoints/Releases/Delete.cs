@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Releases;
 
-public class Delete : EndpointBaseAsync.WithRequest<DeleteReleaseReqest>.WithoutResult
+public class Delete : EndpointBase.WithRequest<DeleteReleaseReqest>.WithoutResult
 {
   private readonly IRepository<Release> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;

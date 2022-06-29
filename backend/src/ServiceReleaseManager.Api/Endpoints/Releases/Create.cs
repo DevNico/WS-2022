@@ -1,5 +1,4 @@
-﻿using Ardalis.ApiEndpoints;
-using Ardalis.Specification;
+﻿using Ardalis.Specification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
@@ -14,7 +13,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Releases;
 
-public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithActionResult<
+public class Create : EndpointBase.WithRequest<CreateReleaseRequest>.WithActionResult<
   ReleaseRecord>
 {
   private readonly IRepository<Locale> _localeRepository;
@@ -34,7 +33,7 @@ public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithAc
     _authorizationService = authorizationService;
   }
 
-  [HttpPost(CreateReleaseRequest.Route)]
+  [HttpPost]
   [Authorize]
   [SwaggerOperation(
     Summary = "Creates a new Release",

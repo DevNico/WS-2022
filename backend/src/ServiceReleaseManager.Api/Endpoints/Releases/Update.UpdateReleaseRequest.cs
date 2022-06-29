@@ -5,7 +5,7 @@ namespace ServiceReleaseManager.Api.Endpoints.Releases;
 
 public class UpdateReleaseRequest
 {
-  public const string Route = "/releases/{ReleaseId:int}";
+  public const string Route = "{ReleaseId:int}";
 
   [FromRoute]
   public int ReleaseId { get; set; } = default!;
