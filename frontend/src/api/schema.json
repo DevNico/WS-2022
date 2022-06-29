@@ -473,7 +473,7 @@
 				]
 			}
 		},
-		"/releases": {
+		"/api/v1/releases": {
 			"post": {
 				"tags": ["Release"],
 				"summary": "Creates a new Release",
@@ -1371,7 +1371,7 @@
 				]
 			}
 		},
-		"/releases/{ReleaseId}": {
+		"/api/v1/releases/{ReleaseId}": {
 			"delete": {
 				"tags": ["Release"],
 				"summary": "Deletes a release",

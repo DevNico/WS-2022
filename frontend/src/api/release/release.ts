@@ -39,7 +39,7 @@ export const releaseCreate = (
 ) => {
 	return customInstance<ReleaseRecord>(
 		{
-			url: `/releases`,
+			url: `/api/v1/releases`,
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
 			data: createReleaseRequest,
@@ -94,7 +94,7 @@ export const releaseDelete = (
 	options?: SecondParameter<typeof customInstance>
 ) => {
 	return customInstance<void>(
-		{ url: `/releases/${releaseId}`, method: 'delete' },
+		{ url: `/api/v1/releases/${releaseId}`, method: 'delete' },
 		options
 	);
 };
@@ -146,13 +146,13 @@ export const releasesGetById = (
 	signal?: AbortSignal
 ) => {
 	return customInstance<ReleaseRecord>(
-		{ url: `/releases/${releaseId}`, method: 'get', signal },
+		{ url: `/api/v1/releases/${releaseId}`, method: 'get', signal },
 		options
 	);
 };
 
 export const getReleasesGetByIdQueryKey = (releaseId: number) => [
-	`/releases/${releaseId}`,
+	`/api/v1/releases/${releaseId}`,
 ];
 
 export type ReleasesGetByIdQueryResult = NonNullable<
@@ -206,7 +206,7 @@ export const releaseUpdate = (
 ) => {
 	return customInstance<ReleaseRecord>(
 		{
-			url: `/releases/${releaseId}`,
+			url: `/api/v1/releases/${releaseId}`,
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
 			data: updateReleaseRequest,
