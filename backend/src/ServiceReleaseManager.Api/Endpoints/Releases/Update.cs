@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Releases;
 
-public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithActionResult<
+public class Update : EndpointBase.WithRequest<UpdateReleaseRequest>.WithActionResult<
   ReleaseRecord>
 {
   private readonly IRepository<Locale> _localeRepository;

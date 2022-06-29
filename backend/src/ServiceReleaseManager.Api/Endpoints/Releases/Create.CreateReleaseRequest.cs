@@ -4,8 +4,6 @@ namespace ServiceReleaseManager.Api.Endpoints.ReleaseEndpoints;
 
 public class CreateReleaseRequest
 {
-  public const string Route = "/releases";
-
   [Required]
   public string Version { get; set; } = default!;
 

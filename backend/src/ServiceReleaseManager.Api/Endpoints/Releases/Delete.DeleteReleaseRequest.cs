@@ -2,7 +2,7 @@
 
 public class DeleteReleaseReqest
 {
-  public const string Route = "/releases/{ReleaseId:int}";
+  public const string Route = "{ReleaseId:int}";
 
   public int ReleaseId { get; set; }
 

@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Releases;
 
-public class GetById : EndpointBaseAsync.WithRequest<GetReleaseByIdRequest>.WithActionResult<
+public class GetById : EndpointBase.WithRequest<GetReleaseByIdRequest>.WithActionResult<
   ReleaseRecord>
 {
   private readonly IRepository<Release> _repository;
