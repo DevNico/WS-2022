@@ -20,6 +20,8 @@ import type {
 	CreateServiceRequest,
 	ReleaseRecord,
 	LocaleRecord,
+	ReleaseTriggerRecord,
+	ServiceTemplateRecord,
 	ServiceUserRecord,
 	ListUsersByServiceId,
 } from '.././models';
@@ -385,49 +387,128 @@ export const useLocalesList = <
 };
 
 /**
- * @summary Get the services this user can access
+ * List all release triggers
+ * @summary List all release triggers
  */
-export const serviceMe = (
+export const serviceListReleaseTriggers = (
+	serviceId: number,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceRecord[]>(
-		{ url: `/api/v1/services/me`, method: 'get', signal },
+	return customInstance<ReleaseTriggerRecord[]>(
+		{
+			url: `/api/v1/services/${serviceId}/release-triggers`,
+			method: 'get',
+			signal,
+		},
 		options
 	);
 };
 
-export const getServiceMeQueryKey = () => [`/api/v1/services/me`];
+export const getServiceListReleaseTriggersQueryKey = (serviceId: number) => [
+	`/api/v1/services/${serviceId}/release-triggers`,
+];
 
-export type ServiceMeQueryResult = NonNullable<
-	Awaited<ReturnType<typeof serviceMe>>
+export type ServiceListReleaseTriggersQueryResult = NonNullable<
+	Awaited<ReturnType<typeof serviceListReleaseTriggers>>
 >;
-export type ServiceMeQueryError = ErrorType<void>;
+export type ServiceListReleaseTriggersQueryError = ErrorType<void>;
 
-export const useServiceMe = <
-	TData = Awaited<ReturnType<typeof serviceMe>>,
+export const useServiceListReleaseTriggers = <
+	TData = Awaited<ReturnType<typeof serviceListReleaseTriggers>>,
 	TError = ErrorType<void>
->(options?: {
-	query?: UseQueryOptions<
-		Awaited<ReturnType<typeof serviceMe>>,
-		TError,
-		TData
-	>;
-	request?: SecondParameter<typeof customInstance>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+>(
+	serviceId: number,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof serviceListReleaseTriggers>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getServiceMeQueryKey();
+	const queryKey =
+		queryOptions?.queryKey ??
+		getServiceListReleaseTriggersQueryKey(serviceId);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof serviceMe>>> = ({
-		signal,
-	}) => serviceMe(requestOptions, signal);
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof serviceListReleaseTriggers>>
+	> = ({ signal }) =>
+		serviceListReleaseTriggers(serviceId, requestOptions, signal);
 
 	const query = useQuery<
-		Awaited<ReturnType<typeof serviceMe>>,
+		Awaited<ReturnType<typeof serviceListReleaseTriggers>>,
 		TError,
 		TData
-	>(queryKey, queryFn, queryOptions);
+	>(queryKey, queryFn, { enabled: !!serviceId, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * Get the service's service template
+ * @summary Get the service's service template
+ */
+export const serviceGetServiceTemplate = (
+	serviceRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceTemplateRecord>(
+		{
+			url: `/api/v1/services/${serviceRouteName}/services-template`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getServiceGetServiceTemplateQueryKey = (
+	serviceRouteName: string
+) => [`/api/v1/services/${serviceRouteName}/services-template`];
+
+export type ServiceGetServiceTemplateQueryResult = NonNullable<
+	Awaited<ReturnType<typeof serviceGetServiceTemplate>>
+>;
+export type ServiceGetServiceTemplateQueryError = ErrorType<void>;
+
+export const useServiceGetServiceTemplate = <
+	TData = Awaited<ReturnType<typeof serviceGetServiceTemplate>>,
+	TError = ErrorType<void>
+>(
+	serviceRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof serviceGetServiceTemplate>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getServiceGetServiceTemplateQueryKey(serviceRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof serviceGetServiceTemplate>>
+	> = ({ signal }) =>
+		serviceGetServiceTemplate(serviceRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof serviceGetServiceTemplate>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!serviceRouteName, ...queryOptions });
 
 	return {
 		queryKey,

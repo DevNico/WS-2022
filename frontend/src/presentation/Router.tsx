@@ -16,6 +16,7 @@ import ServiceTemplatesPage from './pages/organisation/ServiceTemplatesPage';
 import LocalesPage from './pages/service/LocalesPage';
 import ReleasesPage from './pages/service/ReleasesPage';
 import ServicesPage from './pages/service/ServicesPage';
+import CreateReleasePage from './pages/service/CreateReleasePage';
 
 // --- ADMIN ---
 export const adminOrganisationsRoute = route('organisations', {}, {});
@@ -49,7 +50,12 @@ export const organisationRoute = route(
 );
 
 // --- SERVICE ---
-export const releasesRoute = route('releases', {}, {});
+export const createReleasesRoute = route('create', {}, {});
+export const releasesRoute = route(
+	'releases',
+	{},
+	{ create: createReleasesRoute }
+);
 export const localesRoute = route('locales', {}, {});
 export const serviceRoute = route(
 	'service/:name',
@@ -110,10 +116,14 @@ const Router: React.FC = () => {
 						element={<Navigate to={releasesRoute({}).$} />}
 					/>
 
-					<Route
-						path={releasesRoute.template}
-						element={<ReleasesPage />}
-					/>
+					<Route path={releasesRoute.template}>
+						<Route index element={<ReleasesPage />} />
+
+						<Route
+							path={createReleasesRoute.template}
+							element={<CreateReleasePage />}
+						/>
+					</Route>
 
 					<Route
 						path={localesRoute.template}

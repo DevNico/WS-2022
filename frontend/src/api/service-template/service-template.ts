@@ -88,55 +88,6 @@ export const useServiceTemplateCreate = <
 	>(mutationFn, mutationOptions);
 };
 /**
- * Deletes a service template by its id
- * @summary Deletes a service template
- */
-export const serviceTemplateDelete = (
-	options?: SecondParameter<typeof customInstance>
-) => {
-	return customInstance<void>(
-		{ url: `/api/v1/service-templates`, method: 'delete' },
-		options
-	);
-};
-
-export type ServiceTemplateDeleteMutationResult = NonNullable<
-	Awaited<ReturnType<typeof serviceTemplateDelete>>
->;
-
-export type ServiceTemplateDeleteMutationError = ErrorType<unknown>;
-
-export const useServiceTemplateDelete = <
-	TError = ErrorType<unknown>,
-	TVariables = void,
-	TContext = unknown
->(options?: {
-	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof serviceTemplateDelete>>,
-		TError,
-		TVariables,
-		TContext
-	>;
-	request?: SecondParameter<typeof customInstance>;
-}) => {
-	const { mutation: mutationOptions, request: requestOptions } =
-		options ?? {};
-
-	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof serviceTemplateDelete>>,
-		TVariables
-	> = () => {
-		return serviceTemplateDelete(requestOptions);
-	};
-
-	return useMutation<
-		Awaited<ReturnType<typeof serviceTemplateDelete>>,
-		TError,
-		TVariables,
-		TContext
-	>(mutationFn, mutationOptions);
-};
-/**
  * Update a service template
  * @summary Update a service template
  */
@@ -190,6 +141,60 @@ export const useServiceTemplateUpdate = <
 		Awaited<ReturnType<typeof serviceTemplateUpdate>>,
 		TError,
 		{ data: UpdateServiceTemplate },
+		TContext
+	>(mutationFn, mutationOptions);
+};
+/**
+ * Deletes a service template by its id
+ * @summary Deletes a service template
+ */
+export const serviceTemplateDelete = (
+	serviceTemplateId: number,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<void>(
+		{
+			url: `/api/v1/service-templates/${serviceTemplateId}`,
+			method: 'delete',
+		},
+		options
+	);
+};
+
+export type ServiceTemplateDeleteMutationResult = NonNullable<
+	Awaited<ReturnType<typeof serviceTemplateDelete>>
+>;
+
+export type ServiceTemplateDeleteMutationError = ErrorType<unknown>;
+
+export const useServiceTemplateDelete = <
+	TError = ErrorType<unknown>,
+	TContext = unknown
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof serviceTemplateDelete>>,
+		TError,
+		{ serviceTemplateId: number },
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}) => {
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof serviceTemplateDelete>>,
+		{ serviceTemplateId: number }
+	> = (props) => {
+		const { serviceTemplateId } = props ?? {};
+
+		return serviceTemplateDelete(serviceTemplateId, requestOptions);
+	};
+
+	return useMutation<
+		Awaited<ReturnType<typeof serviceTemplateDelete>>,
+		TError,
+		{ serviceTemplateId: number },
 		TContext
 	>(mutationFn, mutationOptions);
 };
@@ -251,71 +256,6 @@ export const useServiceTemplateGet = <
 		TError,
 		TData
 	>(queryKey, queryFn, { enabled: !!serviceTemplateId, ...queryOptions });
-
-	return {
-		queryKey,
-		...query,
-	};
-};
-
-/**
- * List all service templates
- * @summary List all service templates
- */
-export const serviceTemplateList = (
-	organisationRouteName: string,
-	options?: SecondParameter<typeof customInstance>,
-	signal?: AbortSignal
-) => {
-	return customInstance<ServiceTemplateRecord[]>(
-		{
-			url: `/api/v1/organisations/${organisationRouteName}/services-templates`,
-			method: 'get',
-			signal,
-		},
-		options
-	);
-};
-
-export const getServiceTemplateListQueryKey = (
-	organisationRouteName: string
-) => [`/api/v1/organisations/${organisationRouteName}/services-templates`];
-
-export type ServiceTemplateListQueryResult = NonNullable<
-	Awaited<ReturnType<typeof serviceTemplateList>>
->;
-export type ServiceTemplateListQueryError = ErrorType<void>;
-
-export const useServiceTemplateList = <
-	TData = Awaited<ReturnType<typeof serviceTemplateList>>,
-	TError = ErrorType<void>
->(
-	organisationRouteName: string,
-	options?: {
-		query?: UseQueryOptions<
-			Awaited<ReturnType<typeof serviceTemplateList>>,
-			TError,
-			TData
-		>;
-		request?: SecondParameter<typeof customInstance>;
-	}
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions, request: requestOptions } = options ?? {};
-
-	const queryKey =
-		queryOptions?.queryKey ??
-		getServiceTemplateListQueryKey(organisationRouteName);
-
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof serviceTemplateList>>
-	> = ({ signal }) =>
-		serviceTemplateList(organisationRouteName, requestOptions, signal);
-
-	const query = useQuery<
-		Awaited<ReturnType<typeof serviceTemplateList>>,
-		TError,
-		TData
-	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
 
 	return {
 		queryKey,

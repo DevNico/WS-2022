@@ -21,6 +21,7 @@ import type {
 	OrganisationsListParams,
 	ServiceRoleRecord,
 	ServiceRecord,
+	ServiceTemplateRecord,
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
@@ -508,6 +509,139 @@ export const useOrganisationListServices = <
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationListServices>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * @summary Get the services this user can access
+ */
+export const organisationServicesMe = (
+	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/services/me`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getOrganisationServicesMeQueryKey = (
+	organisationRouteName: string
+) => [`/api/v1/organisations/${organisationRouteName}/services/me`];
+
+export type OrganisationServicesMeQueryResult = NonNullable<
+	Awaited<ReturnType<typeof organisationServicesMe>>
+>;
+export type OrganisationServicesMeQueryError = ErrorType<void>;
+
+export const useOrganisationServicesMe = <
+	TData = Awaited<ReturnType<typeof organisationServicesMe>>,
+	TError = ErrorType<void>
+>(
+	organisationRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof organisationServicesMe>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getOrganisationServicesMeQueryKey(organisationRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof organisationServicesMe>>
+	> = ({ signal }) =>
+		organisationServicesMe(organisationRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof organisationServicesMe>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * List all service templates
+ * @summary List all service templates
+ */
+export const organisationListServiceTemplates = (
+	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceTemplateRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/services-templates`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getOrganisationListServiceTemplatesQueryKey = (
+	organisationRouteName: string
+) => [`/api/v1/organisations/${organisationRouteName}/services-templates`];
+
+export type OrganisationListServiceTemplatesQueryResult = NonNullable<
+	Awaited<ReturnType<typeof organisationListServiceTemplates>>
+>;
+export type OrganisationListServiceTemplatesQueryError = ErrorType<void>;
+
+export const useOrganisationListServiceTemplates = <
+	TData = Awaited<ReturnType<typeof organisationListServiceTemplates>>,
+	TError = ErrorType<void>
+>(
+	organisationRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof organisationListServiceTemplates>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getOrganisationListServiceTemplatesQueryKey(organisationRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof organisationListServiceTemplates>>
+	> = ({ signal }) =>
+		organisationListServiceTemplates(
+			organisationRouteName,
+			requestOptions,
+			signal
+		);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof organisationListServiceTemplates>>,
 		TError,
 		TData
 	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
