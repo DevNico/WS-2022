@@ -15,7 +15,8 @@ public class GetById : EndpointBase
   private readonly IServiceRoleService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetById(IServiceRoleService service, IServiceManagerAuthorizationService authorizationService)
+  public GetById(IServiceRoleService service,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -33,8 +34,8 @@ public class GetById : EndpointBase
   {
     var role = await _service.GetById(request.ServiceRoleId, cancellationToken);
 
-    if (!role.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User, 
-      role.Value.OrganisationId, ServiceRoleOperations.ServiceRole_Read, cancellationToken))
+    if (!role.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          role.Value.OrganisationId, ServiceRoleOperations.ServiceRole_Read, cancellationToken))
     {
       return Unauthorized();
     }

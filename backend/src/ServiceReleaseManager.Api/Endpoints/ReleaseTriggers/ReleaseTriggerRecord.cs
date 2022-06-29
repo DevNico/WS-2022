@@ -12,6 +12,7 @@ public record ReleaseTriggerRecord(
 {
   public static ReleaseTriggerRecord FromEntity(ReleaseTrigger trigger)
   {
-    return new ReleaseTriggerRecord(trigger.Id, trigger.Name, trigger.Event, trigger.Url, trigger.Service.Id);
+    return new ReleaseTriggerRecord(trigger.Id, trigger.Name, trigger.Event, trigger.Url,
+      trigger.Service.Id);
   }
 }

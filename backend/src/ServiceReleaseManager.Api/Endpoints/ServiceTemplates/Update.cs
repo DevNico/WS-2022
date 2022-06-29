@@ -49,7 +49,8 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
     }
 
     if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-      serviceTemplate.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create, cancellationToken))
+          serviceTemplate.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create,
+          cancellationToken))
     {
       return NotFound();
     }

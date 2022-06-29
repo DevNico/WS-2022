@@ -7,7 +7,7 @@ public class CreateServiceTemplate
 {
   [Required]
   public int OrganisationId { get; set; } = default!;
-  
+
   [Required]
   public string Name { get; set; } = default!;
 

@@ -6,6 +6,4 @@ namespace ServiceReleaseManager.Api.Authorization;
 public class ServiceAuthorizationRequirement : OperationAuthorizationRequirement
 {
   public Func<ServiceRole, bool>? EvaluationFunction { get; init; }
-
 }
-

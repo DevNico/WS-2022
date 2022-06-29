@@ -30,13 +30,14 @@ public class Delete : EndpointBase
   [SwaggerResponse(200, "The service was deleted")]
   [SwaggerResponse(404, "A service with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
-    [FromRoute] DeleteServiceRequest request, 
+    [FromRoute] DeleteServiceRequest request,
     CancellationToken cancellationToken = new())
   {
     var service = await _service.GetById(request.ServiceId, cancellationToken);
 
-    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User, service.Value.OrganisationId,
-      ServiceOperations.Service_Delete, cancellationToken))
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          service.Value.OrganisationId,
+          ServiceOperations.Service_Delete, cancellationToken))
     {
       return NotFound();
     }

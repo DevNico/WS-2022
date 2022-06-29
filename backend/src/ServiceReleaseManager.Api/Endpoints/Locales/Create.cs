@@ -15,7 +15,8 @@ public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionRe
   private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(ILocaleService localeService, IServiceManagerAuthorizationService authorizationService)
+  public Create(ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -37,7 +38,7 @@ public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionRe
     CancellationToken cancellationToken = new())
   {
     if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
-      LocaleOperations.Locale_Create, cancellationToken))
+          LocaleOperations.Locale_Create, cancellationToken))
     {
       return Unauthorized();
     }

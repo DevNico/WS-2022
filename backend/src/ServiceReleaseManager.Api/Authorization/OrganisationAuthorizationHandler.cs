@@ -3,9 +3,11 @@ using ServiceReleaseManager.Core.OrganisationAggregate;
 
 namespace ServiceReleaseManager.Api.Authorization;
 
-public class OrganisationAuthorizationHandler : AuthorizationHandler<OrganisationAuthorizationRequirement, OrganisationRole>
+public class OrganisationAuthorizationHandler : AuthorizationHandler<
+  OrganisationAuthorizationRequirement, OrganisationRole>
 {
-  protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OrganisationAuthorizationRequirement requirement, OrganisationRole resource)
+  protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
+    OrganisationAuthorizationRequirement requirement, OrganisationRole resource)
   {
     if (context.User.IsInRole("superAdmin"))
     {
@@ -17,6 +19,7 @@ public class OrganisationAuthorizationHandler : AuthorizationHandler<Organisatio
     {
       context.Succeed(requirement);
     }
+
     return Task.CompletedTask;
   }
 }

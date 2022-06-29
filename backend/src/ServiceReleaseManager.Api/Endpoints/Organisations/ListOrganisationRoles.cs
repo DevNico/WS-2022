@@ -16,7 +16,8 @@ public class ListOrganisationRoles : EndpointBase.WithRequest<ListOrganisationRo
   private readonly IOrganisationRoleService _organisationRoleService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public ListOrganisationRoles(IOrganisationRoleService organisationRoleService, IServiceManagerAuthorizationService authorizationService)
+  public ListOrganisationRoles(IOrganisationRoleService organisationRoleService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _organisationRoleService = organisationRoleService;
     _authorizationService = authorizationService;
@@ -34,7 +35,9 @@ public class ListOrganisationRoles : EndpointBase.WithRequest<ListOrganisationRo
     [FromRoute] ListOrganisationRolesRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationRouteName, OrganisationRoleOperation.OrganisationRole_List, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          request.OrganisationRouteName, OrganisationRoleOperation.OrganisationRole_List,
+          cancellationToken))
     {
       return Unauthorized();
     }

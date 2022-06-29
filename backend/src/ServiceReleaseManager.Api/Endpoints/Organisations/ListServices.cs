@@ -15,7 +15,8 @@ public class ListServices : EndpointBase.WithRequest<ListOrganisationServicesReq
   private readonly IRepository<Service> _serviceRepository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public ListServices(IRepository<Service> serviceRepository, IServiceManagerAuthorizationService authorizationService)
+  public ListServices(IRepository<Service> serviceRepository,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _serviceRepository = serviceRepository;
     _authorizationService = authorizationService;
@@ -33,7 +34,8 @@ public class ListServices : EndpointBase.WithRequest<ListOrganisationServicesReq
     [FromRoute] ListOrganisationServicesRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationRouteName, ServiceOperations.Service_List, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          request.OrganisationRouteName, ServiceOperations.Service_List, cancellationToken))
     {
       return Unauthorized();
     }

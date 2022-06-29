@@ -56,7 +56,8 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
     }
 
     if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-      request.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create, cancellationToken))
+          request.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create,
+          cancellationToken))
     {
       return Unauthorized();
     }

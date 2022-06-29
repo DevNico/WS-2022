@@ -15,7 +15,8 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.Wi
   private readonly IOrganisationRoleService _organisationRoleService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(IOrganisationRoleService organisationRoleService, IServiceManagerAuthorizationService authorizationService)
+  public Create(IOrganisationRoleService organisationRoleService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _organisationRoleService = organisationRoleService;
     _authorizationService = authorizationService;
@@ -32,7 +33,8 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.Wi
     [FromBody] CreateOrganisationRoleRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationId, OrganisationRoleOperation.OrganisationRole_Create, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationId,
+          OrganisationRoleOperation.OrganisationRole_Create, cancellationToken))
     {
       return Unauthorized();
     }

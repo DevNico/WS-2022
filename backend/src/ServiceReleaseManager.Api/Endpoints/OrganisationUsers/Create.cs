@@ -28,7 +28,7 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     IOrganisationService organisationService,
     IReadRepository<OrganisationRole> organisationRoleRepository,
     IServiceManagerAuthorizationService authorizationService
-    )
+  )
   {
     _organisationUserService = organisationUserService;
     _keycloakClient = keycloakClient;
@@ -82,7 +82,8 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     [FromBody] CreateOrganisationUserRequest request,
     CancellationToken cancellationToken = new())
   {
-    if(! await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationId, OrganisationUserOperations.OrganisationUser_Create, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationId,
+          OrganisationUserOperations.OrganisationUser_Create, cancellationToken))
     {
       return Unauthorized();
     }

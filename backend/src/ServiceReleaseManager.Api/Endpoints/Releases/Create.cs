@@ -44,12 +44,12 @@ public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithAc
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "The Release was created", typeof(ReleaseRecord))]
   [SwaggerResponse(StatusCodes.Status400BadRequest, "Service or locale id not found")]
-  [SwaggerResponse(StatusCodes.Status409Conflict, "There already is an active release for this service")]
+  [SwaggerResponse(StatusCodes.Status409Conflict,
+    "There already is an active release for this service")]
   public override async Task<ActionResult<ReleaseRecord>> HandleAsync(
     CreateReleaseRequest request,
     CancellationToken cancellationToken = new())
   {
-
     var service = await _serviceRepository.GetByIdAsync(request.ServiceId, cancellationToken);
 
     // TODO: Service Authorization
@@ -59,7 +59,7 @@ public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithAc
     }
 
     if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
-      ReleaseOperations.Release_Create, cancellationToken))
+          ReleaseOperations.Release_Create, cancellationToken))
     {
       return Unauthorized();
     }
@@ -73,7 +73,7 @@ public class Create : EndpointBaseAsync.WithRequest<CreateReleaseRequest>.WithAc
       return Conflict("There already is an active release for this service");
     }
 
-      var requestLocaleIds = request.LocalisedMetadataList.Select(x => x.LocaleId).ToList();
+    var requestLocaleIds = request.LocalisedMetadataList.Select(x => x.LocaleId).ToList();
     if (requestLocaleIds.Count > requestLocaleIds.Distinct().Count())
     {
       return BadRequest("Duplicate locale ids");

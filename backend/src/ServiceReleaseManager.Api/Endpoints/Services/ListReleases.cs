@@ -35,7 +35,7 @@ public class List : EndpointBase
     CancellationToken cancellationToken = new())
   {
     if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
-      ReleaseOperations.Release_List, cancellationToken))
+          ReleaseOperations.Release_List, cancellationToken))
     {
       return Unauthorized();
     }

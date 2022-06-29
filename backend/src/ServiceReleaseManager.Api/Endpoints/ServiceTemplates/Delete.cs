@@ -13,7 +13,8 @@ public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutRes
   private readonly IRepository<ServiceTemplate> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Delete(IRepository<ServiceTemplate> repository, IServiceManagerAuthorizationService authorizationService)
+  public Delete(IRepository<ServiceTemplate> repository,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _repository = repository;
     _authorizationService = authorizationService;
@@ -40,7 +41,8 @@ public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutRes
     }
 
     if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-      toDelete.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Delete, cancellationToken))
+          toDelete.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Delete,
+          cancellationToken))
     {
       return NotFound();
     }

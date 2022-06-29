@@ -12,7 +12,8 @@ public class Delete : EndpointBase.WithRequest<DeleteOrganisationUserRequest>.Wi
   private readonly IOrganisationUserService _organisationUserService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Delete(IOrganisationUserService organisationUserService, IServiceManagerAuthorizationService authorizationService)
+  public Delete(IOrganisationUserService organisationUserService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _organisationUserService = organisationUserService;
     _authorizationService = authorizationService;
@@ -29,10 +30,12 @@ public class Delete : EndpointBase.WithRequest<DeleteOrganisationUserRequest>.Wi
     [FromRoute] DeleteOrganisationUserRequest request,
     CancellationToken cancellationToken = new())
   {
-    var user = await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
+    var user =
+      await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
 
-    if (!user.IsSuccess  || !await _authorizationService.EvaluateOrganisationAuthorization(User, user.Value.OrganisationId,
-      OrganisationUserOperations.OrganisationUser_Delete, cancellationToken))
+    if (!user.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          user.Value.OrganisationId,
+          OrganisationUserOperations.OrganisationUser_Delete, cancellationToken))
     {
       return Unauthorized();
     }

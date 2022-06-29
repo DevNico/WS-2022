@@ -15,7 +15,8 @@ public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceRouteNam
   private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public ListLocales(ILocaleService localeService, IServiceManagerAuthorizationService authorizationService)
+  public ListLocales(ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -34,7 +35,7 @@ public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceRouteNam
     CancellationToken cancellationToken = new())
   {
     if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceRouteName,
-      LocaleOperations.Locale_List, cancellationToken))
+          LocaleOperations.Locale_List, cancellationToken))
     {
       return Unauthorized();
     }

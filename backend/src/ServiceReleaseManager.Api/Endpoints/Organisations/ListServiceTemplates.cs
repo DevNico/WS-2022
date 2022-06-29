@@ -10,7 +10,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 
-public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplatesRequest>.WithActionResult<List<ServiceTemplateRecord>>
+public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplatesRequest>.
+  WithActionResult<List<ServiceTemplateRecord>>
 {
   private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
   private readonly IOrganisationService _organisationService;
@@ -39,7 +40,9 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
     [FromRoute] ListServiceTemplatesRequest request,
     CancellationToken cancellationToken = new())
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationRouteName, ServiceTemplateOperations.ServiceTemplate_List, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          request.OrganisationRouteName, ServiceTemplateOperations.ServiceTemplate_List,
+          cancellationToken))
     {
       return Unauthorized();
     }

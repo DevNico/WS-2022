@@ -12,7 +12,8 @@ public class Delete : EndpointBase.WithRequest<DeleteLocaleRequest>.WithoutResul
   private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Delete(ILocaleService localeService, IServiceManagerAuthorizationService authorizationService)
+  public Delete(ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -33,8 +34,9 @@ public class Delete : EndpointBase.WithRequest<DeleteLocaleRequest>.WithoutResul
   {
     var locale = await _localeService.GetById(request.LocaleId, cancellationToken);
 
-    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(User, locale.Value.ServiceId,
-      LocaleOperations.Locale_Delete, cancellationToken))
+    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(User,
+          locale.Value.ServiceId,
+          LocaleOperations.Locale_Delete, cancellationToken))
     {
       return NotFound();
     }

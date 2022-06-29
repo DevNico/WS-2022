@@ -14,7 +14,8 @@ public class GetById : EndpointBase.WithRequest<GetLocaleByIdRequest>.WithAction
   private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetById(ILocaleService localeService, IServiceManagerAuthorizationService authorizationService)
+  public GetById(ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -35,8 +36,9 @@ public class GetById : EndpointBase.WithRequest<GetLocaleByIdRequest>.WithAction
   {
     var locale = await _localeService.GetById(request.LocaleId, cancellationToken);
 
-    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(User, locale.Value.ServiceId,
-      LocaleOperations.Locale_Read, cancellationToken))
+    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(User,
+          locale.Value.ServiceId,
+          LocaleOperations.Locale_Read, cancellationToken))
     {
       return NotFound();
     }

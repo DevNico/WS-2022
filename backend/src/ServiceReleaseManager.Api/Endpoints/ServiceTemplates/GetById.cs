@@ -14,7 +14,8 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionRe
   private readonly IRepository<ServiceTemplate> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Get(IRepository<ServiceTemplate> repository, IServiceManagerAuthorizationService authorizationService)
+  public Get(IRepository<ServiceTemplate> repository,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _repository = repository;
     _authorizationService = authorizationService;
@@ -42,7 +43,8 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionRe
     }
 
     if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-      template.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Read, cancellationToken))
+          template.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Read,
+          cancellationToken))
     {
       return NotFound();
     }

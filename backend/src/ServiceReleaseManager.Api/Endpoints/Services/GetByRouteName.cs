@@ -15,7 +15,8 @@ public class
   private readonly IServiceService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetServiceByRouteName(IServiceService service, IServiceManagerAuthorizationService authorizationService)
+  public GetServiceByRouteName(IServiceService service,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -38,8 +39,9 @@ public class
       await _service.GetByRouteName(
         request.ServiceRouteName, cancellationToken);
 
-    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User, service.Value.OrganisationId,
-      ServiceOperations.Service_Read, cancellationToken))
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          service.Value.OrganisationId,
+          ServiceOperations.Service_Read, cancellationToken))
     {
       return NotFound();
     }

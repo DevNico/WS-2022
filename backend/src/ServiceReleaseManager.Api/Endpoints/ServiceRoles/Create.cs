@@ -16,7 +16,8 @@ public class Create : EndpointBase
   private readonly IServiceRoleService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(IServiceRoleService service, IServiceManagerAuthorizationService authorizationService)
+  public Create(IServiceRoleService service,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -34,7 +35,7 @@ public class Create : EndpointBase
     CancellationToken cancellationToken = new())
   {
     if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-      request.OrganisationId, ServiceRoleOperations.ServiceRole_Create, cancellationToken))
+          request.OrganisationId, ServiceRoleOperations.ServiceRole_Create, cancellationToken))
     {
       return Unauthorized();
     }

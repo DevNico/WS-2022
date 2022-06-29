@@ -35,8 +35,9 @@ public class
   {
     var service = await _service.GetById(request.ServiceId, cancellationToken);
 
-    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User, service.Value.OrganisationId,
-      ServiceOperations.Service_Read, cancellationToken))
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          service.Value.OrganisationId,
+          ServiceOperations.Service_Read, cancellationToken))
     {
       return NotFound();
     }

@@ -16,7 +16,8 @@ public class GetById : EndpointBaseAsync.WithRequest<GetReleaseByIdRequest>.With
   private readonly IRepository<Release> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetById(IRepository<Release> repository, IServiceManagerAuthorizationService authorizationService)
+  public GetById(IRepository<Release> repository,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _repository = repository;
     _authorizationService = authorizationService;
@@ -43,7 +44,7 @@ public class GetById : EndpointBaseAsync.WithRequest<GetReleaseByIdRequest>.With
     }
 
     if (!await _authorizationService.EvaluateServiceAuthorization(User, release.ServiceId,
-      ReleaseOperations.Release_Read, cancellationToken))
+          ReleaseOperations.Release_Read, cancellationToken))
     {
       return NotFound();
     }

@@ -22,7 +22,7 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
   public Update(
     IRepository<Release> releaseRepository,
     IRepository<Locale> localeRepository,
-    IRepository<Service> serviceRepository, 
+    IRepository<Service> serviceRepository,
     IServiceManagerAuthorizationService authorizationService)
   {
     _releaseRepository = releaseRepository;
@@ -48,7 +48,7 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
     CancellationToken cancellationToken = new())
   {
     var release = await _releaseRepository.GetByIdAsync(request.ReleaseId, cancellationToken);
-    
+
     if (release == null)
     {
       return NotFound();
@@ -58,7 +58,7 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
     {
       return Conflict("Release is approved and cannot be updated");
     }
-    
+
     var requestLocaleIds = request.LocalisedMetadataList.Select(x => x.LocaleId).ToList();
     if (requestLocaleIds.Count > requestLocaleIds.Distinct().Count())
     {
@@ -77,13 +77,13 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
     }
 
     if (await _authorizationService.EvaluateServiceAuthorization(User, release.ServiceId,
-      ReleaseOperations.Release_MetadataEdit, cancellationToken))
+          ReleaseOperations.Release_MetadataEdit, cancellationToken))
     {
       release.Metadata = request.MetaData;
     }
 
     if (await _authorizationService.EvaluateServiceAuthorization(User, release.ServiceId,
-      ReleaseOperations.Release_LocalizedMetadataEdit, cancellationToken))
+          ReleaseOperations.Release_LocalizedMetadataEdit, cancellationToken))
     {
       updateLocalizedMetadata(request, release, localeById);
     }
@@ -94,7 +94,8 @@ public class Update : EndpointBaseAsync.WithRequest<UpdateReleaseRequest>.WithAc
     return Ok(response);
   }
 
-  private void updateLocalizedMetadata(UpdateReleaseRequest request, Release release, Dictionary<int, Locale> localeById)
+  private void updateLocalizedMetadata(UpdateReleaseRequest request, Release release,
+    Dictionary<int, Locale> localeById)
   {
     foreach (var localisedMetadata in request.LocalisedMetadataList)
     {

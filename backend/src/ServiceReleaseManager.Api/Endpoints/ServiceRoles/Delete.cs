@@ -14,7 +14,8 @@ public class Delete : EndpointBase
   private readonly IServiceRoleService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Delete(IServiceRoleService service, IServiceManagerAuthorizationService authorizationService)
+  public Delete(IServiceRoleService service,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -34,7 +35,7 @@ public class Delete : EndpointBase
     var role = await _service.GetById(request.ServiceRoleId, cancellationToken);
 
     if (!role.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
-      role.Value.OrganisationId, ServiceRoleOperations.ServiceRole_Delete, cancellationToken))
+          role.Value.OrganisationId, ServiceRoleOperations.ServiceRole_Delete, cancellationToken))
     {
       return Unauthorized();
     }

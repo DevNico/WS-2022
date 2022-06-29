@@ -16,7 +16,8 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteReleaseReqest>.Without
   private readonly IRepository<Release> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Delete(IRepository<Release> repository, IServiceManagerAuthorizationService authorizationService)
+  public Delete(IRepository<Release> repository,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _repository = repository;
     _authorizationService = authorizationService;
@@ -42,7 +43,7 @@ public class Delete : EndpointBaseAsync.WithRequest<DeleteReleaseReqest>.Without
     }
 
     if (!await _authorizationService.EvaluateServiceAuthorization(User, releaseToDelete.ServiceId,
-      ReleaseOperations.Release_Delete, cancellationToken))
+          ReleaseOperations.Release_Delete, cancellationToken))
     {
       return NotFound();
     }

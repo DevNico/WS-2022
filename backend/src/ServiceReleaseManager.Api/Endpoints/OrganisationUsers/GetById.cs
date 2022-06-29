@@ -14,7 +14,8 @@ public class GetById : EndpointBase.WithRequest<GetOrganisationUserByIdRequest>.
   private readonly IOrganisationUserService _organisationUserService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public GetById(IOrganisationUserService organisationUserService, IServiceManagerAuthorizationService authorizationService)
+  public GetById(IOrganisationUserService organisationUserService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _organisationUserService = organisationUserService;
     _authorizationService = authorizationService;
@@ -31,9 +32,12 @@ public class GetById : EndpointBase.WithRequest<GetOrganisationUserByIdRequest>.
     [FromRoute] GetOrganisationUserByIdRequest request,
     CancellationToken cancellationToken = new())
   {
-    var user = await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
+    var user =
+      await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
 
-    if (!user.IsSuccess  || !await _authorizationService.EvaluateOrganisationAuthorization(User, user.Value.OrganisationId, OrganisationUserOperations.OrganisationUser_Read, cancellationToken))
+    if (!user.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          user.Value.OrganisationId, OrganisationUserOperations.OrganisationUser_Read,
+          cancellationToken))
     {
       return Unauthorized();
     }

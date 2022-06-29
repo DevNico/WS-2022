@@ -35,7 +35,8 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
   {
     var template = await _service.GetServiceTemplate(request.ServiceTemplateId, cancellationToken);
 
-    if (template == null || !await _authorizationService.EvaluateOrganisationAuthorization(User, template.OrganisationId, ServiceOperations.Service_Create, cancellationToken))
+    if (template == null || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          template.OrganisationId, ServiceOperations.Service_Create, cancellationToken))
     {
       return Unauthorized();
     }
