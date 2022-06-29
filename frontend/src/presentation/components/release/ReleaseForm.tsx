@@ -21,23 +21,25 @@ import {
 } from '../../../common/serviceTemplateMetadataUtil';
 import ReleaseFormContents from './ReleaseFormContents';
 
-function createLocalesSchema(
-	locales: LocaleRecord[],
-	data: Record<string, any>
-) {
-	const res: Record<string, any> = {};
-	locales.forEach((locale) => {
-		res['locale-' + locale.tag] = data;
-	});
-
-	return res;
-}
+export type LocaleFormKey = `locale-${string}`;
 
 export interface ReleaseFormValues {
 	serviceId: number;
 	version: string;
 	staticMetadata: Record<string, string | boolean>;
-	[key: string]: Record<string, string | boolean> | number | string;
+	[key: LocaleFormKey]: Record<string, string | boolean>;
+}
+
+function createLocalesSchema(
+	locales: LocaleRecord[],
+	data: Record<string, any>
+): Record<LocaleFormKey, any> {
+	const res: Record<LocaleFormKey, any> = {};
+	locales.forEach((locale) => {
+		res[`locale-${locale.tag}`] = data;
+	});
+
+	return res;
 }
 
 interface CreateReleaseFormProps {
@@ -101,7 +103,7 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 			metaData: JSON.stringify(values.staticMetadata),
 			localisedMetadataList: selectedLocales.map((locale) => ({
 				localeId: locale.id!,
-				metadata: JSON.stringify(values['locale-' + locale.tag]),
+				metadata: JSON.stringify(values[`locale-${locale.tag}`]),
 			})),
 		};
 

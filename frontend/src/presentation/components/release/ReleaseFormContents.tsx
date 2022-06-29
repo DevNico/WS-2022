@@ -6,14 +6,14 @@ import GeneratedServiceTemplateForm from './GeneratedServiceTemplateForm';
 import LocalizedMetadataTabPanel from './LocalizedMetadataTabPanel';
 import Center from '../layout/Center';
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
-import { FormikTouched, useFormikContext } from 'formik';
+import { FormikErrors, FormikTouched, useFormikContext } from 'formik';
 import { LocaleRecord, MetadataArrayElement } from '../../../api/models';
 import { useTranslation } from 'react-i18next';
-import { ReleaseFormValues } from './ReleaseForm';
+import { LocaleFormKey, ReleaseFormValues } from './ReleaseForm';
 
-function hasErrors(
-	errors?: Record<string, any>,
-	touched?: FormikTouched<Record<string, string | boolean>>
+function hasErrors<T extends Record<string, string | boolean>>(
+	errors?: FormikErrors<T>,
+	touched?: FormikTouched<T>
 ): boolean {
 	if (!errors || !touched) {
 		return false;
@@ -50,9 +50,12 @@ const ReleaseFormContents: React.FC<ReleaseFormContentsProps> = ({
 		formik.touched.staticMetadata
 	);
 	const localizedMetadataHasErrors = Object.keys(formik.errors)
-		.filter((k) => k.startsWith('locale'))
+		.filter((key: string) => key.startsWith('locale-'))
 		.some((key: string) =>
-			hasErrors(formik.errors[key] as any, formik.touched[key] as any)
+			hasErrors(
+				formik.errors[key as LocaleFormKey],
+				formik.touched[key as LocaleFormKey]
+			)
 		);
 
 	return (
@@ -89,12 +92,7 @@ const ReleaseFormContents: React.FC<ReleaseFormContentsProps> = ({
 					/>
 				</Tabs>
 			</Box>
-			<MainTabPanel
-				formik={formik as any}
-				index={0}
-				value={currentTab}
-				loading={isLoading}
-			/>
+			<MainTabPanel index={0} value={currentTab} loading={isLoading} />
 			<TabPanel value={currentTab} index={1}>
 				<Stack spacing={2} justifyContent='center' alignItems='center'>
 					<GeneratedServiceTemplateForm

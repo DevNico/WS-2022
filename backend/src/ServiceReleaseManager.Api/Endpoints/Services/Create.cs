@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
-using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
-using ServiceReleaseManager.SharedKernel.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
@@ -13,13 +11,12 @@ namespace ServiceReleaseManager.Api.Endpoints.Services;
 public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionResult<ServiceRecord>
 {
   private readonly IServiceService _service;
-  private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(IServiceService service, IRepository<ServiceTemplate> serviceTemplateRepository)
+  public Create(IServiceService service, IServiceManagerAuthorizationService authorizationService)
   {
     _service = service;
-    _serviceTemplateRepository = serviceTemplateRepository;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost]
@@ -37,23 +34,19 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
     CancellationToken cancellationToken = new())
   {
     var serviceTemplate =
-      await _serviceTemplateRepository.GetByIdAsync(request.ServiceTemplateId, cancellationToken);
-    if (serviceTemplate == null)
-    {
-      return BadRequest();
-    }
-    
-    var template = await _service.GetServiceTemplate(request.ServiceTemplateId, cancellationToken);
+      await _service.GetServiceTemplate(request.ServiceTemplateId, cancellationToken);
 
-    if (template == null || !await _authorizationService.EvaluateOrganisationAuthorization(User,
-          template.OrganisationId, ServiceOperations.Service_Create, cancellationToken))
+    if (!serviceTemplate.IsSuccess ||
+        !await _authorizationService.EvaluateOrganisationAuthorization(User,
+          serviceTemplate.Value.OrganisationId, ServiceOperations.Service_Create,
+          cancellationToken))
     {
       return Unauthorized();
     }
 
     var found = await _service.GetByNameAndOrganisationId(
       request.Name,
-      serviceTemplate.OrganisationId,
+      serviceTemplate.Value.OrganisationId,
       cancellationToken
     );
 

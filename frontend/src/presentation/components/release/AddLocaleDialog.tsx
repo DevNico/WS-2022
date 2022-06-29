@@ -26,15 +26,16 @@ const AddLocaleDialog: React.FC<AddLocaleDialogProps> = ({
 	onClose,
 }) => {
 	const { t } = useTranslation();
-	const [locale, setLocale] = React.useState<number | string>('');
+	const [locale, setLocale] = React.useState<string | null>(null);
 
 	const handleChange = (event: SelectChangeEvent) => {
 		setLocale(event.target.value);
 	};
 
 	const handleClose = () => {
-		onClose(typeof locale === 'number' ? locale : undefined);
-		setLocale('');
+		const parsed = Number.parseInt(locale ?? '');
+		onClose(isNaN(parsed) ? undefined : parsed);
+		setLocale(null);
 	};
 
 	return (
@@ -56,7 +57,7 @@ const AddLocaleDialog: React.FC<AddLocaleDialogProps> = ({
 						<Select
 							labelId='locale-select-label'
 							id='locale-select'
-							value={locale as string}
+							value={locale ?? ''}
 							label={t('release.create.locale')}
 							onChange={handleChange}
 						>

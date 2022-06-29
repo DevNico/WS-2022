@@ -25,19 +25,31 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+	config: any,
+	args: infer P
+) => any
+	? P
+	: never;
+
 /**
  * Creates a new Organisation
  * @summary Creates a new Organisation
  */
 export const organisationCreate = (
-	createOrganisationRequest: CreateOrganisationRequest
+	createOrganisationRequest: CreateOrganisationRequest,
+	options?: SecondParameter<typeof customInstance>
 ) => {
-	return customInstance<OrganisationRecord>({
-		url: `/api/v1/organisations`,
-		method: 'post',
-		headers: { 'Content-Type': 'application/json' },
-		data: createOrganisationRequest,
-	});
+	return customInstance<OrganisationRecord>(
+		{
+			url: `/api/v1/organisations`,
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			data: createOrganisationRequest,
+		},
+		options
+	);
 };
 
 export type OrganisationCreateMutationResult = NonNullable<
@@ -56,8 +68,10 @@ export const useOrganisationCreate = <
 		{ data: CreateOrganisationRequest },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof organisationCreate>>,
@@ -65,7 +79,7 @@ export const useOrganisationCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return organisationCreate(data);
+		return organisationCreate(data, requestOptions);
 	};
 
 	return useMutation<
@@ -80,14 +94,13 @@ export const useOrganisationCreate = <
  */
 export const organisationsList = (
 	params?: OrganisationsListParams,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<OrganisationRecord[]>({
-		url: `/api/v1/organisations`,
-		method: 'get',
-		signal,
-		params,
-	});
+	return customInstance<OrganisationRecord[]>(
+		{ url: `/api/v1/organisations`, method: 'get', signal, params },
+		options
+	);
 };
 
 export const getOrganisationsListQueryKey = (
@@ -110,16 +123,17 @@ export const useOrganisationsList = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ?? getOrganisationsListQueryKey(params);
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationsList>>
-	> = ({ signal }) => organisationsList(params, signal);
+	> = ({ signal }) => organisationsList(params, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationsList>>,
@@ -137,11 +151,17 @@ export const useOrganisationsList = <
  * Deletes a Organisation
  * @summary Deletes a Organisation
  */
-export const organisationsDelete = (organisationRouteName: string) => {
-	return customInstance<void>({
-		url: `/api/v1/organisations/${organisationRouteName}`,
-		method: 'delete',
-	});
+export const organisationsDelete = (
+	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<void>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}`,
+			method: 'delete',
+		},
+		options
+	);
 };
 
 export type OrganisationsDeleteMutationResult = NonNullable<
@@ -160,8 +180,10 @@ export const useOrganisationsDelete = <
 		{ organisationRouteName: string },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof organisationsDelete>>,
@@ -169,7 +191,7 @@ export const useOrganisationsDelete = <
 	> = (props) => {
 		const { organisationRouteName } = props ?? {};
 
-		return organisationsDelete(organisationRouteName);
+		return organisationsDelete(organisationRouteName, requestOptions);
 	};
 
 	return useMutation<
@@ -185,13 +207,17 @@ export const useOrganisationsDelete = <
  */
 export const organisationsGetByRouteName = (
 	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<OrganisationRecord>({
-		url: `/api/v1/organisations/${organisationRouteName}`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<OrganisationRecord>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getOrganisationsGetByRouteNameQueryKey = (
@@ -214,9 +240,10 @@ export const useOrganisationsGetByRouteName = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -225,7 +252,11 @@ export const useOrganisationsGetByRouteName = <
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationsGetByRouteName>>
 	> = ({ signal }) =>
-		organisationsGetByRouteName(organisationRouteName, signal);
+		organisationsGetByRouteName(
+			organisationRouteName,
+			requestOptions,
+			signal
+		);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationsGetByRouteName>>,
@@ -245,13 +276,17 @@ export const useOrganisationsGetByRouteName = <
  */
 export const organisationsGetById = (
 	organisationId: number,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<OrganisationRecord>({
-		url: `/api/v1/organisations/${organisationId}`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<OrganisationRecord>(
+		{
+			url: `/api/v1/organisations/${organisationId}`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getOrganisationsGetByIdQueryKey = (organisationId: number) => [
@@ -274,9 +309,10 @@ export const useOrganisationsGetById = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -284,7 +320,8 @@ export const useOrganisationsGetById = <
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationsGetById>>
-	> = ({ signal }) => organisationsGetById(organisationId, signal);
+	> = ({ signal }) =>
+		organisationsGetById(organisationId, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationsGetById>>,
@@ -301,12 +338,14 @@ export const useOrganisationsGetById = <
 /**
  * @summary Get all Organisations the current user is a member of
  */
-export const organisationsMe = (signal?: AbortSignal) => {
-	return customInstance<OrganisationRecord[]>({
-		url: `/api/v1/organisations/me`,
-		method: 'get',
-		signal,
-	});
+export const organisationsMe = (
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<OrganisationRecord[]>(
+		{ url: `/api/v1/organisations/me`, method: 'get', signal },
+		options
+	);
 };
 
 export const getOrganisationsMeQueryKey = () => [`/api/v1/organisations/me`];
@@ -325,14 +364,15 @@ export const useOrganisationsMe = <
 		TError,
 		TData
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey = queryOptions?.queryKey ?? getOrganisationsMeQueryKey();
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationsMe>>
-	> = ({ signal }) => organisationsMe(signal);
+	> = ({ signal }) => organisationsMe(requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationsMe>>,
@@ -351,13 +391,17 @@ export const useOrganisationsMe = <
  */
 export const organisationListServiceRoles = (
 	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceRoleRecord[]>({
-		url: `/api/v1/organisations/${organisationRouteName}/service-roles`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<ServiceRoleRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/service-roles`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getOrganisationListServiceRolesQueryKey = (
@@ -380,9 +424,10 @@ export const useOrganisationListServiceRoles = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -391,7 +436,11 @@ export const useOrganisationListServiceRoles = <
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationListServiceRoles>>
 	> = ({ signal }) =>
-		organisationListServiceRoles(organisationRouteName, signal);
+		organisationListServiceRoles(
+			organisationRouteName,
+			requestOptions,
+			signal
+		);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationListServiceRoles>>,
@@ -411,13 +460,17 @@ export const useOrganisationListServiceRoles = <
  */
 export const organisationListServices = (
 	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceRecord[]>({
-		url: `/api/v1/organisations/${organisationRouteName}/services`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<ServiceRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/services`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getOrganisationListServicesQueryKey = (
@@ -440,9 +493,10 @@ export const useOrganisationListServices = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -450,10 +504,75 @@ export const useOrganisationListServices = <
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationListServices>>
-	> = ({ signal }) => organisationListServices(organisationRouteName, signal);
+	> = ({ signal }) =>
+		organisationListServices(organisationRouteName, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationListServices>>,
+		TError,
+		TData
+	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
+
+	return {
+		queryKey,
+		...query,
+	};
+};
+
+/**
+ * @summary Get the services this user can access
+ */
+export const organisationServicesMe = (
+	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ServiceRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/services/me`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
+};
+
+export const getOrganisationServicesMeQueryKey = (
+	organisationRouteName: string
+) => [`/api/v1/organisations/${organisationRouteName}/services/me`];
+
+export type OrganisationServicesMeQueryResult = NonNullable<
+	Awaited<ReturnType<typeof organisationServicesMe>>
+>;
+export type OrganisationServicesMeQueryError = ErrorType<void>;
+
+export const useOrganisationServicesMe = <
+	TData = Awaited<ReturnType<typeof organisationServicesMe>>,
+	TError = ErrorType<void>
+>(
+	organisationRouteName: string,
+	options?: {
+		query?: UseQueryOptions<
+			Awaited<ReturnType<typeof organisationServicesMe>>,
+			TError,
+			TData
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	}
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getOrganisationServicesMeQueryKey(organisationRouteName);
+
+	const queryFn: QueryFunction<
+		Awaited<ReturnType<typeof organisationServicesMe>>
+	> = ({ signal }) =>
+		organisationServicesMe(organisationRouteName, requestOptions, signal);
+
+	const query = useQuery<
+		Awaited<ReturnType<typeof organisationServicesMe>>,
 		TError,
 		TData
 	>(queryKey, queryFn, { enabled: !!organisationRouteName, ...queryOptions });
@@ -470,13 +589,17 @@ export const useOrganisationListServices = <
  */
 export const organisationListServiceTemplates = (
 	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceTemplateRecord[]>({
-		url: `/api/v1/organisations/${organisationRouteName}/services-templates`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<ServiceTemplateRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/services-templates`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getOrganisationListServiceTemplatesQueryKey = (
@@ -499,9 +622,10 @@ export const useOrganisationListServiceTemplates = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -510,7 +634,11 @@ export const useOrganisationListServiceTemplates = <
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationListServiceTemplates>>
 	> = ({ signal }) =>
-		organisationListServiceTemplates(organisationRouteName, signal);
+		organisationListServiceTemplates(
+			organisationRouteName,
+			requestOptions,
+			signal
+		);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationListServiceTemplates>>,

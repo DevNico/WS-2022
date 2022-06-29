@@ -21,17 +21,31 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+	config: any,
+	args: infer P
+) => any
+	? P
+	: never;
+
 /**
  * Creates a new Release
  * @summary Creates a new Release
  */
-export const releaseCreate = (createReleaseRequest: CreateReleaseRequest) => {
-	return customInstance<ReleaseRecord>({
-		url: `/releases`,
-		method: 'post',
-		headers: { 'Content-Type': 'application/json' },
-		data: createReleaseRequest,
-	});
+export const releaseCreate = (
+	createReleaseRequest: CreateReleaseRequest,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<ReleaseRecord>(
+		{
+			url: `/releases`,
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			data: createReleaseRequest,
+		},
+		options
+	);
 };
 
 export type ReleaseCreateMutationResult = NonNullable<
@@ -50,8 +64,10 @@ export const useReleaseCreate = <
 		{ data: CreateReleaseRequest },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof releaseCreate>>,
@@ -59,7 +75,7 @@ export const useReleaseCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return releaseCreate(data);
+		return releaseCreate(data, requestOptions);
 	};
 
 	return useMutation<
@@ -73,11 +89,14 @@ export const useReleaseCreate = <
  * Deletes a release
  * @summary Deletes a release
  */
-export const releaseDelete = (releaseId: number) => {
-	return customInstance<void>({
-		url: `/releases/${releaseId}`,
-		method: 'delete',
-	});
+export const releaseDelete = (
+	releaseId: number,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<void>(
+		{ url: `/releases/${releaseId}`, method: 'delete' },
+		options
+	);
 };
 
 export type ReleaseDeleteMutationResult = NonNullable<
@@ -96,8 +115,10 @@ export const useReleaseDelete = <
 		{ releaseId: number },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof releaseDelete>>,
@@ -105,7 +126,7 @@ export const useReleaseDelete = <
 	> = (props) => {
 		const { releaseId } = props ?? {};
 
-		return releaseDelete(releaseId);
+		return releaseDelete(releaseId, requestOptions);
 	};
 
 	return useMutation<
@@ -119,12 +140,15 @@ export const useReleaseDelete = <
  * Gets a single Release by ReleaseId
  * @summary Gets a single Release
  */
-export const releasesGetById = (releaseId: number, signal?: AbortSignal) => {
-	return customInstance<ReleaseRecord>({
-		url: `/releases/${releaseId}`,
-		method: 'get',
-		signal,
-	});
+export const releasesGetById = (
+	releaseId: number,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<ReleaseRecord>(
+		{ url: `/releases/${releaseId}`, method: 'get', signal },
+		options
+	);
 };
 
 export const getReleasesGetByIdQueryKey = (releaseId: number) => [
@@ -147,16 +171,17 @@ export const useReleasesGetById = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ?? getReleasesGetByIdQueryKey(releaseId);
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof releasesGetById>>
-	> = ({ signal }) => releasesGetById(releaseId, signal);
+	> = ({ signal }) => releasesGetById(releaseId, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof releasesGetById>>,
@@ -176,14 +201,18 @@ export const useReleasesGetById = <
  */
 export const releaseUpdate = (
 	releaseId: string,
-	updateReleaseRequest: UpdateReleaseRequest
+	updateReleaseRequest: UpdateReleaseRequest,
+	options?: SecondParameter<typeof customInstance>
 ) => {
-	return customInstance<ReleaseRecord>({
-		url: `/releases/${releaseId}`,
-		method: 'post',
-		headers: { 'Content-Type': 'application/json' },
-		data: updateReleaseRequest,
-	});
+	return customInstance<ReleaseRecord>(
+		{
+			url: `/releases/${releaseId}`,
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			data: updateReleaseRequest,
+		},
+		options
+	);
 };
 
 export type ReleaseUpdateMutationResult = NonNullable<
@@ -202,8 +231,10 @@ export const useReleaseUpdate = <
 		{ releaseId: string; data: UpdateReleaseRequest },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof releaseUpdate>>,
@@ -211,7 +242,7 @@ export const useReleaseUpdate = <
 	> = (props) => {
 		const { releaseId, data } = props ?? {};
 
-		return releaseUpdate(releaseId, data);
+		return releaseUpdate(releaseId, data, requestOptions);
 	};
 
 	return useMutation<

@@ -36,7 +36,7 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
     Tags = new[] { "Organisation" }
   )]
   [SwaggerResponse(200, "Success", typeof(List<ServiceTemplateRecord>))]
-  [SwaggerResponse(404, "Not found")]
+  [SwaggerResponse(400, "Invalid ID")]
   public override async Task<ActionResult<List<ServiceTemplateRecord>>> HandleAsync(
     [FromRoute] ListServiceTemplatesRequest request,
     CancellationToken cancellationToken = new())

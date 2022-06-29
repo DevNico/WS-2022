@@ -22,19 +22,31 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+	config: any,
+	args: infer P
+) => any
+	? P
+	: never;
+
 /**
  * Create a new service template
  * @summary Add a new service template
  */
 export const serviceTemplateCreate = (
-	createServiceTemplate: CreateServiceTemplate
+	createServiceTemplate: CreateServiceTemplate,
+	options?: SecondParameter<typeof customInstance>
 ) => {
-	return customInstance<ServiceTemplateRecord>({
-		url: `/api/v1/service-templates`,
-		method: 'post',
-		headers: { 'Content-Type': 'application/json' },
-		data: createServiceTemplate,
-	});
+	return customInstance<ServiceTemplateRecord>(
+		{
+			url: `/api/v1/service-templates`,
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			data: createServiceTemplate,
+		},
+		options
+	);
 };
 
 export type ServiceTemplateCreateMutationResult = NonNullable<
@@ -54,8 +66,10 @@ export const useServiceTemplateCreate = <
 		{ data: CreateServiceTemplate },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceTemplateCreate>>,
@@ -63,7 +77,7 @@ export const useServiceTemplateCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return serviceTemplateCreate(data);
+		return serviceTemplateCreate(data, requestOptions);
 	};
 
 	return useMutation<
@@ -78,14 +92,18 @@ export const useServiceTemplateCreate = <
  * @summary Update a service template
  */
 export const serviceTemplateUpdate = (
-	updateServiceTemplate: UpdateServiceTemplate
+	updateServiceTemplate: UpdateServiceTemplate,
+	options?: SecondParameter<typeof customInstance>
 ) => {
-	return customInstance<ServiceTemplateRecord>({
-		url: `/api/v1/service-templates`,
-		method: 'patch',
-		headers: { 'Content-Type': 'application/json' },
-		data: updateServiceTemplate,
-	});
+	return customInstance<ServiceTemplateRecord>(
+		{
+			url: `/api/v1/service-templates`,
+			method: 'patch',
+			headers: { 'Content-Type': 'application/json' },
+			data: updateServiceTemplate,
+		},
+		options
+	);
 };
 
 export type ServiceTemplateUpdateMutationResult = NonNullable<
@@ -105,8 +123,10 @@ export const useServiceTemplateUpdate = <
 		{ data: UpdateServiceTemplate },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceTemplateUpdate>>,
@@ -114,7 +134,7 @@ export const useServiceTemplateUpdate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return serviceTemplateUpdate(data);
+		return serviceTemplateUpdate(data, requestOptions);
 	};
 
 	return useMutation<
@@ -128,11 +148,17 @@ export const useServiceTemplateUpdate = <
  * Deletes a service template by its id
  * @summary Deletes a service template
  */
-export const serviceTemplateDelete = (serviceTemplateId: number) => {
-	return customInstance<void>({
-		url: `/api/v1/service-templates/${serviceTemplateId}`,
-		method: 'delete',
-	});
+export const serviceTemplateDelete = (
+	serviceTemplateId: number,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<void>(
+		{
+			url: `/api/v1/service-templates/${serviceTemplateId}`,
+			method: 'delete',
+		},
+		options
+	);
 };
 
 export type ServiceTemplateDeleteMutationResult = NonNullable<
@@ -151,8 +177,10 @@ export const useServiceTemplateDelete = <
 		{ serviceTemplateId: number },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof serviceTemplateDelete>>,
@@ -160,7 +188,7 @@ export const useServiceTemplateDelete = <
 	> = (props) => {
 		const { serviceTemplateId } = props ?? {};
 
-		return serviceTemplateDelete(serviceTemplateId);
+		return serviceTemplateDelete(serviceTemplateId, requestOptions);
 	};
 
 	return useMutation<
@@ -176,13 +204,17 @@ export const useServiceTemplateDelete = <
  */
 export const serviceTemplateGet = (
 	serviceTemplateId: number,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<ServiceTemplateRecord>({
-		url: `/api/v1/service-templates/${serviceTemplateId}`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<ServiceTemplateRecord>(
+		{
+			url: `/api/v1/service-templates/${serviceTemplateId}`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getServiceTemplateGetQueryKey = (serviceTemplateId: number) => [
@@ -205,9 +237,10 @@ export const useServiceTemplateGet = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -215,7 +248,8 @@ export const useServiceTemplateGet = <
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof serviceTemplateGet>>
-	> = ({ signal }) => serviceTemplateGet(serviceTemplateId, signal);
+	> = ({ signal }) =>
+		serviceTemplateGet(serviceTemplateId, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof serviceTemplateGet>>,

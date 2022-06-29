@@ -3,23 +3,22 @@ import TextField from '@mui/material/TextField/TextField';
 import { Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TabPanel from '../TabPanel';
-import { useFormik } from 'formik';
-import { RecoilLoadable } from 'recoil';
+import { useFormikContext } from 'formik';
+import { ReleaseFormValues } from './ReleaseForm';
 
 interface MainTabPanelProps {
-	formik: ReturnType<typeof useFormik>;
 	index: number;
 	value: number;
 	loading: boolean;
 }
 
 const MainTabPanel: React.FC<MainTabPanelProps> = ({
-	formik,
 	index,
 	value,
 	loading,
 }) => {
 	const { t } = useTranslation();
+	const formik = useFormikContext<ReleaseFormValues>();
 
 	return (
 		<TabPanel value={value} index={index}>

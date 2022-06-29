@@ -28,7 +28,7 @@ public class
     Tags = new[] { "Service" }
   )]
   [SwaggerResponse(200, "The service was found", typeof(ServiceRecord))]
-  [SwaggerResponse(404, "The service was not found")]
+  [SwaggerResponse(400, "The service was not found")]
   public override async Task<ActionResult<ServiceRecord>> HandleAsync(
     [FromRoute] GetServiceByIdRequest request,
     CancellationToken cancellationToken = new())
@@ -39,7 +39,7 @@ public class
           service.Value.OrganisationId,
           ServiceOperations.Service_Read, cancellationToken))
     {
-      return NotFound();
+      return Unauthorized();
     }
 
     return this.ToActionResult(service.MapValue(ServiceRecord.FromEntity));

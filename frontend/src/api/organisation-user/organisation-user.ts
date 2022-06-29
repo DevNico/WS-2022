@@ -20,19 +20,31 @@ import type {
 } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+	config: any,
+	args: infer P
+) => any
+	? P
+	: never;
+
 /**
  * Creates a new OrganisationUser
  * @summary Creates a new OrganisationUser
  */
 export const organisationUserCreate = (
-	createOrganisationUserRequest: CreateOrganisationUserRequest
+	createOrganisationUserRequest: CreateOrganisationUserRequest,
+	options?: SecondParameter<typeof customInstance>
 ) => {
-	return customInstance<OrganisationUserRecord>({
-		url: `/api/v1/organisation-users`,
-		method: 'post',
-		headers: { 'Content-Type': 'application/json' },
-		data: createOrganisationUserRequest,
-	});
+	return customInstance<OrganisationUserRecord>(
+		{
+			url: `/api/v1/organisation-users`,
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			data: createOrganisationUserRequest,
+		},
+		options
+	);
 };
 
 export type OrganisationUserCreateMutationResult = NonNullable<
@@ -51,8 +63,10 @@ export const useOrganisationUserCreate = <
 		{ data: CreateOrganisationUserRequest },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof organisationUserCreate>>,
@@ -60,7 +74,7 @@ export const useOrganisationUserCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return organisationUserCreate(data);
+		return organisationUserCreate(data, requestOptions);
 	};
 
 	return useMutation<
@@ -74,11 +88,17 @@ export const useOrganisationUserCreate = <
  * Deletes a OrganisationUser
  * @summary Deletes a OrganisationUser
  */
-export const organisationUserDelete = (organisationUserId: number) => {
-	return customInstance<void>({
-		url: `/api/v1/organisation-users/${organisationUserId}`,
-		method: 'delete',
-	});
+export const organisationUserDelete = (
+	organisationUserId: number,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<void>(
+		{
+			url: `/api/v1/organisation-users/${organisationUserId}`,
+			method: 'delete',
+		},
+		options
+	);
 };
 
 export type OrganisationUserDeleteMutationResult = NonNullable<
@@ -97,8 +117,10 @@ export const useOrganisationUserDelete = <
 		{ organisationUserId: number },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof organisationUserDelete>>,
@@ -106,7 +128,7 @@ export const useOrganisationUserDelete = <
 	> = (props) => {
 		const { organisationUserId } = props ?? {};
 
-		return organisationUserDelete(organisationUserId);
+		return organisationUserDelete(organisationUserId, requestOptions);
 	};
 
 	return useMutation<
@@ -122,13 +144,17 @@ export const useOrganisationUserDelete = <
  */
 export const organisationsGetByUserId = (
 	organisationUserId: number,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<OrganisationUserRecord>({
-		url: `/api/v1/organisation-users/${organisationUserId}`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<OrganisationUserRecord>(
+		{
+			url: `/api/v1/organisation-users/${organisationUserId}`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getOrganisationsGetByUserIdQueryKey = (
@@ -151,9 +177,10 @@ export const useOrganisationsGetByUserId = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -161,7 +188,8 @@ export const useOrganisationsGetByUserId = <
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationsGetByUserId>>
-	> = ({ signal }) => organisationsGetByUserId(organisationUserId, signal);
+	> = ({ signal }) =>
+		organisationsGetByUserId(organisationUserId, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationsGetByUserId>>,
@@ -180,13 +208,17 @@ export const useOrganisationsGetByUserId = <
  */
 export const organisationUserList = (
 	organisationRouteName: string,
+	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal
 ) => {
-	return customInstance<OrganisationUserRecord[]>({
-		url: `/api/v1/organisations/${organisationRouteName}/users`,
-		method: 'get',
-		signal,
-	});
+	return customInstance<OrganisationUserRecord[]>(
+		{
+			url: `/api/v1/organisations/${organisationRouteName}/users`,
+			method: 'get',
+			signal,
+		},
+		options
+	);
 };
 
 export const getOrganisationUserListQueryKey = (
@@ -209,9 +241,10 @@ export const useOrganisationUserList = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ??
@@ -219,7 +252,8 @@ export const useOrganisationUserList = <
 
 	const queryFn: QueryFunction<
 		Awaited<ReturnType<typeof organisationUserList>>
-	> = ({ signal }) => organisationUserList(organisationRouteName, signal);
+	> = ({ signal }) =>
+		organisationUserList(organisationRouteName, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof organisationUserList>>,
