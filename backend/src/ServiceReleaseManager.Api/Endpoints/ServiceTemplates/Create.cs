@@ -1,6 +1,8 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Service;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Specifications;
@@ -15,17 +17,20 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
 {
   private readonly IMetadataFormatValidator _metadataValidator;
   private readonly IOrganisationService _organisationService;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IRepository<ServiceTemplate> _repository;
 
   public Create(
     IRepository<ServiceTemplate> repository,
     IMetadataFormatValidator metadataValidator,
-    IOrganisationService organisationService
+    IOrganisationService organisationService,
+    IServiceManagerAuthorizationService authorizationService
   )
   {
     _repository = repository;
     _metadataValidator = metadataValidator;
     _organisationService = organisationService;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost]
@@ -48,6 +53,13 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
     if (!organisation.IsSuccess)
     {
       return BadRequest(new ErrorResponse("Organisation not found"));
+    }
+
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
+          request.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create,
+          cancellationToken))
+    {
+      return Unauthorized();
     }
 
     var nameSpec = new ServiceTemplateByNameSpec(request.Name);

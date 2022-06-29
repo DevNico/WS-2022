@@ -26,7 +26,7 @@ public class Delete : EndpointBase
   [SwaggerResponse(200, "The release trigger was deleted")]
   [SwaggerResponse(404, "A release trigger with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
-    [FromRoute] DeleteReleaseTriggersRequest request, 
+    [FromRoute] DeleteReleaseTriggersRequest request,
     CancellationToken cancellationToken = new())
   {
     var result = await _service.Delete(request.ReleaseTriggerId, cancellationToken);

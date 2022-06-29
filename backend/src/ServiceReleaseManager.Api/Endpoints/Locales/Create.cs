@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
+using ServiceReleaseManager.Api.Authorization;
+using ServiceReleaseManager.Api.Authorization.Operations.Locale;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -11,10 +13,13 @@ public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionRe
   LocaleRecord>
 {
   private readonly ILocaleService _localeService;
+  private readonly IServiceManagerAuthorizationService _authorizationService;
 
-  public Create(ILocaleService localeService)
+  public Create(ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService)
   {
     _localeService = localeService;
+    _authorizationService = authorizationService;
   }
 
   [HttpPost]
@@ -32,6 +37,12 @@ public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionRe
     CreateLocaleRequest request,
     CancellationToken cancellationToken = new())
   {
+    if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
+          LocaleOperations.Locale_Create, cancellationToken))
+    {
+      return Unauthorized();
+    }
+
     var locale = new Locale(
       request.Tag,
       request.IsDefault.GetValueOrDefault(false),

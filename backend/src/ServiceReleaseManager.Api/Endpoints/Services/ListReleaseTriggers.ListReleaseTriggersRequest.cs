@@ -11,4 +11,3 @@ public class ListReleaseTriggersRequest
   [FromRoute]
   public int ServiceId { get; set; } = default!;
 }
-
