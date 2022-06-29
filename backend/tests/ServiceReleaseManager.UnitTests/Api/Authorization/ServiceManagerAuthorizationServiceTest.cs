@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Authorization;
 using Moq;
@@ -117,7 +112,6 @@ public class ServiceManagerAuthorizationServiceTest
 
     Assert.True(result);
 
-
     _serviceServiceMock.Verify(m => m.GetById(serviceId, cancellationToken), Times.Once);
     _serviceServiceMock.VerifyNoOtherCalls();
 
@@ -153,7 +147,6 @@ public class ServiceManagerAuthorizationServiceTest
 
     Assert.True(result);
 
-
     _serviceServiceMock.Verify(m => m.GetByRouteName(serviceRouteName, cancellationToken), Times.Once);
     _serviceServiceMock.VerifyNoOtherCalls();
 
@@ -166,7 +159,6 @@ public class ServiceManagerAuthorizationServiceTest
     _serviceUserServiceMock.VerifyNoOtherCalls();
   }
   #endregion
-
 
   #region Mock setup and verify methods
   private void setupEvaluateOrganisationAuthorization(string userId, OrganisationUser organisationUser)
@@ -188,7 +180,6 @@ public class ServiceManagerAuthorizationServiceTest
       It.Is<IEnumerable<IAuthorizationRequirement>>(e => e.Any(r => r == requirement) && e.Count() == 1)), Times.Once);
     _organisationUserServiceMock.Verify(m => m.GetUsers(orgId, cancellationToken), Times.Once);
   }
-
   #endregion
 
   #region ExapmleData

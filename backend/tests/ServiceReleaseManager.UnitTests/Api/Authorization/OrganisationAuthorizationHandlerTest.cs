@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Moq;
 using ServiceReleaseManager.Api.Authorization;
@@ -46,7 +41,6 @@ public class OrganisationAuthorizationHandlerTest : OrganisationAuthorizationHan
 
     authContextMock_User.Verify(a => a.User, Times.Once());
     authContextMock_User.VerifyNoOtherCalls();
-
   }
 
   [Fact]
