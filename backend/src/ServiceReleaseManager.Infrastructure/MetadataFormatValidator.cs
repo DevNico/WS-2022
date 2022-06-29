@@ -109,6 +109,7 @@ public class MetadataFormatValidator : IMetadataFormatValidator
       element.Type.Trim().ToLower(),
       element.Label.Trim(), lengthAllowed ? element.MinLength : null,
       lengthAllowed ? element.MaxLength : null,
+      element.Placeholder?.Trim(),
       element.Required);
   }
 

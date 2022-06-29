@@ -3043,6 +3043,10 @@
 						"format": "int32",
 						"nullable": true
 					},
+					"placeholder": {
+						"type": "string",
+						"nullable": true
+					},
 					"required": {
 						"type": "boolean"
 					}
