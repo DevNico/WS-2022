@@ -92,8 +92,8 @@ const ReleasesTable: React.FC<LocalesTableProps> = ({
 					<DataGridOverlay
 						text={
 							isError
-								? t('locale.list.error')
-								: t('locale.list.noData')
+								? t('release.list.error')
+								: t('release.list.noData')
 						}
 					/>
 				),

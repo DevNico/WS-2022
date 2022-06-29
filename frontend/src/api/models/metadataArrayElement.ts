@@ -12,5 +12,6 @@ export interface MetadataArrayElement {
 	label?: string | null;
 	minLength?: number | null;
 	maxLength?: number | null;
+	placeholder?: string | null;
 	required?: boolean;
 }
