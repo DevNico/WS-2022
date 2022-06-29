@@ -16,8 +16,7 @@ public class MetadataFormatValidator : IMetadataFormatValidator
     "text",
     "semver",
     "checkbox",
-    "phone",
-    "placeholder"
+    "phone"
   };
 
   private readonly ILogger _logger;
