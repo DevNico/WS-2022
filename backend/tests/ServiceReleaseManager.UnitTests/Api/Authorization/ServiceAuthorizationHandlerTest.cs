@@ -9,7 +9,6 @@ namespace ServiceReleaseManager.UnitTests.Api.Authorization;
 
 public class ServiceAuthorizationHandlerTest : ServiceAuthorizationHandler
 {
-
   [Fact]
   public async Task HandleRequirementAsync_Should()
   {
