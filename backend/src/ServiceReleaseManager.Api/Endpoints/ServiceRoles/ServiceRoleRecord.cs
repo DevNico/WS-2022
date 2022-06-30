@@ -3,6 +3,7 @@
 namespace ServiceReleaseManager.Api.Endpoints.ServiceRoles;
 
 public record ServiceRoleRecord(
+  int Id,
   string Name,
   bool ReleaseCreate,
   bool ReleaseApprove,
@@ -15,6 +16,7 @@ public record ServiceRoleRecord(
   public static ServiceRoleRecord FromEntity(ServiceRole role)
   {
     return new ServiceRoleRecord(
+      role.Id,
       role.Name,
       role.ReleaseCreate,
       role.ReleaseApprove,

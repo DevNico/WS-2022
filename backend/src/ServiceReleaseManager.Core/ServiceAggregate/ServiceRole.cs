@@ -7,9 +7,10 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class ServiceRole : EntityBase, IAggregateRoot
 {
-  public ServiceRole(string name, bool releaseCreate, bool releaseApprove, bool releasePublish,
+  public ServiceRole(int organisationId, string name, bool releaseCreate, bool releaseApprove, bool releasePublish,
     bool releaseMetadataEdit, bool releaseLocalizedMetadataEdit)
   {
+    OrganisationId = organisationId;
     Name = name;
     ReleaseCreate = releaseCreate;
     ReleaseApprove = releaseApprove;
