@@ -9,4 +9,6 @@ module "env" {
   keycloak_users        = var.keycloak_users
   webapp_redirect_urls  = var.webapp_redirect_urls
   backend_redirect_urls = var.backend_redirect_urls
+
+  github_token = var.github_token
 }

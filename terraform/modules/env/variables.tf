@@ -30,3 +30,8 @@ variable "keycloak_users" {
     last_name  = string
   }))
 }
+
+variable "github_token" {
+  description = "The github token to access repositories"
+  type        = string
+}
