@@ -9,15 +9,15 @@ public class UserServiceConfiguration : IEntityTypeConfiguration<ServiceUser>
   public void Configure(EntityTypeBuilder<ServiceUser> builder)
   {
     builder
-      .HasOne(serviceUser => serviceUser.OrganisationUser)
-      .WithMany(organisationUser => organisationUser.ServiceUserList)
-      .HasForeignKey(serviceUser => serviceUser.OrganisationUserId)
-      .IsRequired();
+     .HasOne(serviceUser => serviceUser.OrganisationUser)
+     .WithMany()
+     .HasForeignKey(serviceUser => serviceUser.OrganisationUserId)
+     .IsRequired();
 
     builder
-      .HasOne(serviceUser => serviceUser.ServiceRole)
-      .WithMany()
-      .HasForeignKey(serviceUser => serviceUser.ServiceRoleId)
-      .IsRequired();
+     .HasOne(serviceUser => serviceUser.ServiceRole)
+     .WithMany()
+     .HasForeignKey(serviceUser => serviceUser.ServiceRoleId)
+     .IsRequired();
   }
 }

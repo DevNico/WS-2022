@@ -14,14 +14,8 @@ public class OrganisationUserConfiguration : IEntityTypeConfiguration<Organisati
 
     builder
       .HasOne(organisationUser => organisationUser.Role)
-      .WithMany(organisationRole => organisationRole.Users)
+      .WithMany()
       .HasForeignKey(organisationUser => organisationUser.RoleId)
-      .IsRequired();
-
-    builder
-      .HasMany(user => user.ServiceUserList)
-      .WithOne(serviceUser => serviceUser.OrganisationUser)
-      .HasForeignKey(serviceUser => serviceUser.OrganisationUserId)
       .IsRequired();
   }
 }

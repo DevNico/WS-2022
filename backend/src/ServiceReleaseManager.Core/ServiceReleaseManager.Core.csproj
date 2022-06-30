@@ -24,8 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Aggregates" />
-    <Folder Include="OrganisationAggregate\Handlers" />
-    <Folder Include="OrganisationAggregate\Services" />
   </ItemGroup>
 
 </Project>

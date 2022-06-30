@@ -47,9 +47,9 @@ public static class KebabNamespace
   private class CustomRouteToken : IApplicationModelConvention
   {
     private readonly string _tokenRegex;
-    private readonly Func<ControllerModel, string?> _valueGenerator;
+    private readonly Func<ControllerModel, string> _valueGenerator;
 
-    public CustomRouteToken(string tokenName, Func<ControllerModel, string?> valueGenerator)
+    public CustomRouteToken(string tokenName, Func<ControllerModel, string> valueGenerator)
     {
       _tokenRegex = "(\\[" + tokenName + "])(?<!\\[\\1(?=]))";
       _valueGenerator = valueGenerator;
@@ -68,7 +68,7 @@ public static class KebabNamespace
       }
     }
 
-    private void UpdateSelectors(IEnumerable<SelectorModel> selectors, string? tokenValue)
+    private void UpdateSelectors(IEnumerable<SelectorModel> selectors, string tokenValue)
     {
       foreach (var selectorModel in selectors.Where(
                  s => s.AttributeRouteModel != null))
@@ -85,7 +85,7 @@ public static class KebabNamespace
       }
     }
 
-    private string? InsertTokenValue(string? template, string? tokenValue)
+    private string? InsertTokenValue(string? template, string tokenValue)
     {
       return template == null
         ? template

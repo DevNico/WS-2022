@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using JetBrains.Annotations;
 using ServiceReleaseManager.Core.OrganisationAggregate.Events;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
@@ -8,7 +9,7 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationUser : EntityBase, IAggregateRoot
 {
-  // Used by EF Core
+  [UsedImplicitly]
   protected OrganisationUser()
   {
   }
@@ -19,7 +20,8 @@ public class OrganisationUser : EntityBase, IAggregateRoot
     string firstName,
     string lastName,
     OrganisationRole role,
-    int organisationId)
+    int organisationId
+  )
   {
     UserId = userId;
     Email = email.ToLower();
@@ -35,27 +37,25 @@ public class OrganisationUser : EntityBase, IAggregateRoot
   }
 
   [Required]
-  public String UserId { get; set; }
+  public String UserId { get; set; } = null!;
 
   [Required]
   [EmailAddress]
-  public String Email { get; }
+  public String Email { get; } = null!;
 
   [Required]
   [MaxLength(50)]
-  public String FirstName { get; set; }
+  public String FirstName { get; set; } = null!;
 
   [Required]
   [MaxLength(50)]
-  public String LastName { get; set; }
+  public String LastName { get; set; } = null!;
 
   public int OrganisationId { get; set; }
 
-  public OrganisationRole Role { get; set; }
+  public OrganisationRole Role { get; set; } = null!;
 
   public int RoleId { get; set; }
-
-  public List<ServiceUser> ServiceUserList { get; set; } = new();
 
   [Required]
   public bool IsActive { get; set; }

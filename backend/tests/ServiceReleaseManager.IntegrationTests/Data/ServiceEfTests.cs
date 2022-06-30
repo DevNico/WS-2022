@@ -1,6 +1,6 @@
 ﻿using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate;
+using ServiceReleaseManager.Core.ServiceAggregate;
 using Xunit;
 
 namespace ServiceReleaseManager.IntegrationTests.Data;
@@ -18,7 +18,12 @@ public class ServiceEfTests : BaseEfRepoTestFixture
     var serviceRepository = GetServiceRepository();
     const string testServiceName = "TestService";
     const string testServiceDescription = "TestServiceDescription";
-    var service = new Service(testServiceName, testServiceDescription, new ServiceTemplate("", "", "", organisation.Id), organisation);
+    var service = new Service(
+      testServiceName,
+      testServiceDescription,
+      new ServiceTemplate("", "", "", organisation.Id),
+      organisation
+    );
     await serviceRepository.AddAsync(service);
 
     var newOrganisation = (await organisationRepository.ListAsync()).FirstOrDefault();
@@ -41,7 +46,12 @@ public class ServiceEfTests : BaseEfRepoTestFixture
     var serviceRepository = GetServiceRepository();
     const string testServiceName = "TestService";
     const string testServiceDescription = "TestServiceDescription";
-    var service = new Service(testServiceName, testServiceDescription, new ServiceTemplate("", "", "", organisation.Id), organisation);
+    var service = new Service(
+      testServiceName,
+      testServiceDescription,
+      new ServiceTemplate("", "", "", organisation.Id),
+      organisation
+    );
     await serviceRepository.AddAsync(service);
 
     var releaseRepository = GetReleaseRepository();

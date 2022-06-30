@@ -6,8 +6,15 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationRole : EntityBase, IAggregateRoot
 {
-  public OrganisationRole(int organisationId, string name, bool serviceWrite, bool serviceDelete,
-    bool userRead, bool userWrite, bool userDelete)
+  public OrganisationRole(
+    int organisationId,
+    string name,
+    bool serviceWrite,
+    bool serviceDelete,
+    bool userRead,
+    bool userWrite,
+    bool userDelete
+  )
   {
     OrganisationId = organisationId;
     Name = name;
@@ -48,6 +55,4 @@ public class OrganisationRole : EntityBase, IAggregateRoot
   public bool UserDelete { get; set; }
 
   public int OrganisationId { get; set; }
-
-  public List<OrganisationUser> Users { get; set; } = new();
 }

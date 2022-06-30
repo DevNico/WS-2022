@@ -16,8 +16,10 @@ public class Release : EntityBase, IAggregateRoot
   )
   {
     ApprovedBy = null;
+    ApprovedById = null;
     ApprovedAt = null;
     PublishedBy = null;
+    PublishedById = null;
     PublishedAt = null;
     Version = version;
     Metadata = metadata;
@@ -28,9 +30,13 @@ public class Release : EntityBase, IAggregateRoot
     RegisterDomainEvent(releaseCreatedEvent);
   }
 
+  public int? ApprovedById { get; private set; }
+
   public OrganisationUser? ApprovedBy { get; private set; }
 
   public DateTime? ApprovedAt { get; private set; }
+
+  public int? PublishedById { get; private set; }
 
   public OrganisationUser? PublishedBy { get; private set; }
 
@@ -51,8 +57,9 @@ public class Release : EntityBase, IAggregateRoot
   public void Approve(OrganisationUser user)
   {
     if (ApprovedAt != null) return;
-    
+
     ApprovedBy = user;
+    ApprovedById = user.Id;
     ApprovedAt = DateTime.Now;
 
     var releaseApprovedEvent = new ReleaseApprovedEvent(this, user, ApprovedAt.Value);
@@ -62,8 +69,9 @@ public class Release : EntityBase, IAggregateRoot
   public void Publish(OrganisationUser user)
   {
     if (ApprovedAt == null || PublishedAt != null) return;
-    
+
     PublishedBy = user;
+    PublishedById = user.Id;
     PublishedAt = DateTime.Now;
 
     var releasePublishedEvent = new ReleasePublishedEvent(this, user, PublishedAt.Value);

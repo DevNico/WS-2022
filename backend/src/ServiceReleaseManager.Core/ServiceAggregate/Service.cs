@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using JetBrains.Annotations;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Events;
@@ -10,7 +11,7 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class Service : EntityBase, IAggregateRoot
 {
-  // Used by EF
+  [UsedImplicitly]
   protected Service()
   {
   }
@@ -35,15 +36,15 @@ public class Service : EntityBase, IAggregateRoot
   [Required]
   [MinLength(5)]
   [MaxLength(50)]
-  public string Name { get; set; }
+  public string Name { get; set; } = null!;
 
-  public String RouteName { get; }
+  public String RouteName { get; } = null!;
 
   [Required]
   [MaxLength(200)]
-  public string Description { get; set; }
+  public string Description { get; set; } = null!;
 
-  public ServiceTemplate ServiceTemplate { get; set; }
+  public ServiceTemplate ServiceTemplate { get; set; } = null!;
 
   public int ServiceTemplateId { get; set; }
 
@@ -53,7 +54,7 @@ public class Service : EntityBase, IAggregateRoot
 
   public List<ServiceUser> Users { get; set; } = new();
 
-  public Organisation Organisation { get; set; }
+  public Organisation Organisation { get; set; } = null!;
   public int OrganisationId { get; set; }
 
   [DefaultValue(true)]

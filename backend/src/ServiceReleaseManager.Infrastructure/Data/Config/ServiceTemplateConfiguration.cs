@@ -13,9 +13,9 @@ public class ServiceTemplateConfiguration : IEntityTypeConfiguration<ServiceTemp
       .IsUnique();
 
     builder
-      .HasOne(s => s.Organisation)
-      .WithMany()
-      .HasForeignKey(s => s.OrganisationId)
-      .IsRequired();
+     .HasOne(s => s.Organisation)
+     .WithMany(o => o.ServiceTemplates)
+     .HasForeignKey(s => s.OrganisationId)
+     .IsRequired();
   }
 }

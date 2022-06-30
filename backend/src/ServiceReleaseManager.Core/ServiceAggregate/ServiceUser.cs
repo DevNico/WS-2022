@@ -1,4 +1,5 @@
-﻿using ServiceReleaseManager.Core.OrganisationAggregate;
+﻿using JetBrains.Annotations;
+using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.ServiceAggregate.Events;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -7,6 +8,11 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class ServiceUser : EntityBase, IAggregateRoot
 {
+  [UsedImplicitly]
+  protected ServiceUser()
+  {
+  }
+
   public ServiceUser(int serviceId, ServiceRole serviceRole, OrganisationUser organisationUser)
   {
     ServiceId = serviceId;
@@ -17,14 +23,10 @@ public class ServiceUser : EntityBase, IAggregateRoot
     IsActive = true;
   }
 
-  public ServiceUser()
-  {
-  }
-
-  public ServiceRole ServiceRole { get; set; }
+  public ServiceRole ServiceRole { get; set; } = null!;
   public int ServiceRoleId { get; set; }
 
-  public OrganisationUser OrganisationUser { get; set; }
+  public OrganisationUser OrganisationUser { get; set; } = null!;
   public int OrganisationUserId { get; set; }
 
   public int ServiceId { get; set; }
