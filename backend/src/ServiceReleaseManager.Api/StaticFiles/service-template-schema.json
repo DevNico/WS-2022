@@ -46,7 +46,10 @@
         "type": "boolean"
       },
       "placeholder": {
-        "type": "string",
+        "type": [
+          "string",
+          "null"
+        ],
         "minLength": 2,
         "maxLength": 50
       }
