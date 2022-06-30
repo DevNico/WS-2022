@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using ServiceReleaseManager.Core.OrganisationAggregate;
+using ServiceReleaseManager.Core.ServiceAggregate;
+using ServiceReleaseManager.Core.ReleaseAggregate;
 using ServiceReleaseManager.Infrastructure.Data;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 
@@ -40,4 +42,24 @@ public abstract class BaseEfRepoTestFixture
   {
     return new EfRepository<Organisation>(_dbContext);
   }
+
+  protected EfRepository<OrganisationRole> GetOrganisationRoleRepository()
+  {
+    return new EfRepository<OrganisationRole>(_dbContext);
+  }
+    protected EfRepository<OrganisationUser> GetOrganisationUserRepository()
+  {
+    return new EfRepository<OrganisationUser>(_dbContext);
+  }
+
+  protected EfRepository<Service> GetServiceRepository()
+  {
+    return new EfRepository<Service>(_dbContext);
+  }
+
+  protected EfRepository<Release> GetReleaseRepository()
+  {
+    return new EfRepository<Release>(_dbContext);
+  }
+
 }
