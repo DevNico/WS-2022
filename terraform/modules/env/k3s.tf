@@ -45,6 +45,7 @@ resource "kubernetes_config_map" "appsettings" {
     ]))
   }"
   },
+  "GithubToken": "${var.github_token}",
   "Swagger": {
     "Enabled": "true",
     "ClientId": "webapp-v1"

@@ -33,3 +33,8 @@ variable "keycloak_password" {
   description = "The keycloak admin password"
   type        = string
 }
+
+variable "github_token" {
+  description = "The github token to access repositories"
+  type        = string
+}
