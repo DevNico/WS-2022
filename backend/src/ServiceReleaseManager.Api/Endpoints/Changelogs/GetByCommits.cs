@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
 using Microsoft.AspNetCore.Mvc;
-using ServiceReleaseManager.Core.GitHub;
-using ServiceReleaseManager.Core.GitHub.Converters;
+using ServiceReleaseManager.Infrastructure.GitHub;
+using ServiceReleaseManager.Infrastructure.GitHub.Converters;
 using ServiceReleaseManager.SharedKernel;
 using Swashbuckle.AspNetCore.Annotations;
 

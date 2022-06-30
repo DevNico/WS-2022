@@ -1,4 +1,4 @@
-﻿namespace ServiceReleaseManager.Core.GitHub.Exceptions;
+﻿namespace ServiceReleaseManager.Infrastructure.GitHub.Exceptions;
 
 public class GitHubException : Exception
 {

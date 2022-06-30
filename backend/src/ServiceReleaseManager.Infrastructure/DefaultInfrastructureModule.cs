@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Infrastructure.Data;
+using ServiceReleaseManager.Infrastructure.GitHub;
+using ServiceReleaseManager.Infrastructure.GitHub.Converters;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 using Module = Autofac.Module;
@@ -106,6 +108,14 @@ public class DefaultInfrastructureModule : Module
     builder.Register(c => new KeycloakClient(_configuration, c.Resolve<ILogger<KeycloakClient>>(),
         c.Resolve<KeycloakOAuthClient>(), new HttpClient()))
       .As<IKeycloakClient>()
+      .InstancePerLifetimeScope();
+
+    builder.Register(c => new GitHubProxy(_configuration))
+      .As<IGitHubProxy>()
+      .InstancePerLifetimeScope();
+
+    builder.Register(c => new ChangeLogConverter())
+      .As<IChangeLogConverter>()
       .InstancePerLifetimeScope();
 
     builder.Register(c =>

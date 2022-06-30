@@ -1,6 +1,6 @@
-﻿using ServiceReleaseManager.Core.GitHub.Entities;
+﻿using ServiceReleaseManager.Infrastructure.GitHub.Entities;
 
-namespace ServiceReleaseManager.Core.GitHub.Converters;
+namespace ServiceReleaseManager.Infrastructure.GitHub.Converters;
 
 /// <summary>
 /// Converts a list of GitHub entities to a readable changelog

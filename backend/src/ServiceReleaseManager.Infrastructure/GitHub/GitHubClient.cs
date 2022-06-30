@@ -3,9 +3,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Ardalis.Result;
-using ServiceReleaseManager.Core.GitHub.Exceptions;
+using ServiceReleaseManager.Infrastructure.GitHub.Exceptions;
 
-namespace ServiceReleaseManager.Core.GitHub;
+namespace ServiceReleaseManager.Infrastructure.GitHub;
 
 /// <summary>
 /// A HttpClient for the GitHub API
@@ -24,15 +24,14 @@ public sealed class GitHubClient : IDisposable
   /// <summary>
   /// Initializes the HttpClient configures the required headers
   /// </summary>
-  public GitHubClient()
+  public GitHubClient(string token)
   {
     _client = new HttpClient();
 
     var headers = _client.DefaultRequestHeaders;
     headers.UserAgent.Add(new ProductInfoHeaderValue("ChangeLogSystem", "1.0"));
     headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-    // TODO Insert Token
-    headers.Authorization = new AuthenticationHeaderValue("token", null);
+    headers.Authorization = new AuthenticationHeaderValue("token", token);
   }
 
   /// <summary>
