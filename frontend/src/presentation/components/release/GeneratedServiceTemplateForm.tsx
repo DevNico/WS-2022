@@ -5,11 +5,13 @@ import {
 	FormControl,
 	FormControlLabel,
 	FormHelperText,
+	Grid,
 	TextField,
 	Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useFormikContext } from 'formik';
+import Container from '@mui/system/Container';
 
 interface FormElementProps {
 	item: MetadataArrayElement;
@@ -36,7 +38,7 @@ const FormElement: React.FC<FormElementProps> = ({
 			};
 
 			return (
-				<FormControl>
+				<FormControl fullWidth>
 					<FormControlLabel
 						onChange={handleChange}
 						name={nameWithPrefix}
@@ -75,6 +77,7 @@ const FormElement: React.FC<FormElementProps> = ({
 					}
 					disabled={disabled}
 					placeholder={item.placeholder ?? undefined}
+					fullWidth
 				/>
 			);
 	}
@@ -92,20 +95,24 @@ const GeneratedServiceTemplateForm: React.FC<
 	const { t } = useTranslation();
 
 	return (
-		<>
-			{template.length > 0 ? (
-				template.map((item, index) => (
-					<FormElement
-						key={index}
-						item={item}
-						disabled={disabled}
-						prefix={prefix}
-					/>
-				))
-			) : (
-				<Typography>{t('release.create.emptyTemplate')}</Typography>
-			)}
-		</>
+		<Container maxWidth='md'>
+			<Grid container spacing={2}>
+				{template.length > 0 ? (
+					template.map((item, index) => (
+						<Grid item xs={12}>
+							<FormElement
+								key={index}
+								item={item}
+								disabled={disabled}
+								prefix={prefix}
+							/>
+						</Grid>
+					))
+				) : (
+					<Typography>{t('release.create.emptyTemplate')}</Typography>
+				)}
+			</Grid>
+		</Container>
 	);
 };
 
