@@ -10,12 +10,18 @@ const Main = styled(Box)`
 	display: flex;
 	flex-basis: auto;
 	flex-direction: row;
+	height: 100%;
 `;
 
 const Content = styled(Box)`
 	flex-grow: 1;
 	overflow: auto;
 	width: 100%;
+	height: calc(100% - ${({ theme }) => theme.spacing(8)});
+
+	[${({ theme }) => theme.breakpoints.down('sm')}] {
+		height: calc(100% - ${({ theme }) => theme.spacing(4)});
+	}
 `;
 
 interface BaseLayoutProps {
