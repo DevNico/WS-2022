@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, Stack } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
 import TabPanel from '../TabPanel';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import AddLocaleDialog from './AddLocaleDialog';
 import { LocaleRecord, MetadataArrayElement } from '../../../api/models';
 import LocalizedMetadataCard from './LocalizedMetadataCard';
+import Container from '@mui/system/Container';
 
 interface LocalizedMetadataTabPanelProps {
 	index: number;
@@ -57,24 +58,34 @@ const LocalizedMetadataTabPanel: React.FC<LocalizedMetadataTabPanelProps> = ({
 	return (
 		<>
 			<TabPanel value={value} index={index}>
-				<Stack spacing={2} justifyContent='center' alignItems='center'>
-					{selectedLocales.map((locale) => (
-						<LocalizedMetadataCard
-							key={locale.id}
-							metadata={metadata}
-							locale={locale}
-							onDelete={handleLocaleDelete.bind(null, locale)}
-						/>
-					))}
-					<Button
-						startIcon={<AddIcon />}
-						variant='text'
-						onClick={() => setLocaleDialogOpen(true)}
-						disabled={loading || localesCopy.length === 0}
-					>
-						{t('release.create.addLocalizedMetadata')}
-					</Button>
-				</Stack>
+				<Container>
+					<Grid container spacing={2}>
+						{selectedLocales.map((locale) => (
+							<Grid item xs={12}>
+								<LocalizedMetadataCard
+									key={locale.id}
+									metadata={metadata}
+									locale={locale}
+									onDelete={handleLocaleDelete.bind(
+										null,
+										locale
+									)}
+								/>
+							</Grid>
+						))}
+						<Grid item xs={12} justifyContent='center'>
+							<Button
+								startIcon={<AddIcon />}
+								variant='text'
+								onClick={() => setLocaleDialogOpen(true)}
+								disabled={loading || localesCopy.length === 0}
+								fullWidth
+							>
+								{t('release.create.addLocalizedMetadata')}
+							</Button>
+						</Grid>
+					</Grid>
+				</Container>
 			</TabPanel>
 			<AddLocaleDialog
 				locales={localesCopy}
