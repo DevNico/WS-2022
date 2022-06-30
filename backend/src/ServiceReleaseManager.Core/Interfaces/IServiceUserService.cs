@@ -14,4 +14,6 @@ public interface IServiceUserService
     CancellationToken cancellationToken);
   
   public Task<Result> Deactivate(int id, CancellationToken cancellationToken);
+
+  public Task<Result<ServiceUser>> GetOrganisationUserById(int organisationUserid, int serviceId, CancellationToken cancellationToken);
 }
