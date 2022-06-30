@@ -24,10 +24,10 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.UseSerilog((_, config) => config.ReadFrom.Configuration(builder.Configuration));
 
 var config = builder.Configuration
-  .AddJsonFile("appsettings.json")
-  .AddJsonFile("appsettings.Production.json", true)
-  .AddEnvironmentVariables()
-  .Build();
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile("appsettings.Production.json", true)
+                    .AddEnvironmentVariables()
+                    .Build();
 
 var swaggerConfig = config.GetSection("Swagger");
 var kcConfig = config.GetSection("Keycloak");
@@ -36,21 +36,27 @@ var kcBaseUrl = $"{kcConfig["Url"]}/realms/{kcConfig["Realm"]}";
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-  options.ForwardedHeaders = ForwardedHeaders.All;
-});
+builder.Services.Configure<ForwardedHeadersOptions>(
+  options =>
+  {
+    options.ForwardedHeaders = ForwardedHeaders.All;
+  }
+);
 
-builder.Services.AddRouting(options =>
-{
-  options.LowercaseUrls = true;
-});
-builder.Services.AddApiVersioning(options =>
-{
-  options.DefaultApiVersion = new ApiVersion(1, 0);
-  options.AssumeDefaultVersionWhenUnspecified = true;
-  options.ReportApiVersions = true;
-});
+builder.Services.AddRouting(
+  options =>
+  {
+    options.LowercaseUrls = true;
+  }
+);
+builder.Services.AddApiVersioning(
+  options =>
+  {
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+  }
+);
 
 builder.Services.AddSingleton<IAuthorizationHandler, OrganisationAuthorizationHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, ServiceAuthorizationHandler>();
@@ -61,83 +67,103 @@ builder.Services.AddControllers(options => options.UseKebabCaseNamespaceRouteTok
 builder.Services.AddHealthChecks();
 
 // Cors
-builder.Services.AddCors(options => options.AddDefaultPolicy(b =>
-{
-  // TODO: Add CORS policy
-  b.AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader();
-}));
+builder.Services.AddCors(
+  options => options.AddDefaultPolicy(
+    b =>
+    {
+      // TODO: Add CORS policy
+      b.AllowAnyOrigin()
+       .AllowAnyMethod()
+       .AllowAnyHeader();
+    }
+  )
+);
 
 // Authentication
 if (builder.Environment.EnvironmentName != "Testing")
 {
   builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(o =>
-    {
-      o.Authority = kcBaseUrl;
-      o.Audience = kcConfig["Audience"];
-      o.TokenValidationParameters.NameClaimType = "preferred_username";
-      o.TokenValidationParameters.RoleClaimType = "role";
-    });
-  builder.Services.AddTransient<IClaimsTransformation>(_ =>
-    new KeycloakRolesClaimsTransformation("role"));
+         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+         .AddJwtBearer(
+            o =>
+            {
+              o.Authority = kcBaseUrl;
+              o.Audience = kcConfig["Audience"];
+              o.TokenValidationParameters.NameClaimType = "preferred_username";
+              o.TokenValidationParameters.RoleClaimType = "role";
+            }
+          );
+  builder.Services.AddTransient<IClaimsTransformation>(
+    _ =>
+      new KeycloakRolesClaimsTransformation("role")
+  );
 }
 
 
 // Authorization
-builder.Services.AddAuthorization(options =>
-{
-  options.FallbackPolicy = new AuthorizationPolicyBuilder()
-    .RequireAuthenticatedUser()
-    .Build();
-});
+builder.Services.AddAuthorization(
+  options =>
+  {
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .Build();
+  }
+);
 
 
 // Swagger
-builder.Services.AddSwaggerGen(c =>
-{
-  c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service Release Manager API", Version = "v1" });
-  c.EnableAnnotations();
-  var securityDefinition = new OpenApiSecurityScheme
+builder.Services.AddSwaggerGen(
+  c =>
   {
-    Type = SecuritySchemeType.OAuth2,
-    Flows = new OpenApiOAuthFlows
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service Release Manager API", Version = "v1" });
+    c.EnableAnnotations();
+    var securityDefinition = new OpenApiSecurityScheme
     {
-      AuthorizationCode = new OpenApiOAuthFlow
+      Type = SecuritySchemeType.OAuth2,
+      Flows = new OpenApiOAuthFlows
       {
-        AuthorizationUrl = new Uri($"{kcBaseUrl}/protocol/openid-connect/auth"),
-        TokenUrl = new Uri($"{kcBaseUrl}/protocol/openid-connect/token")
+        AuthorizationCode = new OpenApiOAuthFlow
+        {
+          AuthorizationUrl = new Uri($"{kcBaseUrl}/protocol/openid-connect/auth"),
+          TokenUrl = new Uri($"{kcBaseUrl}/protocol/openid-connect/token")
+        }
       }
-    }
-  };
-  c.AddSecurityDefinition("OAuth2", securityDefinition);
-  c.OperationFilter<AuthorizeOperationFilter>();
-  c.OperationFilter<RemoveVersionParameterFilter>();
-  c.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
-});
+    };
+    c.AddSecurityDefinition("OAuth2", securityDefinition);
+    c.OperationFilter<AuthorizeOperationFilter>();
+    c.OperationFilter<RemoveVersionParameterFilter>();
+    c.DocumentFilter<ReplaceVersionWithExactValueInPathFilter>();
+  }
+);
 
 // add list services for diagnostic purposes - see https://github.com/ardalis/AspNetCoreStartupServices
-builder.Services.Configure<ServiceConfig>(serviceConfig =>
-{
-  serviceConfig.Services = new List<ServiceDescriptor>(builder.Services);
+builder.Services.Configure<ServiceConfig>(
+  serviceConfig =>
+  {
+    serviceConfig.Services = new List<ServiceDescriptor>(builder.Services);
 
-  // optional - default path to view services is /listallservices - recommended to choose your own path
-  serviceConfig.Path = "/listservices";
-});
+    // optional - default path to view services is /listallservices - recommended to choose your own path
+    serviceConfig.Path = "/listservices";
+  }
+);
 
 
-builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-{
-  containerBuilder.RegisterModule(new DefaultCoreModule());
-  containerBuilder.RegisterType<ServiceManagerAuthorizationService>()
-    .As<IServiceManagerAuthorizationService>()
-    .SingleInstance();
-  containerBuilder.RegisterModule(
-    new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development", config,
-      builder.Environment.ContentRootPath));
-});
+builder.Host.ConfigureContainer<ContainerBuilder>(
+  containerBuilder =>
+  {
+    containerBuilder.RegisterModule(new DefaultCoreModule());
+    containerBuilder.RegisterType<ServiceManagerAuthorizationService>()
+                    .As<IServiceManagerAuthorizationService>()
+                    .SingleInstance();
+    containerBuilder.RegisterModule(
+      new DefaultInfrastructureModule(
+        builder.Environment.EnvironmentName == "Development",
+        config,
+        builder.Environment.ContentRootPath
+      )
+    );
+  }
+);
 
 var app = builder.Build();
 
@@ -150,17 +176,20 @@ if (app.Environment.IsDevelopment())
   app.UseDeveloperExceptionPage();
 }
 
-app.UseStaticFiles(new StaticFileOptions
-{
-  FileProvider = new PhysicalFileProvider(
-    Path.Combine(builder.Environment.ContentRootPath, "StaticFiles")),
-  RequestPath = "/static-files",
-  OnPrepareResponse = ctx =>
+app.UseStaticFiles(
+  new StaticFileOptions
   {
-    ctx.Context.Response.Headers["Access-Control-Allow-Origin"] = "*";
-    ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={60 * 60 * 24 * 7}");
+    FileProvider = new PhysicalFileProvider(
+      Path.Combine(builder.Environment.ContentRootPath, "StaticFiles")
+    ),
+    RequestPath = "/static-files",
+    OnPrepareResponse = ctx =>
+    {
+      ctx.Context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+      ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={60 * 60 * 24 * 7}");
+    }
   }
-});
+);
 
 if (swaggerConfig.GetValue<bool>("Enabled"))
 {
@@ -168,14 +197,16 @@ if (swaggerConfig.GetValue<bool>("Enabled"))
   app.UseSwagger();
 
   // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-  app.UseSwaggerUI(c =>
-  {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service Release Manager API V1");
-    c.OAuthClientId(swaggerConfig["ClientId"]);
-    c.OAuthAppName("SRM API");
-    c.OAuthScopeSeparator(" ");
-    c.OAuthUsePkce();
-  });
+  app.UseSwaggerUI(
+    c =>
+    {
+      c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service Release Manager API V1");
+      c.OAuthClientId(swaggerConfig["ClientId"]);
+      c.OAuthAppName("SRM API");
+      c.OAuthScopeSeparator(" ");
+      c.OAuthUsePkce();
+    }
+  );
 }
 
 app.UseRouting();
@@ -185,12 +216,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapHealthChecks("/healthz")
-  .AllowAnonymous();
+   .AllowAnonymous();
 
-app.UseEndpoints(endpoints =>
-{
-  endpoints.MapDefaultControllerRoute();
-});
+app.UseEndpoints(
+  endpoints =>
+  {
+    endpoints.MapDefaultControllerRoute();
+  }
+);
 
 // Seed Database
 using (var scope = app.Services.CreateScope())

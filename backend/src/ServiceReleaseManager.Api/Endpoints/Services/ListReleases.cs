@@ -9,12 +9,11 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class List : EndpointBase
-  .WithRequest<ListReleasesByServiceId>
-  .WithActionResult<List<ReleaseRecord>>
+public class List : EndpointBase.WithRequest<ListReleasesByServiceId>.WithActionResult<
+  List<ReleaseRecord>>
 {
-  private readonly IReleaseService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IReleaseService _service;
 
   public List(IReleaseService service, IServiceManagerAuthorizationService authorizationService)
   {
@@ -24,18 +23,24 @@ public class List : EndpointBase
 
   [HttpGet(ListReleasesByServiceId.Route)]
   [SwaggerOperation(
-    Summary = "Gets a list of all Releases",
-    OperationId = "Services.ListReleases",
-    Tags = new[] { "Service" })
+      Summary = "Gets a list of all Releases",
+      OperationId = "Services.ListReleases",
+      Tags = new[] { "Service" }
+    )
   ]
   [SwaggerResponse(200, "List of Releases", typeof(List<ReleaseRecord>))]
   [SwaggerResponse(404, "Service id not found")]
   public override async Task<ActionResult<List<ReleaseRecord>>> HandleAsync(
     [FromRoute] ListReleasesByServiceId request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
-          ReleaseOperations.Release_List, cancellationToken))
+    if (!await _authorizationService.EvaluateServiceAuthorization(
+          User,
+          request.ServiceId,
+          ReleaseOperations.Release_List,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

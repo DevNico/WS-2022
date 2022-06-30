@@ -19,11 +19,15 @@ public class DefaultInfrastructureModule : Module
 {
   private readonly List<Assembly> _assemblies = new();
   private readonly IConfiguration _configuration;
-  private readonly bool _isDevelopment;
   private readonly string _contentRootPath;
+  private readonly bool _isDevelopment;
 
-  public DefaultInfrastructureModule(bool isDevelopment, IConfiguration configuration,
-    string contentRootPath, Assembly? callingAssembly = null)
+  public DefaultInfrastructureModule(
+    bool isDevelopment,
+    IConfiguration configuration,
+    string contentRootPath,
+    Assembly? callingAssembly = null
+  )
   {
     _isDevelopment = isDevelopment;
     _configuration = configuration;
@@ -63,25 +67,27 @@ public class DefaultInfrastructureModule : Module
   private void RegisterCommonDependencies(ContainerBuilder builder)
   {
     builder.RegisterGeneric(typeof(EfRepository<>))
-      .As(typeof(IRepository<>))
-      .As(typeof(IReadRepository<>))
-      .InstancePerLifetimeScope();
+           .As(typeof(IRepository<>))
+           .As(typeof(IReadRepository<>))
+           .InstancePerLifetimeScope();
 
     builder
-      .RegisterType<Mediator>()
-      .As<IMediator>()
-      .InstancePerLifetimeScope();
+     .RegisterType<Mediator>()
+     .As<IMediator>()
+     .InstancePerLifetimeScope();
 
     builder
-      .RegisterType<DomainEventDispatcher>()
-      .As<IDomainEventDispatcher>()
-      .InstancePerLifetimeScope();
+     .RegisterType<DomainEventDispatcher>()
+     .As<IDomainEventDispatcher>()
+     .InstancePerLifetimeScope();
 
-    builder.Register<ServiceFactory>(context =>
-    {
-      var c = context.Resolve<IComponentContext>();
-      return t => c.Resolve(t);
-    });
+    builder.Register<ServiceFactory>(
+      context =>
+      {
+        var c = context.Resolve<IComponentContext>();
+        return t => c.Resolve(t);
+      }
+    );
 
     var mediatrOpenTypes = new[]
     {
@@ -92,37 +98,52 @@ public class DefaultInfrastructureModule : Module
     foreach (var mediatrOpenType in mediatrOpenTypes)
     {
       builder
-        .RegisterAssemblyTypes(_assemblies.ToArray())
-        .AsClosedTypesOf(mediatrOpenType)
-        .AsImplementedInterfaces();
+       .RegisterAssemblyTypes(_assemblies.ToArray())
+       .AsClosedTypesOf(mediatrOpenType)
+       .AsImplementedInterfaces();
     }
 
     builder.RegisterType<EmailSender>().As<IEmailSender>()
-      .InstancePerLifetimeScope();
+           .InstancePerLifetimeScope();
 
-    builder.Register(c =>
-        new KeycloakOAuthClient(_configuration, c.Resolve<ILogger<KeycloakOAuthClient>>(),
-          new HttpClient()))
-      .InstancePerLifetimeScope();
+    builder.Register(
+              c =>
+                new KeycloakOAuthClient(
+                  _configuration,
+                  c.Resolve<ILogger<KeycloakOAuthClient>>(),
+                  new HttpClient()
+                )
+            )
+           .InstancePerLifetimeScope();
 
-    builder.Register(c => new KeycloakClient(_configuration, c.Resolve<ILogger<KeycloakClient>>(),
-        c.Resolve<KeycloakOAuthClient>(), new HttpClient()))
-      .As<IKeycloakClient>()
-      .InstancePerLifetimeScope();
+    builder.Register(
+              c => new KeycloakClient(
+                _configuration,
+                c.Resolve<ILogger<KeycloakClient>>(),
+                c.Resolve<KeycloakOAuthClient>(),
+                new HttpClient()
+              )
+            )
+           .As<IKeycloakClient>()
+           .InstancePerLifetimeScope();
 
     builder.Register(c => new GitHubProxy(_configuration))
-      .As<IGitHubProxy>()
-      .InstancePerLifetimeScope();
+           .As<IGitHubProxy>()
+           .InstancePerLifetimeScope();
 
     builder.Register(c => new ChangeLogConverter())
-      .As<IChangeLogConverter>()
-      .InstancePerLifetimeScope();
+           .As<IChangeLogConverter>()
+           .InstancePerLifetimeScope();
 
-    builder.Register(c =>
-        new MetadataFormatValidator(c.Resolve<ILogger<MetadataFormatValidator>>(),
-          _contentRootPath))
-      .As<IMetadataFormatValidator>()
-      .InstancePerLifetimeScope();
+    builder.Register(
+              c =>
+                new MetadataFormatValidator(
+                  c.Resolve<ILogger<MetadataFormatValidator>>(),
+                  _contentRootPath
+                )
+            )
+           .As<IMetadataFormatValidator>()
+           .InstancePerLifetimeScope();
   }
 
   private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)

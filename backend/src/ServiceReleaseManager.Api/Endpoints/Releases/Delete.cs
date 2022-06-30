@@ -1,5 +1,4 @@
-﻿using Ardalis.ApiEndpoints;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Api.Authorization.Operations.Service;
@@ -13,11 +12,13 @@ namespace ServiceReleaseManager.Api.Endpoints.Releases;
 
 public class Delete : EndpointBase.WithRequest<DeleteReleaseReqest>.WithoutResult
 {
-  private readonly IRepository<Release> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IRepository<Release> _repository;
 
-  public Delete(IRepository<Release> repository,
-    IServiceManagerAuthorizationService authorizationService)
+  public Delete(
+    IRepository<Release> repository,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _repository = repository;
     _authorizationService = authorizationService;
@@ -26,14 +27,16 @@ public class Delete : EndpointBase.WithRequest<DeleteReleaseReqest>.WithoutResul
   [HttpDelete(DeleteReleaseReqest.Route)]
   [Authorize]
   [SwaggerOperation(
-    Summary = "Deletes a release",
-    Description = "Deletes a release",
-    OperationId = "Release.Delete",
-    Tags = new[] { "Release" })
+      Summary = "Deletes a release",
+      Description = "Deletes a release",
+      OperationId = "Release.Delete",
+      Tags = new[] { "Release" }
+    )
   ]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteReleaseReqest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var spec = new ReleaseByIdSpec(request.ReleaseId);
     var releaseToDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
@@ -42,8 +45,12 @@ public class Delete : EndpointBase.WithRequest<DeleteReleaseReqest>.WithoutResul
       return NotFound();
     }
 
-    if (!await _authorizationService.EvaluateServiceAuthorization(User, releaseToDelete.ServiceId,
-          ReleaseOperations.Release_Delete, cancellationToken))
+    if (!await _authorizationService.EvaluateServiceAuthorization(
+          User,
+          releaseToDelete.ServiceId,
+          ReleaseOperations.Release_Delete,
+          cancellationToken
+        ))
     {
       return NotFound();
     }

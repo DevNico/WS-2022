@@ -15,12 +15,12 @@ public record OrganisationUserRecord(
   public static OrganisationUserRecord FromEntity(OrganisationUser user)
   {
     return new OrganisationUserRecord(
-      Id: user.Id,
-      UserId: user.UserId,
-      Email: user.Email,
-      FirstName: user.FirstName,
-      LastName: user.LastName,
-      OrganisationRole: OrganisationRoleRecord.FromEntity(user.Role)
+      user.Id,
+      user.UserId,
+      user.Email,
+      user.FirstName,
+      user.LastName,
+      OrganisationRoleRecord.FromEntity(user.Role)
     );
   }
 }

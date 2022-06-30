@@ -19,7 +19,11 @@ public class EmailSender : IEmailSender
     var message = new MailMessage { From = new MailAddress(from), Subject = subject, Body = body };
     message.To.Add(new MailAddress(to));
     await emailClient.SendMailAsync(message);
-    _logger.LogWarning("Sending email to {to} from {from} with subject {subject}.", to, from,
-      subject);
+    _logger.LogWarning(
+      "Sending email to {to} from {from} with subject {subject}.",
+      to,
+      from,
+      subject
+    );
   }
 }

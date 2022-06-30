@@ -56,7 +56,10 @@ public class Release : EntityBase, IAggregateRoot
 
   public void Approve(OrganisationUser user)
   {
-    if (ApprovedAt != null) return;
+    if (ApprovedAt != null)
+    {
+      return;
+    }
 
     ApprovedBy = user;
     ApprovedById = user.Id;
@@ -68,7 +71,10 @@ public class Release : EntityBase, IAggregateRoot
 
   public void Publish(OrganisationUser user)
   {
-    if (ApprovedAt == null || PublishedAt != null) return;
+    if (ApprovedAt == null || PublishedAt != null)
+    {
+      return;
+    }
 
     PublishedBy = user;
     PublishedById = user.Id;

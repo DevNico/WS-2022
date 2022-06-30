@@ -6,8 +6,8 @@ namespace ServiceReleaseManager.Infrastructure.GitHub.Entities;
 public class GitHubIssue : GitHubEntity
 {
   [JsonPropertyName("state")]
-  public string State { get; set; }  = default!;
+  public string State { get; set; } = default!;
 
   [JsonPropertyName("closed_at")]
-  public DateTime? ClosedAt { get; set; }  = default!;
+  public DateTime? ClosedAt { get; set; } = default!;
 }

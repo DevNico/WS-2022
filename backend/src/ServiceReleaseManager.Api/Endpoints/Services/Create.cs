@@ -10,8 +10,8 @@ namespace ServiceReleaseManager.Api.Endpoints.Services;
 
 public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionResult<ServiceRecord>
 {
-  private readonly IServiceService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceService _service;
 
   public Create(IServiceService service, IServiceManagerAuthorizationService authorizationService)
   {
@@ -28,18 +28,26 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
   )]
   [SwaggerResponse(200, "The service was created", typeof(ServiceRecord))]
   [SwaggerResponse(400, "A parameter was null or invalid", typeof(ErrorResponse))]
-  [SwaggerResponse(409, "A service with the same name and organisation already exists",
-    typeof(ErrorResponse))]
-  public override async Task<ActionResult<ServiceRecord>> HandleAsync(CreateServiceRequest request,
-    CancellationToken cancellationToken = new())
+  [SwaggerResponse(
+    409,
+    "A service with the same name and organisation already exists",
+    typeof(ErrorResponse)
+  )]
+  public override async Task<ActionResult<ServiceRecord>> HandleAsync(
+    CreateServiceRequest request,
+    CancellationToken cancellationToken = new()
+  )
   {
     var serviceTemplate =
       await _service.GetServiceTemplate(request.ServiceTemplateId, cancellationToken);
 
     if (!serviceTemplate.IsSuccess ||
-        !await _authorizationService.EvaluateOrganisationAuthorization(User,
-          serviceTemplate.Value.OrganisationId, ServiceOperations.Service_Create,
-          cancellationToken))
+        !await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          serviceTemplate.Value.OrganisationId,
+          ServiceOperations.Service_Create,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }
@@ -53,7 +61,8 @@ public class Create : EndpointBase.WithRequest<CreateServiceRequest>.WithActionR
     if (found.IsSuccess)
     {
       return Conflict(
-        new ErrorResponse("A service with the same name and organisation already exists"));
+        new ErrorResponse("A service with the same name and organisation already exists")
+      );
     }
 
     var created = await _service.Create(

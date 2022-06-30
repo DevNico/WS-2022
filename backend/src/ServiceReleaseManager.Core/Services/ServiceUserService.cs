@@ -9,13 +9,17 @@ namespace ServiceReleaseManager.Core.Services;
 
 public class ServiceUserService : IServiceUserService
 {
-  private readonly IRepository<ServiceUser> _repository;
-  private readonly IServiceService _serviceService;
   private readonly IOrganisationUserService _organisationUserService;
+  private readonly IRepository<ServiceUser> _repository;
   private readonly IServiceRoleService _serviceRoleService;
+  private readonly IServiceService _serviceService;
 
-  public ServiceUserService(IRepository<ServiceUser> repository, IServiceService serviceService,
-    IOrganisationUserService organisationUserService, IServiceRoleService serviceRoleService)
+  public ServiceUserService(
+    IRepository<ServiceUser> repository,
+    IServiceService serviceService,
+    IOrganisationUserService organisationUserService,
+    IServiceRoleService serviceRoleService
+  )
   {
     _repository = repository;
     _serviceService = serviceService;
@@ -23,8 +27,10 @@ public class ServiceUserService : IServiceUserService
     _serviceRoleService = serviceRoleService;
   }
 
-  public async Task<Result<List<ServiceUser>>> GetByServiceId(int serviceId,
-    CancellationToken cancellationToken)
+  public async Task<Result<List<ServiceUser>>> GetByServiceId(
+    int serviceId,
+    CancellationToken cancellationToken
+  )
   {
     var service = await _serviceService.GetById(serviceId, cancellationToken);
     if (!service.IsSuccess)
@@ -44,9 +50,12 @@ public class ServiceUserService : IServiceUserService
     return ResultHelper.NullableSuccessNotFound(result);
   }
 
-  public async Task<Result<ServiceUser>> Create(int serviceId, int serviceRoleId,
+  public async Task<Result<ServiceUser>> Create(
+    int serviceId,
+    int serviceRoleId,
     int organisationUserId,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken
+  )
   {
     var user = await _organisationUserService.GetById(organisationUserId, cancellationToken);
     if (!user.IsSuccess)
@@ -69,15 +78,17 @@ public class ServiceUserService : IServiceUserService
     if (user.Value.OrganisationId != role.Value.OrganisationId ||
         role.Value.OrganisationId != serviceResult.Value.OrganisationId)
     {
-      return Result<ServiceUser>.Invalid(new List<ValidationError>()
-      {
-        new()
+      return Result<ServiceUser>.Invalid(
+        new List<ValidationError>
         {
-          ErrorCode = "InvalidOrganisationId",
-          ErrorMessage = "The user, role or service organisation did not match",
-          Severity = ValidationSeverity.Error
+          new()
+          {
+            ErrorCode = "InvalidOrganisationId",
+            ErrorMessage = "The user, role or service organisation did not match",
+            Severity = ValidationSeverity.Error
+          }
         }
-      });
+      );
     }
 
     var serviceUser = new ServiceUser(serviceResult.Value.Id, role, user);
@@ -107,7 +118,11 @@ public class ServiceUserService : IServiceUserService
     return Result.Success();
   }
 
-  public async Task<Result<ServiceUser>> GetOrganisationUserById(int organisationUserid, int serviceId, CancellationToken cancellationToken)
+  public async Task<Result<ServiceUser>> GetOrganisationUserById(
+    int organisationUserid,
+    int serviceId,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new ServiceUserByOrganisationUserIdSpec(organisationUserid, serviceId);
     var result = await _repository.GetBySpecAsync(spec, cancellationToken);

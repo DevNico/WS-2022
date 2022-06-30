@@ -13,11 +13,13 @@ public class ListOrganisationRoles : EndpointBase.WithRequest<ListOrganisationRo
   WithActionResult<
     List<OrganisationRoleRecord>>
 {
-  private readonly IOrganisationRoleService _organisationRoleService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IOrganisationRoleService _organisationRoleService;
 
-  public ListOrganisationRoles(IOrganisationRoleService organisationRoleService,
-    IServiceManagerAuthorizationService authorizationService)
+  public ListOrganisationRoles(
+    IOrganisationRoleService organisationRoleService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _organisationRoleService = organisationRoleService;
     _authorizationService = authorizationService;
@@ -25,28 +27,42 @@ public class ListOrganisationRoles : EndpointBase.WithRequest<ListOrganisationRo
 
   [HttpGet(ListOrganisationRolesRequest.Route)]
   [SwaggerOperation(
-    Summary = "Gets a list of all OrganisationRoles",
-    OperationId = "OrganisationRoles.List",
-    Tags = new[] { "OrganisationRole" })
+      Summary = "Gets a list of all OrganisationRoles",
+      OperationId = "OrganisationRoles.List",
+      Tags = new[] { "OrganisationRole" }
+    )
   ]
-  [SwaggerResponse(StatusCodes.Status200OK, "OrganisationRoles found",
-    typeof(List<OrganisationRoleRecord>))]
+  [SwaggerResponse(
+    StatusCodes.Status200OK,
+    "OrganisationRoles found",
+    typeof(List<OrganisationRoleRecord>)
+  )]
   public override async Task<ActionResult<List<OrganisationRoleRecord>>> HandleAsync(
     [FromRoute] ListOrganisationRolesRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          request.OrganisationRouteName, OrganisationRoleOperation.OrganisationRole_List,
-          cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationRouteName,
+          OrganisationRoleOperation.OrganisationRole_List,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }
 
     var result = await
-      _organisationRoleService.ListByOrganisationRouteName(request.OrganisationRouteName,
-        cancellationToken);
+      _organisationRoleService.ListByOrganisationRouteName(
+        request.OrganisationRouteName,
+        cancellationToken
+      );
 
-    return this.ToActionResult(result.MapValue(role =>
-      role.ConvertAll(OrganisationRoleRecord.FromEntity)));
+    return this.ToActionResult(
+      result.MapValue(
+        role =>
+          role.ConvertAll(OrganisationRoleRecord.FromEntity)
+      )
+    );
   }
 }

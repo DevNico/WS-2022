@@ -7,6 +7,6 @@ public sealed class ReleaseByIdSpec : Specification<Release>, ISingleResultSpeci
   public ReleaseByIdSpec(int releaseId)
   {
     Query
-      .Where(o => o.Id == releaseId);
+     .Where(o => o.Id == releaseId);
   }
 }

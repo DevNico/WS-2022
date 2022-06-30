@@ -1,4 +1,4 @@
-﻿ using Ardalis.Result.AspNetCore;
+﻿using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Api.Authorization.Operations.Service;
@@ -9,15 +9,16 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceRoles;
 
-public class Create : EndpointBase
-  .WithRequest<CreateServiceRole>
-  .WithActionResult<ServiceRoleRecord>
+public class
+  Create : EndpointBase.WithRequest<CreateServiceRole>.WithActionResult<ServiceRoleRecord>
 {
-  private readonly IServiceRoleService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceRoleService _service;
 
-  public Create(IServiceRoleService service,
-    IServiceManagerAuthorizationService authorizationService)
+  public Create(
+    IServiceRoleService service,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -31,11 +32,17 @@ public class Create : EndpointBase
   )]
   [SwaggerResponse(200, "The service role was created", typeof(ServiceRoleRecord))]
   [SwaggerResponse(408, "A role with the same name already exists")]
-  public override async Task<ActionResult<ServiceRoleRecord>> HandleAsync(CreateServiceRole request,
-    CancellationToken cancellationToken = new())
+  public override async Task<ActionResult<ServiceRoleRecord>> HandleAsync(
+    CreateServiceRole request,
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          request.OrganisationId, ServiceRoleOperations.ServiceRole_Create, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationId,
+          ServiceRoleOperations.ServiceRole_Create,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }
@@ -46,8 +53,15 @@ public class Create : EndpointBase
       return Conflict(new ErrorResponse("A role with the same name already exists"));
     }
 
-    var role = new ServiceRole(request.OrganisationId, request.Name, request.ReleaseCreate, request.ReleaseApprove,
-      request.ReleasePublish, request.ReleaseMetadataEdit, request.ReleaseLocalizedMetadataEdit);
+    var role = new ServiceRole(
+      request.OrganisationId,
+      request.Name,
+      request.ReleaseCreate,
+      request.ReleaseApprove,
+      request.ReleasePublish,
+      request.ReleaseMetadataEdit,
+      request.ReleaseLocalizedMetadataEdit
+    );
     var result = await _service.Create(request.OrganisationId, role, cancellationToken);
     return this.ToActionResult(result.MapValue(ServiceRoleRecord.FromEntity));
   }

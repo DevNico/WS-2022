@@ -20,16 +20,18 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRequest>.WithAc
   [HttpPost]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
-    Summary = "Creates a new Organisation",
-    Description = "Creates a new Organisation",
-    OperationId = "Organisation.Create",
-    Tags = new[] { "Organisation" })
+      Summary = "Creates a new Organisation",
+      Description = "Creates a new Organisation",
+      OperationId = "Organisation.Create",
+      Tags = new[] { "Organisation" }
+    )
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "Organisation created", typeof(OrganisationRecord))]
   [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request", typeof(ErrorResponse))]
   public override async Task<ActionResult<OrganisationRecord>> HandleAsync(
     CreateOrganisationRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     if (string.IsNullOrWhiteSpace(request.Name))
     {

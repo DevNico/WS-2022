@@ -19,8 +19,9 @@ public class MetadataFormatValidator : IMetadataFormatValidator
     "phone"
   };
 
-  private readonly ILogger _logger;
   private readonly string _contentRootPath;
+
+  private readonly ILogger _logger;
 
   public MetadataFormatValidator(ILogger logger, string contentRootPath)
   {
@@ -42,8 +43,10 @@ public class MetadataFormatValidator : IMetadataFormatValidator
     return Result.Success(JsonConvert.SerializeObject(normalized));
   }
 
-  private Result ValidateMetadataArrayElement(MetadataArrayElement element,
-    List<MetadataArrayElement> elements)
+  private Result ValidateMetadataArrayElement(
+    MetadataArrayElement element,
+    List<MetadataArrayElement> elements
+  )
   {
     switch (element.Index)
     {
@@ -52,18 +55,23 @@ public class MetadataFormatValidator : IMetadataFormatValidator
         break;
       case < 0:
       case > 0 when !elements.Exists(e => e.Index == element.Index - 1):
-        _logger.LogDebug("Field '{}' has invalid index: {}", element.Name,
-          element.Index.ToString());
-        return Result.Invalid(new List<ValidationError>
-        {
-          new()
+        _logger.LogDebug(
+          "Field '{}' has invalid index: {}",
+          element.Name,
+          element.Index.ToString()
+        );
+        return Result.Invalid(
+          new List<ValidationError>
           {
-            ErrorMessage = $"Field '{element.Name}' has invalid index: {element.Index}",
-            Severity = ValidationSeverity.Error,
-            Identifier = "JsonSchema",
-            ErrorCode = "JsonSchema.ValidationError"
+            new()
+            {
+              ErrorMessage = $"Field '{element.Name}' has invalid index: {element.Index}",
+              Severity = ValidationSeverity.Error,
+              Identifier = "JsonSchema",
+              ErrorCode = "JsonSchema.ValidationError"
+            }
           }
-        });
+        );
     }
 
     if (string.IsNullOrWhiteSpace(element.Name) || string.IsNullOrWhiteSpace(element.Type) ||
@@ -71,16 +79,18 @@ public class MetadataFormatValidator : IMetadataFormatValidator
         element.Name.Length > 50)
     {
       _logger.LogDebug("Field '{}' has invalid name, type, or label", element.Name);
-      return Result.Invalid(new List<ValidationError>
-      {
-        new()
+      return Result.Invalid(
+        new List<ValidationError>
         {
-          ErrorMessage = $"Field '{element.Name}' has invalid name, type, or label",
-          Severity = ValidationSeverity.Error,
-          Identifier = "JsonSchema",
-          ErrorCode = "JsonSchema.ValidationError"
+          new()
+          {
+            ErrorMessage = $"Field '{element.Name}' has invalid name, type, or label",
+            Severity = ValidationSeverity.Error,
+            Identifier = "JsonSchema",
+            ErrorCode = "JsonSchema.ValidationError"
+          }
         }
-      });
+      );
     }
 
     if (_allowedTypes.Contains(element.Type.Trim().ToLower()))
@@ -89,35 +99,46 @@ public class MetadataFormatValidator : IMetadataFormatValidator
     }
 
     _logger.LogDebug("Field '{}' has invalid type: '{}'", element.Name, element.Type);
-    return Result.Invalid(new List<ValidationError>
-    {
-      new()
+    return Result.Invalid(
+      new List<ValidationError>
       {
-        ErrorMessage = $"Field '{element.Name}' has invalid type: '{element.Type}'",
-        Severity = ValidationSeverity.Error,
-        Identifier = "JsonSchema",
-        ErrorCode = "JsonSchema.ValidationError"
+        new()
+        {
+          ErrorMessage = $"Field '{element.Name}' has invalid type: '{element.Type}'",
+          Severity = ValidationSeverity.Error,
+          Identifier = "JsonSchema",
+          ErrorCode = "JsonSchema.ValidationError"
+        }
       }
-    });
+    );
   }
 
   private static MetadataArrayElement NormalizeArrayElement(MetadataArrayElement element)
   {
     var lengthAllowed = element.Type.Trim().ToLower() is "text" or "phone" or "email";
 
-    return new MetadataArrayElement(element.Index, element.Name.Trim(),
+    return new MetadataArrayElement(
+      element.Index,
+      element.Name.Trim(),
       element.Type.Trim().ToLower(),
-      element.Label.Trim(), lengthAllowed ? element.MinLength : null,
+      element.Label.Trim(),
+      lengthAllowed ? element.MinLength : null,
       lengthAllowed ? element.MaxLength : null,
       element.Placeholder?.Trim(),
-      element.Required);
+      element.Required
+    );
   }
 
   private async Task<Result> ValidateMetadata(List<MetadataArrayElement> metadata)
   {
     var schema =
-      await JsonSchema.FromFileAsync(Path.Combine(_contentRootPath,
-        "StaticFiles", "service-template-schema.json"));
+      await JsonSchema.FromFileAsync(
+        Path.Combine(
+          _contentRootPath,
+          "StaticFiles",
+          "service-template-schema.json"
+        )
+      );
     var serializerSettings = new JsonSerializerSettings();
     serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
     var serialized = JsonConvert.SerializeObject(metadata, serializerSettings);
@@ -130,34 +151,45 @@ public class MetadataFormatValidator : IMetadataFormatValidator
         _logger.LogDebug("Validation error: {Error}", validationError.ToString());
       }
 
-      return Result.Invalid(errors.ToList().ConvertAll(e => new ValidationError()
-      {
-        ErrorMessage = e.ToString(),
-        Severity = ValidationSeverity.Error,
-        Identifier = "JsonSchema",
-        ErrorCode = "JsonSchema.ValidationError"
-      }));
+      return Result.Invalid(
+        errors.ToList().ConvertAll(
+          e => new ValidationError
+          {
+            ErrorMessage = e.ToString(),
+            Severity = ValidationSeverity.Error,
+            Identifier = "JsonSchema",
+            ErrorCode = "JsonSchema.ValidationError"
+          }
+        )
+      );
     }
 
     if (metadata.Count == 0)
     {
       _logger.LogDebug("The metadata array is empty");
-      return Result.Invalid(new List<ValidationError>
-      {
-        new()
+      return Result.Invalid(
+        new List<ValidationError>
         {
-          Identifier = "JsonSchema",
-          ErrorCode = "JsonSchema.ValidationError",
-          ErrorMessage = "The metadata array is empty",
-          Severity = ValidationSeverity.Error
+          new()
+          {
+            Identifier = "JsonSchema",
+            ErrorCode = "JsonSchema.ValidationError",
+            ErrorMessage = "The metadata array is empty",
+            Severity = ValidationSeverity.Error
+          }
         }
-      });
+      );
     }
 
     foreach (var validationResult in metadata
-               .Select(metadataArrayElement =>
-                 ValidateMetadataArrayElement(metadataArrayElement, metadata))
-               .Where(validationResult => !validationResult.IsSuccess))
+                                    .Select(
+                                       metadataArrayElement =>
+                                         ValidateMetadataArrayElement(
+                                           metadataArrayElement,
+                                           metadata
+                                         )
+                                     )
+                                    .Where(validationResult => !validationResult.IsSuccess))
     {
       return validationResult;
     }

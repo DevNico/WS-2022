@@ -13,10 +13,10 @@ public record ServiceTemplateRecord(
   public static ServiceTemplateRecord FromEntity(ServiceTemplate serviceTemplate)
   {
     return new ServiceTemplateRecord(
-      Id: serviceTemplate.Id,
-      Name: serviceTemplate.Name,
-      StaticMetadata: MetadataArrayElement.FromJson(serviceTemplate.StaticMetadata),
-      LocalizedMetadata: MetadataArrayElement.FromJson(serviceTemplate.LocalizedMetadata)
+      serviceTemplate.Id,
+      serviceTemplate.Name,
+      MetadataArrayElement.FromJson(serviceTemplate.StaticMetadata),
+      MetadataArrayElement.FromJson(serviceTemplate.LocalizedMetadata)
     );
   }
 }

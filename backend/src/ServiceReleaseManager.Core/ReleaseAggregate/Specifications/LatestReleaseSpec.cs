@@ -7,7 +7,7 @@ public sealed class LatestReleaseSpec : Specification<Release>, ISingleResultSpe
   public LatestReleaseSpec()
   {
     Query
-      .OrderByDescending(release => release.PublishedAt)
-      .Take(1);
+     .OrderByDescending(release => release.PublishedAt)
+     .Take(1);
   }
 }

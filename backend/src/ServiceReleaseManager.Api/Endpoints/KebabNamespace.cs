@@ -9,12 +9,16 @@ public static class KebabNamespace
 {
   public static MvcOptions UseKebabCaseNamespaceRouteToken(this MvcOptions options)
   {
-    options.Conventions.Add(new CustomRouteToken(
-      "namespace", (Func<ControllerModel, string>)(c =>
-      {
-        var str = c.ControllerType.Namespace ?? String.Empty;
-        return str.Split(new[] { '.' }).Last().PascalToKebabCase();
-      })));
+    options.Conventions.Add(
+      new CustomRouteToken(
+        "namespace",
+        c =>
+        {
+          var str = c.ControllerType.Namespace ?? String.Empty;
+          return str.Split(new[] { '.' }).Last().PascalToKebabCase();
+        }
+      )
+    );
     return options;
   }
 
@@ -64,14 +68,18 @@ public static class KebabNamespace
         UpdateSelectors(
           controller.Actions.SelectMany(
             a =>
-              a.Selectors), tokenValue);
+              a.Selectors
+          ),
+          tokenValue
+        );
       }
     }
 
     private void UpdateSelectors(IEnumerable<SelectorModel> selectors, string tokenValue)
     {
       foreach (var selectorModel in selectors.Where(
-                 s => s.AttributeRouteModel != null))
+                 s => s.AttributeRouteModel != null
+               ))
       {
         if (selectorModel.AttributeRouteModel == null)
         {

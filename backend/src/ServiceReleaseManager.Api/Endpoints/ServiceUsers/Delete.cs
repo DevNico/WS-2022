@@ -7,15 +7,15 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceUsers;
 
-public class Delete : EndpointBase
-  .WithRequest<DeleteServiceUser>
-  .WithoutResult
+public class Delete : EndpointBase.WithRequest<DeleteServiceUser>.WithoutResult
 {
-  private readonly IServiceUserService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceUserService _service;
 
-  public Delete(IServiceUserService service,
-    IServiceManagerAuthorizationService authorizationService)
+  public Delete(
+    IServiceUserService service,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -31,13 +31,18 @@ public class Delete : EndpointBase
   [SwaggerResponse(404, "A user with the given id does not exist")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteServiceUser request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var serviceUser = await _service.GetById(request.ServiceUserId, cancellationToken);
 
     if (!serviceUser.IsSuccess ||
-        !await _authorizationService.EvaluateOrganisationAuthorizationServiceId(User,
-          serviceUser.Value.ServiceId, ServiceUserOperations.ServiceUser_Delete, cancellationToken))
+        !await _authorizationService.EvaluateOrganisationAuthorizationServiceId(
+          User,
+          serviceUser.Value.ServiceId,
+          ServiceUserOperations.ServiceUser_Delete,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

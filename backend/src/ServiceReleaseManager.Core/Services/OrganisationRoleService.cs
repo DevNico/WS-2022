@@ -12,8 +12,11 @@ public class OrganisationRoleService : IOrganisationRoleService
   private readonly IRepository<OrganisationRole> _roleRepository;
   private readonly IRepository<OrganisationUser> _userRepository;
 
-  public OrganisationRoleService(IRepository<Organisation> organisationRepository,
-    IRepository<OrganisationRole> roleRepository, IRepository<OrganisationUser> userRepository)
+  public OrganisationRoleService(
+    IRepository<Organisation> organisationRepository,
+    IRepository<OrganisationRole> roleRepository,
+    IRepository<OrganisationUser> userRepository
+  )
   {
     _organisationRepository = organisationRepository;
     _roleRepository = roleRepository;
@@ -22,18 +25,23 @@ public class OrganisationRoleService : IOrganisationRoleService
 
   public async Task<Result<List<OrganisationRole>>> ListByOrganisationRouteName(
     string organisationRouteName,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken
+  )
   {
     var spec = new OrganisationRolesByOrganisationRouteNameSpec(organisationRouteName);
     var roles =
-      await _organisationRepository.GetBySpecAsync<IEnumerable<OrganisationRole>>(spec,
-        cancellationToken);
+      await _organisationRepository.GetBySpecAsync<IEnumerable<OrganisationRole>>(
+        spec,
+        cancellationToken
+      );
 
     return Result.Success((roles ?? new List<OrganisationRole>()).ToList());
   }
 
-  public async Task<Result<OrganisationRole>> Create(OrganisationRole role,
-    CancellationToken cancellationToken)
+  public async Task<Result<OrganisationRole>> Create(
+    OrganisationRole role,
+    CancellationToken cancellationToken
+  )
   {
     var organisationSpec = new OrganisationByIdSpec(role.OrganisationId);
     var organisation =
@@ -45,15 +53,17 @@ public class OrganisationRoleService : IOrganisationRoleService
 
     if (organisation.Roles.Exists(r => r.Name == role.Name))
     {
-      return Result.Invalid(new List<ValidationError>
-      {
-        new()
+      return Result.Invalid(
+        new List<ValidationError>
         {
-          Severity = ValidationSeverity.Error,
-          Identifier = "Name",
-          ErrorMessage = "Role already exists"
+          new()
+          {
+            Severity = ValidationSeverity.Error,
+            Identifier = "Name",
+            ErrorMessage = "Role already exists"
+          }
         }
-      });
+      );
     }
 
     var created = await _roleRepository.AddAsync(role, cancellationToken);

@@ -7,11 +7,11 @@ public sealed class OrganisationByIdSpec : Specification<Organisation>, ISingleR
   public OrganisationByIdSpec(int organisationId)
   {
     Query
-      .Include(o => o.Roles)
-      .Include(o => o.Services)
-      .Include(o => o.Users);
+     .Include(o => o.Roles)
+     .Include(o => o.Services)
+     .Include(o => o.Users);
     Query
-      .Where(o => o.IsActive)
-      .Where(o => o.Id == organisationId);
+     .Where(o => o.IsActive)
+     .Where(o => o.Id == organisationId);
   }
 }

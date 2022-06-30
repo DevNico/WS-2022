@@ -9,13 +9,13 @@ public class OrganisationUserConfiguration : IEntityTypeConfiguration<Organisati
   public void Configure(EntityTypeBuilder<OrganisationUser> builder)
   {
     builder
-      .HasIndex(user => user.Email)
-      .IsUnique();
+     .HasIndex(user => user.Email)
+     .IsUnique();
 
     builder
-      .HasOne(organisationUser => organisationUser.Role)
-      .WithMany()
-      .HasForeignKey(organisationUser => organisationUser.RoleId)
-      .IsRequired();
+     .HasOne(organisationUser => organisationUser.Role)
+     .WithMany()
+     .HasForeignKey(organisationUser => organisationUser.RoleId)
+     .IsRequired();
   }
 }

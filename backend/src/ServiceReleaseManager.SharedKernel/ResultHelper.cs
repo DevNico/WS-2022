@@ -30,8 +30,10 @@ public static class ResultHelper
     return result.Status == ResultStatus.Error;
   }
 
-  public static async Task<Result<TR>> MapValue<T, TR>(this Task<Result<T>> resultTask,
-    Func<T, TR> map)
+  public static async Task<Result<TR>> MapValue<T, TR>(
+    this Task<Result<T>> resultTask,
+    Func<T, TR> map
+  )
   {
     var result = await resultTask;
     return result.MapValue(map);

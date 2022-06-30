@@ -8,7 +8,7 @@ using ServiceReleaseManager.Infrastructure.GitHub.Exceptions;
 namespace ServiceReleaseManager.Infrastructure.GitHub;
 
 /// <summary>
-/// A HttpClient for the GitHub API
+///   A HttpClient for the GitHub API
 /// </summary>
 public sealed class GitHubClient : IDisposable
 {
@@ -22,7 +22,7 @@ public sealed class GitHubClient : IDisposable
   private readonly HttpClient _client;
 
   /// <summary>
-  /// Initializes the HttpClient configures the required headers
+  ///   Initializes the HttpClient configures the required headers
   /// </summary>
   public GitHubClient(string token)
   {
@@ -34,8 +34,13 @@ public sealed class GitHubClient : IDisposable
     headers.Authorization = new AuthenticationHeaderValue("token", token);
   }
 
+  public void Dispose()
+  {
+    _client.Dispose();
+  }
+
   /// <summary>
-  /// Send a GET request to the GitHub API and deserialize the result
+  ///   Send a GET request to the GitHub API and deserialize the result
   /// </summary>
   /// <param name="uri">The endpoint uri</param>
   /// <param name="ct">The cancellation token</param>
@@ -51,7 +56,7 @@ public sealed class GitHubClient : IDisposable
       {
         return Result<T>.NotFound();
       }
-      
+
       var parsed = await result.Content.ReadFromJsonAsync<T>(_options, ct);
 
       return Result<T>.Success(parsed!);
@@ -60,10 +65,5 @@ public sealed class GitHubClient : IDisposable
     {
       throw new GitHubException("GitHub Request failed.", e);
     }
-  }
-
-  public void Dispose()
-  {
-    _client.Dispose();
   }
 }

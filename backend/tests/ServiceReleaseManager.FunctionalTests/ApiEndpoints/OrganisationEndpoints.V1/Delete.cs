@@ -28,7 +28,8 @@ public class Delete : IClassFixture<CustomWebApplicationFactory<WebMarker>>
 
     var result =
       await client.DeleteAsync(
-        _buildRoute(SeedData.TestOrganisation1.RouteName));
+        _buildRoute(SeedData.TestOrganisation1.RouteName)
+      );
 
     Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
   }
@@ -40,7 +41,8 @@ public class Delete : IClassFixture<CustomWebApplicationFactory<WebMarker>>
     client.SetBearerToken(ApiTokenHelper.GetNormalUserToken());
 
     var result = await client.DeleteAsync(
-      _buildRoute(SeedData.TestOrganisation1.RouteName));
+      _buildRoute(SeedData.TestOrganisation1.RouteName)
+    );
 
     Assert.Equal(HttpStatusCode.Forbidden, result.StatusCode);
   }

@@ -19,21 +19,25 @@ public class Delete : EndpointBase.WithRequest<DeleteOrganisationRequest>.Withou
   [HttpDelete(DeleteOrganisationRequest.Route)]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
-    Summary = "Deletes a Organisation",
-    Description = "Deletes a Organisation",
-    OperationId = "Organisations.Delete",
-    Tags = new[] { "Organisation" })
+      Summary = "Deletes a Organisation",
+      Description = "Deletes a Organisation",
+      OperationId = "Organisations.Delete",
+      Tags = new[] { "Organisation" }
+    )
   ]
   [SwaggerResponse(StatusCodes.Status204NoContent, "Organisation deleted")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteOrganisationRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     Guard.Against.NullOrWhiteSpace(request.OrganisationRouteName);
 
     var result =
-      await _organisationService.Delete(request.OrganisationRouteName,
-        cancellationToken);
+      await _organisationService.Delete(
+        request.OrganisationRouteName,
+        cancellationToken
+      );
 
     return result.IsSuccess ? NoContent() : this.ToActionResult(result);
   }

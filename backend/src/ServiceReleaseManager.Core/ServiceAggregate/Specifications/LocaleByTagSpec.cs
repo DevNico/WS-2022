@@ -7,7 +7,7 @@ public sealed class LocaleByTagSpec : Specification<Locale>, ISingleResultSpecif
   public LocaleByTagSpec(int serviceId, string tag)
   {
     Query
-      .Where(locale => locale.ServiceId == serviceId)
-      .Where(locale => locale.Tag == tag);
+     .Where(locale => locale.ServiceId == serviceId)
+     .Where(locale => locale.Tag == tag);
   }
 }

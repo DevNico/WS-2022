@@ -15,7 +15,15 @@ public class OrganisationEfTests : BaseEfRepoTestFixture
 
     var organisationRoleRepository = GetOrganisationRoleRepository();
     const string testOrganisationRoleName = "testOrganisationRoleName";
-    var organisationRole = new OrganisationRole(organisation.Id, testOrganisationRoleName, false, false, false, false, false);
+    var organisationRole = new OrganisationRole(
+      organisation.Id,
+      testOrganisationRoleName,
+      false,
+      false,
+      false,
+      false,
+      false
+    );
     await organisationRoleRepository.AddAsync(organisationRole);
 
     var newOrganisation = (await organisationRepository.ListAsync()).FirstOrDefault();
@@ -36,7 +44,15 @@ public class OrganisationEfTests : BaseEfRepoTestFixture
 
     var organisationRoleRepository = GetOrganisationRoleRepository();
     const string testOrganisationRoleName = "testOrganisationRoleName";
-    var organisationRole = new OrganisationRole(organisation.Id, testOrganisationRoleName, false, false, false, false, false);
+    var organisationRole = new OrganisationRole(
+      organisation.Id,
+      testOrganisationRoleName,
+      false,
+      false,
+      false,
+      false,
+      false
+    );
     await organisationRoleRepository.AddAsync(organisationRole);
 
     var organisationUserRepository = GetOrganisationUserRepository();
@@ -45,8 +61,14 @@ public class OrganisationEfTests : BaseEfRepoTestFixture
     const string testOrganisationUserFirstName = "TestFirstName";
     const string testOrganisationUserLastName = "TestLastName";
 
-    var organisationUser = new OrganisationUser(testOrganisationUserId, testOrganisationUserEmail, testOrganisationUserFirstName, testOrganisationUserLastName,
-      organisationRole, organisation.Id);
+    var organisationUser = new OrganisationUser(
+      testOrganisationUserId,
+      testOrganisationUserEmail,
+      testOrganisationUserFirstName,
+      testOrganisationUserLastName,
+      organisationRole,
+      organisation.Id
+    );
     await organisationUserRepository.AddAsync(organisationUser);
 
     var newOrganisation = (await organisationRepository.ListAsync()).FirstOrDefault();

@@ -8,8 +8,8 @@ public sealed class OrganisationRolesByOrganisationRouteNameSpec :
   public OrganisationRolesByOrganisationRouteNameSpec(string organisationRouteName)
   {
     Query
-      .Where(organisation => organisation.RouteName == organisationRouteName.ToLower())
-      .Include(organisation => organisation.Roles);
+     .Where(organisation => organisation.RouteName == organisationRouteName.ToLower())
+     .Include(organisation => organisation.Roles);
     Query.Select(organisation => organisation.Roles);
   }
 }

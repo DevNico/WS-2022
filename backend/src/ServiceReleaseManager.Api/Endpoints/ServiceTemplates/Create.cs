@@ -15,9 +15,9 @@ namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithActionResult<
   ServiceTemplateRecord>
 {
+  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IMetadataFormatValidator _metadataValidator;
   private readonly IOrganisationService _organisationService;
-  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IRepository<ServiceTemplate> _repository;
 
   public Create(
@@ -45,7 +45,8 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
   [SwaggerResponse(409, "A service template with the same name already exists")]
   public override async Task<ActionResult<ServiceTemplateRecord>> HandleAsync(
     CreateServiceTemplate request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var organisation =
       await _organisationService.GetById(request.OrganisationId, cancellationToken);
@@ -55,9 +56,12 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
       return BadRequest(new ErrorResponse("Organisation not found"));
     }
 
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          request.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create,
-          cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationId,
+          ServiceTemplateOperations.ServiceTemplate_Create,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

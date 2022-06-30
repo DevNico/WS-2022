@@ -5,9 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ReleaseTriggers;
 
-public class Delete : EndpointBase
-  .WithRequest<DeleteReleaseTriggersRequest>
-  .WithoutResult
+public class Delete : EndpointBase.WithRequest<DeleteReleaseTriggersRequest>.WithoutResult
 {
   private readonly IReleaseTriggerService _service;
 
@@ -27,7 +25,8 @@ public class Delete : EndpointBase
   [SwaggerResponse(404, "A release trigger with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteReleaseTriggersRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var result = await _service.Delete(request.ReleaseTriggerId, cancellationToken);
     return this.ToActionResult(result);

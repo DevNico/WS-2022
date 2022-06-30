@@ -18,15 +18,17 @@ public class GetById : EndpointBase.WithRequest<GetOrganisationByIdRequest>.With
 
   [HttpGet(GetOrganisationByIdRequest.Route)]
   [SwaggerOperation(
-    Summary = "Gets a single Organisation",
-    Description = "Gets a single Organisation by its route name",
-    OperationId = "Organisations.GetById",
-    Tags = new[] { "Organisation" })
+      Summary = "Gets a single Organisation",
+      Description = "Gets a single Organisation by its route name",
+      OperationId = "Organisations.GetById",
+      Tags = new[] { "Organisation" }
+    )
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "Organisation found", typeof(OrganisationRecord))]
   public override async Task<ActionResult<OrganisationRecord>> HandleAsync(
     [FromRoute] GetOrganisationByIdRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var result =
       await _organisationService.GetById(request.OrganisationId, cancellationToken);

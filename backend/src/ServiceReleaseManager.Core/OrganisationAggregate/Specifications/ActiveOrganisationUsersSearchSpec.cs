@@ -7,6 +7,6 @@ public sealed class ActiveOrganisationUsersSearchSpec : Specification<Organisati
   public ActiveOrganisationUsersSearchSpec()
   {
     Query
-      .Where(o => o.IsActive);
+     .Where(o => o.IsActive);
   }
 }

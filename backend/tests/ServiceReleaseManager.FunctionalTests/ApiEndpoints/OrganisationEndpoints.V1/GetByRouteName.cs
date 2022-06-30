@@ -27,9 +27,11 @@ public class GetByRouteName : IClassFixture<CustomWebApplicationFactory<WebMarke
     var client = _factory.CreateClient();
     client.SetBearerToken(ApiTokenHelper.GetAdminUserToken());
 
-    var route = _buildRoute(SeedData
-      .TestOrganisation1
-      .RouteName);
+    var route = _buildRoute(
+      SeedData
+       .TestOrganisation1
+       .RouteName
+    );
     var result = await client.GetAndDeserialize<OrganisationRecord>(route);
 
     Assert.Equal(1, result.Id);
@@ -52,8 +54,10 @@ public class GetByRouteName : IClassFixture<CustomWebApplicationFactory<WebMarke
     var client = _factory.CreateClient();
     client.SetBearerToken(ApiTokenHelper.GetNormalUserToken());
 
-    var route = _buildRoute(SeedData
-      .TestOrganisation1.RouteName);
+    var route = _buildRoute(
+      SeedData
+       .TestOrganisation1.RouteName
+    );
 
     await client.GetAndEnsureNotFound(route);
   }

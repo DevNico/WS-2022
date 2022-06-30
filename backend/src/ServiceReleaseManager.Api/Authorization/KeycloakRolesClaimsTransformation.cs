@@ -30,18 +30,18 @@ public class KeycloakRolesClaimsTransformation : IClaimsTransformation
 
     using var realmAccess = JsonDocument.Parse(realmAccessValue);
     var clientRoles = realmAccess
-      .RootElement
-      .GetProperty("roles");
+                     .RootElement
+                     .GetProperty("roles");
 
     // Log clientRoles
     var roles = clientRoles.EnumerateArray().Select(x => x.GetString()).ToList();
     Log.Information("Roles: {@Roles}", roles);
 
     foreach (var value in clientRoles
-               .EnumerateArray()
-               .Select(role => role.GetString())
-               .Where(value => !string.IsNullOrWhiteSpace(value))
-               .OfType<String>())
+                         .EnumerateArray()
+                         .Select(role => role.GetString())
+                         .Where(value => !string.IsNullOrWhiteSpace(value))
+                         .OfType<String>())
     {
       identity.AddClaim(new Claim(_roleClaimType, value));
     }

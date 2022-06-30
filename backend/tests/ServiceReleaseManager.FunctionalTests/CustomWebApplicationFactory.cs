@@ -25,8 +25,8 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
   protected override IHost CreateHost(IHostBuilder builder)
   {
     var host = builder
-      .UseEnvironment("Testing")
-      .Build();
+              .UseEnvironment("Testing")
+              .Build();
 
     host.Start();
 
@@ -40,7 +40,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
     var db = scopedServices.GetRequiredService<AppDbContext>();
 
     var logger = scopedServices
-      .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
+     .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
 
     // Ensure the database is created.
     db.Database.EnsureCreated();
@@ -55,9 +55,11 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
     }
     catch (Exception ex)
     {
-      logger.LogError(ex,
+      logger.LogError(
+        ex,
         "An error occurred seeding the database with test messages. Error: {ExceptionMessage}",
-        ex.Message);
+        ex.Message
+      );
     }
 
     return host;
@@ -66,43 +68,50 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
   protected override void ConfigureWebHost(IWebHostBuilder builder)
   {
     builder
-      .ConfigureServices(services =>
-      {
-        // Remove the app's ApplicationDbContext registration.
-        var descriptor = services.SingleOrDefault(
-          d => d.ServiceType ==
-               typeof(DbContextOptions<AppDbContext>));
-
-        if (descriptor != null)
+     .ConfigureServices(
+        services =>
         {
-          services.Remove(descriptor);
-        }
+          // Remove the app's ApplicationDbContext registration.
+          var descriptor = services.SingleOrDefault(
+            d => d.ServiceType ==
+                 typeof(DbContextOptions<AppDbContext>)
+          );
 
-        // This should be set for each individual test run
-        var inMemoryCollectionName = Guid.NewGuid().ToString();
-
-        // Add ApplicationDbContext using an in-memory database for testing.
-        services.AddDbContext<AppDbContext>(options =>
-        {
-          options.UseInMemoryDatabase(inMemoryCollectionName);
-        });
-
-        services.AddScoped<IMediator, NoOpMediator>();
-
-        services
-          .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-          .AddJwtBearer(config =>
+          if (descriptor != null)
           {
-            config.RequireHttpsMetadata = false;
-            config.SaveToken = true;
-            config.TokenValidationParameters = new TokenValidationParameters
+            services.Remove(descriptor);
+          }
+
+          // This should be set for each individual test run
+          var inMemoryCollectionName = Guid.NewGuid().ToString();
+
+          // Add ApplicationDbContext using an in-memory database for testing.
+          services.AddDbContext<AppDbContext>(
+            options =>
             {
-              ValidateIssuerSigningKey = true,
-              IssuerSigningKey = new SymmetricSecurityKey(ApiTokenHelper.AuthorizationKey),
-              ValidateIssuer = false,
-              ValidateAudience = false
-            };
-          });
-      });
+              options.UseInMemoryDatabase(inMemoryCollectionName);
+            }
+          );
+
+          services.AddScoped<IMediator, NoOpMediator>();
+
+          services
+           .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+           .AddJwtBearer(
+              config =>
+              {
+                config.RequireHttpsMetadata = false;
+                config.SaveToken = true;
+                config.TokenValidationParameters = new TokenValidationParameters
+                {
+                  ValidateIssuerSigningKey = true,
+                  IssuerSigningKey = new SymmetricSecurityKey(ApiTokenHelper.AuthorizationKey),
+                  ValidateIssuer = false,
+                  ValidateAudience = false
+                };
+              }
+            );
+        }
+      );
   }
 }

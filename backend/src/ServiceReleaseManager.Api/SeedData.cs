@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Infrastructure.Data;
 
 namespace ServiceReleaseManager.Api;
@@ -17,7 +16,9 @@ public static class SeedData
   public static void Initialize(IServiceProvider serviceProvider)
   {
     using var dbContext = new AppDbContext(
-      serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>(), null);
+      serviceProvider.GetRequiredService<DbContextOptions<AppDbContext>>(),
+      null
+    );
     if (dbContext.Organisations.Any())
     {
       return; // DB has been seeded

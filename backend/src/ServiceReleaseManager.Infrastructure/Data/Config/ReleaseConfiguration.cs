@@ -12,16 +12,16 @@ public class ReleaseConfiguration : IEntityTypeConfiguration<Release>
      .HasOne(release => release.ApprovedBy)
      .WithMany()
      .HasForeignKey(release => release.ApprovedById);
-    
+
     builder
      .HasOne(release => release.PublishedBy)
      .WithMany()
      .HasForeignKey(release => release.PublishedById);
-    
+
     builder
-      .HasMany(release => release.LocalisedMetadataList)
-      .WithOne(localisedMetadata => localisedMetadata.Release)
-      .HasForeignKey(localisedMetadata => localisedMetadata.ReleaseId)
-      .IsRequired();
+     .HasMany(release => release.LocalisedMetadataList)
+     .WithOne(localisedMetadata => localisedMetadata.Release)
+     .HasForeignKey(localisedMetadata => localisedMetadata.ReleaseId)
+     .IsRequired();
   }
 }

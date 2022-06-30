@@ -11,11 +11,13 @@ namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionResult<
   ServiceTemplateRecord>
 {
-  private readonly IRepository<ServiceTemplate> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IRepository<ServiceTemplate> _repository;
 
-  public Get(IRepository<ServiceTemplate> repository,
-    IServiceManagerAuthorizationService authorizationService)
+  public Get(
+    IRepository<ServiceTemplate> repository,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _repository = repository;
     _authorizationService = authorizationService;
@@ -32,7 +34,8 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionRe
   [SwaggerResponse(404, "The service template was not found")]
   public override async Task<ActionResult<ServiceTemplateRecord>> HandleAsync(
     [FromRoute] GetServiceTemplateById request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var spec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
     var template = await _repository.GetBySpecAsync(spec, cancellationToken);
@@ -42,9 +45,12 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionRe
       return NotFound();
     }
 
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          template.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Read,
-          cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          template.OrganisationId,
+          ServiceTemplateOperations.ServiceTemplate_Read,
+          cancellationToken
+        ))
     {
       return NotFound();
     }

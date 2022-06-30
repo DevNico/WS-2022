@@ -5,9 +5,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class ListServiceTemplates : EndpointBase
-  .WithRequest<ListServiceTemplateRequest>
-  .WithActionResult<List<ServiceTemplateRecord>>
+public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplateRequest>.
+  WithActionResult<List<ServiceTemplateRecord>>
 {
   private readonly IServiceService _serviceService;
 
@@ -27,7 +26,8 @@ public class ListServiceTemplates : EndpointBase
   [SwaggerResponse(400, "Not found")]
   public override async Task<ActionResult<List<ServiceTemplateRecord>>> HandleAsync(
     [FromRoute] ListServiceTemplateRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var service =
       await _serviceService.GetByRouteName(request.ServiceRouteName, cancellationToken);

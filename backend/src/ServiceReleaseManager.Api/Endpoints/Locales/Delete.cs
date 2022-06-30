@@ -9,11 +9,13 @@ namespace ServiceReleaseManager.Api.Endpoints.Locales;
 
 public class Delete : EndpointBase.WithRequest<DeleteLocaleRequest>.WithoutResult
 {
-  private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly ILocaleService _localeService;
 
-  public Delete(ILocaleService localeService,
-    IServiceManagerAuthorizationService authorizationService)
+  public Delete(
+    ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -30,13 +32,17 @@ public class Delete : EndpointBase.WithRequest<DeleteLocaleRequest>.WithoutResul
   [SwaggerResponse(404, "The locale or service was not found")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteLocaleRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var locale = await _localeService.GetById(request.LocaleId, cancellationToken);
 
-    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(User,
+    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(
+          User,
           locale.Value.ServiceId,
-          LocaleOperations.Locale_Delete, cancellationToken))
+          LocaleOperations.Locale_Delete,
+          cancellationToken
+        ))
     {
       return NotFound();
     }

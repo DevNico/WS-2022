@@ -7,15 +7,15 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ServiceRoles;
 
-public class Delete : EndpointBase
-  .WithRequest<DeleteServiceRole>
-  .WithoutResult
+public class Delete : EndpointBase.WithRequest<DeleteServiceRole>.WithoutResult
 {
-  private readonly IServiceRoleService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceRoleService _service;
 
-  public Delete(IServiceRoleService service,
-    IServiceManagerAuthorizationService authorizationService)
+  public Delete(
+    IServiceRoleService service,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -29,13 +29,19 @@ public class Delete : EndpointBase
   )]
   [SwaggerResponse(200, "The service role was deactivated")]
   [SwaggerResponse(404, "The service role was not found")]
-  public override async Task<ActionResult> HandleAsync(DeleteServiceRole request,
-    CancellationToken cancellationToken = new())
+  public override async Task<ActionResult> HandleAsync(
+    DeleteServiceRole request,
+    CancellationToken cancellationToken = new()
+  )
   {
     var role = await _service.GetById(request.ServiceRoleId, cancellationToken);
 
-    if (!role.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
-          role.Value.OrganisationId, ServiceRoleOperations.ServiceRole_Delete, cancellationToken))
+    if (!role.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          role.Value.OrganisationId,
+          ServiceRoleOperations.ServiceRole_Delete,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

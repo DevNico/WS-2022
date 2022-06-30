@@ -9,9 +9,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class ListReleaseTriggers : EndpointBase
-  .WithRequest<ListReleaseTriggersRequest>
-  .WithActionResult<List<ReleaseTriggerRecord>>
+public class ListReleaseTriggers : EndpointBase.WithRequest<ListReleaseTriggersRequest>.
+  WithActionResult<List<ReleaseTriggerRecord>>
 {
   private readonly IRepository<ReleaseTrigger> _repository;
   private readonly IServiceService _serviceService;
@@ -33,13 +32,15 @@ public class ListReleaseTriggers : EndpointBase
   [SwaggerResponse(400, "The service was not found")]
   public override async Task<ActionResult<List<ReleaseTriggerRecord>>> HandleAsync(
     [FromRoute] ListReleaseTriggersRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var service = await _serviceService.GetById(request.ServiceId, cancellationToken);
     if (!service.IsSuccess)
     {
       return BadRequest(
-        new ErrorResponse($"A service with the id {request.ServiceId} does not exist."));
+        new ErrorResponse($"A service with the id {request.ServiceId} does not exist.")
+      );
     }
 
     var spec = new ReleaseTriggersByServiceSearchSpec(request.ServiceId);

@@ -3,11 +3,11 @@
 namespace ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 
 public sealed class OrganisationRoleByIdSpec : Specification<OrganisationRole>,
-  ISingleResultSpecification
+                                               ISingleResultSpecification
 {
   public OrganisationRoleByIdSpec(int id)
   {
     Query
-      .Where(r => r.Id == id);
+     .Where(r => r.Id == id);
   }
 }

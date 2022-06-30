@@ -8,12 +8,10 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Changelogs;
 
-public class GetByIssues : EndpointBase
-  .WithRequest<GetByIssuesRequest>
-  .WithActionResult<string>
+public class GetByIssues : EndpointBase.WithRequest<GetByIssuesRequest>.WithActionResult<string>
 {
-  private readonly IGitHubProxy _proxy;
   private readonly IChangeLogConverter _converter;
+  private readonly IGitHubProxy _proxy;
 
   public GetByIssues(IGitHubProxy proxy, IChangeLogConverter converter)
   {
@@ -33,23 +31,35 @@ public class GetByIssues : EndpointBase
   [SwaggerResponse(404, "GitHub Repository not found")]
   public override async Task<ActionResult<string>> HandleAsync(
     [FromBody] GetByIssuesRequest request,
-    CancellationToken cancellationToken = new CancellationToken())
+    CancellationToken cancellationToken = new()
+  )
   {
     // Validate input
     if (request.Limit is < 1 or > 100)
     {
       return BadRequest(new ErrorResponse(GitHubProxy.LimitOutOfRangeMessage));
     }
-    
+
     // Fetch information from GitHub
     Result<IEnumerable<GitHubIssue>> issues;
     if (request.ClosedAfter == null)
     {
-      issues = await _proxy.ListIssues(request.Owner, request.Repo, cancellationToken, request.Limit);
+      issues = await _proxy.ListIssues(
+        request.Owner,
+        request.Repo,
+        cancellationToken,
+        request.Limit
+      );
     }
     else
     {
-      issues = await _proxy.ListIssuesClosedAfter(request.Owner, request.Repo, request.ClosedAfter.Value, cancellationToken, request.Limit);
+      issues = await _proxy.ListIssuesClosedAfter(
+        request.Owner,
+        request.Repo,
+        request.ClosedAfter.Value,
+        cancellationToken,
+        request.Limit
+      );
     }
 
     // Check if repo exists
@@ -57,7 +67,7 @@ public class GetByIssues : EndpointBase
     {
       return NotFound();
     }
-    
+
     // Convert list to a changelog
     return _converter.Convert(issues.Value, " - ");
   }

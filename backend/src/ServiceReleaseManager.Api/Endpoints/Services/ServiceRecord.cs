@@ -21,14 +21,14 @@ public record ServiceRecord(
     var latestRelease = latestSpec.Evaluate(service.Releases).FirstOrDefault();
 
     return new ServiceRecord(
-      Id: service.Id,
-      Name: service.Name,
-      RouteName: service.RouteName,
-      Description: service.Description,
-      LatestRelease: latestRelease != null ? ReleaseRecord.FromEntity(latestRelease) : null,
-      organisationId: service.OrganisationId,
-      UpdatedAt: service.UpdatedAt,
-      CreatedAt: service.CreatedAt
+      service.Id,
+      service.Name,
+      service.RouteName,
+      service.Description,
+      latestRelease != null ? ReleaseRecord.FromEntity(latestRelease) : null,
+      service.OrganisationId,
+      service.UpdatedAt,
+      service.CreatedAt
     );
   }
 }

@@ -6,9 +6,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ReleaseTriggers;
 
-public class GetById : EndpointBase
-  .WithRequest<GetReleaseTriggerByIdRequest>
-  .WithActionResult<ReleaseTriggerRecord>
+public class GetById : EndpointBase.WithRequest<GetReleaseTriggerByIdRequest>.WithActionResult<
+  ReleaseTriggerRecord>
 {
   private readonly IReleaseTriggerService _service;
 
@@ -28,7 +27,8 @@ public class GetById : EndpointBase
   [SwaggerResponse(404, "The release trigger was not found")]
   public override async Task<ActionResult<ReleaseTriggerRecord>> HandleAsync(
     [FromRoute] GetReleaseTriggerByIdRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var trigger = await _service.GetById(request.ReleaseTriggerId, cancellationToken);
     return this.ToActionResult(trigger.MapValue(ReleaseTriggerRecord.FromEntity));

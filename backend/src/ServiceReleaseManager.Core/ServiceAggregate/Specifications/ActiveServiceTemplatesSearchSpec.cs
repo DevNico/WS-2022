@@ -7,7 +7,7 @@ public sealed class ActiveServiceTemplatesSearchSpec : Specification<ServiceTemp
   public ActiveServiceTemplatesSearchSpec(int organisationId)
   {
     Query
-      .Where(s => s.OrganisationId == organisationId)
-      .Where(s => s.IsActive);
+     .Where(s => s.OrganisationId == organisationId)
+     .Where(s => s.IsActive);
   }
 }

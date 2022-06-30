@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.OrganisationAggregate.Specifications;
 using ServiceReleaseManager.Core.Services;
@@ -14,7 +9,6 @@ namespace ServiceReleaseManager.UnitTests.Core.Services;
 
 public class OrganisationServiceTest
 {
-
   private readonly Mock<IRepository<Organisation>> _organisationRepositoryMock;
 
   public OrganisationServiceTest()
@@ -30,7 +24,9 @@ public class OrganisationServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _organisationRepositoryMock.Setup(m => m.AddAsync(It.IsAny<Organisation>(), It.IsAny<CancellationToken>())).ReturnsAsync(organisation);
+    _organisationRepositoryMock
+     .Setup(m => m.AddAsync(It.IsAny<Organisation>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(organisation);
 
     var organisationService = new OrganisationService(_organisationRepositoryMock.Object);
     var result = await organisationService.Create(orgName, cancellationToken);
@@ -38,12 +34,33 @@ public class OrganisationServiceTest
     Assert.True(result.IsSuccess);
     Assert.Equal(organisation, result.Value);
 
-    _organisationRepositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<OrganisationByRouteNameSpec>(),
-      It.Is<CancellationToken>( c => c == cancellationToken)), Times.Once);
-    _organisationRepositoryMock.Verify(m => m.AddAsync(It.Is<Organisation>(o => o.IsActive == true && o.Name == orgName &&
-    orgName.Equals(o.RouteName, StringComparison.OrdinalIgnoreCase)), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
-    _organisationRepositoryMock.Verify(m => m.UpdateAsync(It.Is<Organisation>(o => o.IsActive == true && o.Name == orgName &&
-    orgName.Equals(o.RouteName, StringComparison.OrdinalIgnoreCase)), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _organisationRepositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<OrganisationByRouteNameSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
+    _organisationRepositoryMock.Verify(
+      m => m.AddAsync(
+        It.Is<Organisation>(
+          o => o.IsActive == true && o.Name == orgName &&
+               orgName.Equals(o.RouteName, StringComparison.OrdinalIgnoreCase)
+        ),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
+    _organisationRepositoryMock.Verify(
+      m => m.UpdateAsync(
+        It.Is<Organisation>(
+          o => o.IsActive == true && o.Name == orgName &&
+               orgName.Equals(o.RouteName, StringComparison.OrdinalIgnoreCase)
+        ),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _organisationRepositoryMock.Verify(m => m.SaveChangesAsync(cancellationToken), Times.Once);
     _organisationRepositoryMock.VerifyNoOtherCalls();
   }
@@ -56,7 +73,9 @@ public class OrganisationServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _organisationRepositoryMock.Setup(m => m.GetBySpecAsync(It.IsAny<OrganisationByIdSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(organisation);
+    _organisationRepositoryMock
+     .Setup(m => m.GetBySpecAsync(It.IsAny<OrganisationByIdSpec>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(organisation);
 
     var organisationService = new OrganisationService(_organisationRepositoryMock.Object);
     var result = await organisationService.GetById(orgID, cancellationToken);
@@ -64,7 +83,13 @@ public class OrganisationServiceTest
     Assert.True(result.IsSuccess);
     Assert.Equal(organisation, result.Value);
 
-    _organisationRepositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<OrganisationByIdSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _organisationRepositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<OrganisationByIdSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _organisationRepositoryMock.VerifyNoOtherCalls();
   }
 
@@ -76,7 +101,13 @@ public class OrganisationServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _organisationRepositoryMock.Setup(m => m.GetBySpecAsync(It.IsAny<OrganisationByRouteNameSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(organisation);
+    _organisationRepositoryMock
+     .Setup(
+        m => m.GetBySpecAsync(
+          It.IsAny<OrganisationByRouteNameSpec>(),
+          It.IsAny<CancellationToken>()
+        )
+      ).ReturnsAsync(organisation);
 
     var organisationService = new OrganisationService(_organisationRepositoryMock.Object);
     var result = await organisationService.GetByRouteName(orgName, cancellationToken);
@@ -84,7 +115,13 @@ public class OrganisationServiceTest
     Assert.True(result.IsSuccess);
     Assert.Equal(organisation, result.Value);
 
-    _organisationRepositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<OrganisationByRouteNameSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _organisationRepositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<OrganisationByRouteNameSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _organisationRepositoryMock.VerifyNoOtherCalls();
   }
 
@@ -93,8 +130,8 @@ public class OrganisationServiceTest
   {
     var orgName = "test";
     var orgId = 1234;
-    var organisation = new Organisation(orgName) { Id = orgId};
-    var orgUpdate = new Organisation(orgName) { Id = orgId, Name = "newName"};
+    var organisation = new Organisation(orgName) { Id = orgId };
+    var orgUpdate = new Organisation(orgName) { Id = orgId, Name = "newName" };
 
     var cancellationToken = new CancellationToken();
 
@@ -103,7 +140,10 @@ public class OrganisationServiceTest
 
     Assert.True(result.IsSuccess);
 
-    _organisationRepositoryMock.Verify(m => m.UpdateAsync(orgUpdate, cancellationToken), Times.Once);
+    _organisationRepositoryMock.Verify(
+      m => m.UpdateAsync(orgUpdate, cancellationToken),
+      Times.Once
+    );
     _organisationRepositoryMock.Verify(m => m.SaveChangesAsync(cancellationToken), Times.Once);
     _organisationRepositoryMock.VerifyNoOtherCalls();
   }
@@ -116,15 +156,30 @@ public class OrganisationServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _organisationRepositoryMock.Setup(m => m.GetBySpecAsync(It.IsAny<OrganisationByRouteNameSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(organisation);
+    _organisationRepositoryMock
+     .Setup(
+        m => m.GetBySpecAsync(
+          It.IsAny<OrganisationByRouteNameSpec>(),
+          It.IsAny<CancellationToken>()
+        )
+      ).ReturnsAsync(organisation);
 
     var organisationService = new OrganisationService(_organisationRepositoryMock.Object);
     var result = await organisationService.Delete(orgName, cancellationToken);
 
     Assert.True(result.IsSuccess);
 
-    _organisationRepositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<OrganisationByRouteNameSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
-    _organisationRepositoryMock.Verify(m => m.UpdateAsync(organisation, cancellationToken), Times.Once);
+    _organisationRepositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<OrganisationByRouteNameSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
+    _organisationRepositoryMock.Verify(
+      m => m.UpdateAsync(organisation, cancellationToken),
+      Times.Once
+    );
     _organisationRepositoryMock.Verify(m => m.SaveChangesAsync(cancellationToken), Times.Once);
     _organisationRepositoryMock.VerifyNoOtherCalls();
   }
@@ -137,7 +192,9 @@ public class OrganisationServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _organisationRepositoryMock.Setup(m => m.ListAsync(It.IsAny<OrganisationsSearchSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<Organisation> { organisation0, organisation1});
+    _organisationRepositoryMock
+     .Setup(m => m.ListAsync(It.IsAny<OrganisationsSearchSpec>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(new List<Organisation> { organisation0, organisation1 });
 
     var organisationService = new OrganisationService(_organisationRepositoryMock.Object);
     var result = await organisationService.List(true, cancellationToken);
@@ -146,7 +203,13 @@ public class OrganisationServiceTest
     Assert.Contains(organisation0, result.Value);
     Assert.Contains(organisation1, result.Value);
 
-    _organisationRepositoryMock.Verify(m => m.ListAsync(It.IsAny<OrganisationsSearchSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _organisationRepositoryMock.Verify(
+      m => m.ListAsync(
+        It.IsAny<OrganisationsSearchSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _organisationRepositoryMock.VerifyNoOtherCalls();
   }
 
@@ -158,7 +221,10 @@ public class OrganisationServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _organisationRepositoryMock.Setup(m => m.ListAsync(It.IsAny<OrganisationsByUserEmailSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<Organisation> { organisation0, organisation1});
+    _organisationRepositoryMock
+     .Setup(
+        m => m.ListAsync(It.IsAny<OrganisationsByUserEmailSpec>(), It.IsAny<CancellationToken>())
+      ).ReturnsAsync(new List<Organisation> { organisation0, organisation1 });
 
     var organisationService = new OrganisationService(_organisationRepositoryMock.Object);
     var result = await organisationService.ListByUserEmail("", cancellationToken);
@@ -167,7 +233,13 @@ public class OrganisationServiceTest
     Assert.Contains(organisation0, result.Value);
     Assert.Contains(organisation1, result.Value);
 
-    _organisationRepositoryMock.Verify(m => m.ListAsync(It.IsAny<OrganisationsByUserEmailSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _organisationRepositoryMock.Verify(
+      m => m.ListAsync(
+        It.IsAny<OrganisationsByUserEmailSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _organisationRepositoryMock.VerifyNoOtherCalls();
   }
 }

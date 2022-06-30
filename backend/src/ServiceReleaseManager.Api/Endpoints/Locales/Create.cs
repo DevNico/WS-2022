@@ -12,11 +12,13 @@ namespace ServiceReleaseManager.Api.Endpoints.Locales;
 public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionResult<
   LocaleRecord>
 {
-  private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly ILocaleService _localeService;
 
-  public Create(ILocaleService localeService,
-    IServiceManagerAuthorizationService authorizationService)
+  public Create(
+    ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -35,10 +37,15 @@ public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionRe
   [SwaggerResponse(409, "The locale already exists")]
   public override async Task<ActionResult<LocaleRecord>> HandleAsync(
     CreateLocaleRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
-          LocaleOperations.Locale_Create, cancellationToken))
+    if (!await _authorizationService.EvaluateServiceAuthorization(
+          User,
+          request.ServiceId,
+          LocaleOperations.Locale_Create,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }
@@ -50,7 +57,7 @@ public class Create : EndpointBase.WithRequest<CreateLocaleRequest>.WithActionRe
     );
 
     var createResult = await _localeService.Create(locale, cancellationToken)
-      .MapValue(LocaleRecord.FromEntity);
+                                           .MapValue(LocaleRecord.FromEntity);
 
     return createResult.IsError() ? Conflict() : this.ToActionResult(createResult);
   }

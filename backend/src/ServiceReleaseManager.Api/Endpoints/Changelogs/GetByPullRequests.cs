@@ -8,12 +8,11 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Changelogs;
 
-public class GetByPullRequests : EndpointBase
-  .WithRequest<GetByPullRequestsRequest>
-  .WithActionResult<string>
+public class
+  GetByPullRequests : EndpointBase.WithRequest<GetByPullRequestsRequest>.WithActionResult<string>
 {
-  private readonly IGitHubProxy _proxy;
   private readonly IChangeLogConverter _converter;
+  private readonly IGitHubProxy _proxy;
 
   public GetByPullRequests(IGitHubProxy proxy, IChangeLogConverter converter)
   {
@@ -33,14 +32,15 @@ public class GetByPullRequests : EndpointBase
   [SwaggerResponse(404, "GitHub Repository not found")]
   public override async Task<ActionResult<string>> HandleAsync(
     [FromBody] GetByPullRequestsRequest request,
-    CancellationToken cancellationToken = new CancellationToken())
+    CancellationToken cancellationToken = new()
+  )
   {
     // Validate input
     if (request.Limit is < 1 or > 100)
     {
       return BadRequest(new ErrorResponse(GitHubProxy.LimitOutOfRangeMessage));
     }
-    
+
     // Fetch information from GitHub
     Result<IEnumerable<GitHubPullRequest>> pulls;
     if (request.MergedAfter == null)
@@ -49,7 +49,13 @@ public class GetByPullRequests : EndpointBase
     }
     else
     {
-      pulls = await _proxy.ListPullsMergedAfter(request.Owner, request.Repo, request.MergedAfter.Value, cancellationToken, request.Limit);
+      pulls = await _proxy.ListPullsMergedAfter(
+        request.Owner,
+        request.Repo,
+        request.MergedAfter.Value,
+        cancellationToken,
+        request.Limit
+      );
     }
 
     // Check if repo exists
@@ -57,7 +63,7 @@ public class GetByPullRequests : EndpointBase
     {
       return NotFound();
     }
-    
+
     // Convert list to a changelog
     return _converter.Convert(pulls.Value, " - ");
   }

@@ -11,11 +11,13 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUsers;
 public class GetById : EndpointBase.WithRequest<GetOrganisationUserByIdRequest>.WithActionResult<
   OrganisationUserRecord>
 {
-  private readonly IOrganisationUserService _organisationUserService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IOrganisationUserService _organisationUserService;
 
-  public GetById(IOrganisationUserService organisationUserService,
-    IServiceManagerAuthorizationService authorizationService)
+  public GetById(
+    IOrganisationUserService organisationUserService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _organisationUserService = organisationUserService;
     _authorizationService = authorizationService;
@@ -23,21 +25,26 @@ public class GetById : EndpointBase.WithRequest<GetOrganisationUserByIdRequest>.
 
   [HttpGet(GetOrganisationUserByIdRequest.Route)]
   [SwaggerOperation(
-    Summary = "Gets a single OrganisationUser",
-    Description = "Gets a single OrganisationUser by UserId",
-    OperationId = "Organisations.GetByUserId",
-    Tags = new[] { "OrganisationUser" })
+      Summary = "Gets a single OrganisationUser",
+      Description = "Gets a single OrganisationUser by UserId",
+      OperationId = "Organisations.GetByUserId",
+      Tags = new[] { "OrganisationUser" }
+    )
   ]
   public override async Task<ActionResult<OrganisationUserRecord>> HandleAsync(
     [FromRoute] GetOrganisationUserByIdRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var user =
       await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
 
-    if (!user.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
-          user.Value.OrganisationId, OrganisationUserOperations.OrganisationUser_Read,
-          cancellationToken))
+    if (!user.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          user.Value.OrganisationId,
+          OrganisationUserOperations.OrganisationUser_Read,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

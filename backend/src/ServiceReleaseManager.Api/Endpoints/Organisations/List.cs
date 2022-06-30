@@ -20,19 +20,28 @@ public class List : EndpointBase.WithRequest<ListOrganisationsRequest>.WithActio
   [HttpGet]
   [Authorize(Roles = "superAdmin")]
   [SwaggerOperation(
-    Summary = "Gets a list of all Organisations",
-    OperationId = "Organisations.List",
-    Tags = new[] { "Organisation" })
+      Summary = "Gets a list of all Organisations",
+      OperationId = "Organisations.List",
+      Tags = new[] { "Organisation" }
+    )
   ]
-  [SwaggerResponse(StatusCodes.Status200OK, "Organisations found",
-    typeof(List<OrganisationRecord>))]
+  [SwaggerResponse(
+    StatusCodes.Status200OK,
+    "Organisations found",
+    typeof(List<OrganisationRecord>)
+  )]
   public override async Task<ActionResult<List<OrganisationRecord>>> HandleAsync(
     [FromQuery] ListOrganisationsRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var result = await _organisationService.List(request.IncludeDeactivated, cancellationToken);
 
-    return this.ToActionResult(result.MapValue(organisations =>
-      organisations.ConvertAll(OrganisationRecord.FromEntity)));
+    return this.ToActionResult(
+      result.MapValue(
+        organisations =>
+          organisations.ConvertAll(OrganisationRecord.FromEntity)
+      )
+    );
   }
 }

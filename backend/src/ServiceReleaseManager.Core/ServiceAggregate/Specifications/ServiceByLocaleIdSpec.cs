@@ -7,7 +7,7 @@ public sealed class ServiceByLocaleIdSpec : Specification<Service>, ISingleResul
   public ServiceByLocaleIdSpec(int localeId)
   {
     Query
-      .Include(s => s.Locales)
-      .Where(s => s.Locales.Any(l => l.Id == localeId));
+     .Include(s => s.Locales)
+     .Where(s => s.Locales.Any(l => l.Id == localeId));
   }
 }

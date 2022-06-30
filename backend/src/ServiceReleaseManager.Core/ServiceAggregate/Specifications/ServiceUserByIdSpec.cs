@@ -7,7 +7,7 @@ public sealed class ServiceUserByIdSpec : Specification<ServiceUser>, ISingleRes
   public ServiceUserByIdSpec(int id)
   {
     Query
-      .Where(u => u.IsActive)
-      .Where(u => u.Id == id);
+     .Where(u => u.IsActive)
+     .Where(u => u.Id == id);
   }
 }

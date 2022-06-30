@@ -15,8 +15,12 @@ public class KeycloakClient : IKeycloakClient
   private readonly string _realm;
   private readonly string _url;
 
-  public KeycloakClient(IConfiguration config, ILogger logger, KeycloakOAuthClient _oAuthClient,
-    HttpClient httpClient)
+  public KeycloakClient(
+    IConfiguration config,
+    ILogger logger,
+    KeycloakOAuthClient _oAuthClient,
+    HttpClient httpClient
+  )
   {
     _logger = logger;
     _httpClient = httpClient;
@@ -38,8 +42,10 @@ public class KeycloakClient : IKeycloakClient
 
   public async Task<KeycloakUserRecord?> GetUserByEmail(string email)
   {
-    var res = await _request<List<KeycloakUserRecord>>($"/users?email={email}&exact=true",
-      HttpMethod.Get);
+    var res = await _request<List<KeycloakUserRecord>>(
+      $"/users?email={email}&exact=true",
+      HttpMethod.Get
+    );
     return res.Count > 0 ? res[0] : null;
   }
 
@@ -62,9 +68,12 @@ public class KeycloakClient : IKeycloakClient
 
   public async Task SetUserPassword(string userId, string password)
   {
-    await _request<string>($"/users/{userId}/reset-password", HttpMethod.Put,
+    await _request<string>(
+      $"/users/{userId}/reset-password",
+      HttpMethod.Put,
       new PasswordChangeRecord(password),
-      HttpStatusCode.NoContent);
+      HttpStatusCode.NoContent
+    );
   }
 
   public async Task SetUserDisabled(string userId, bool disabled)
@@ -73,8 +82,12 @@ public class KeycloakClient : IKeycloakClient
     await UpdateUser(user with { Enabled = !disabled });
   }
 
-  private async Task<T> _request<T>(string url, HttpMethod method, object? body = null,
-    HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+  private async Task<T> _request<T>(
+    string url,
+    HttpMethod method,
+    object? body = null,
+    HttpStatusCode expectedStatusCode = HttpStatusCode.OK
+  )
   {
     _logger.LogDebug("Sending {Method} request to {Url}", method.Method, url);
     var token = await _keycloakOAuthClient.getToken();
@@ -90,14 +103,17 @@ public class KeycloakClient : IKeycloakClient
       requestMessage.Headers.Add("Authorization", $"Bearer {token}");
       var response = await _httpClient.SendAsync(requestMessage);
       var responseContent = await response.Content.ReadAsStringAsync();
-      _logger.LogDebug("Keycloak returned a response with status {Code}",
-        response.StatusCode.ToString());
+      _logger.LogDebug(
+        "Keycloak returned a response with status {Code}",
+        response.StatusCode.ToString()
+      );
       if (response.StatusCode != expectedStatusCode)
       {
         throw new HttpRequestException(
           $"Could not {method.Method.ToUpperInvariant()} to keycloak, error: {responseContent}",
           null,
-          response.StatusCode);
+          response.StatusCode
+        );
       }
 
       if (typeof(T) == typeof(string))
@@ -113,13 +129,19 @@ public class KeycloakClient : IKeycloakClient
       catch (Exception e)
       {
         throw new ApplicationException(
-          string.Format("Could not decode json message: {0}", responseContent), e);
+          string.Format("Could not decode json message: {0}", responseContent),
+          e
+        );
       }
 
       if (parsed == null)
       {
-        throw new ApplicationException(string.Format("Could not decode the response: {0}",
-          responseContent));
+        throw new ApplicationException(
+          string.Format(
+            "Could not decode the response: {0}",
+            responseContent
+          )
+        );
       }
 
       return parsed;

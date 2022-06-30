@@ -34,6 +34,8 @@ public interface IServiceService
 
   public Task<Result> Deactivate(int serviceId, CancellationToken cancellationToken);
 
-  public Task<Result<ServiceTemplate>> GetServiceTemplate(int serviceTemplateId,
-    CancellationToken cancellationToken);
+  public Task<Result<ServiceTemplate>> GetServiceTemplate(
+    int serviceTemplateId,
+    CancellationToken cancellationToken
+  );
 }

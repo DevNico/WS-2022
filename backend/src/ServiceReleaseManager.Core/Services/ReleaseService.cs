@@ -20,7 +20,10 @@ public class ReleaseService : IReleaseService
     _serviceRepository = serviceRepository;
   }
 
-  public async Task<Result<List<Release>>> GetByServiceId(int id, CancellationToken cancellationToken)
+  public async Task<Result<List<Release>>> GetByServiceId(
+    int id,
+    CancellationToken cancellationToken
+  )
   {
     var serviceSpec = new ServiceByIdSpec(id);
     var services = await _serviceRepository.CountAsync(serviceSpec, cancellationToken);

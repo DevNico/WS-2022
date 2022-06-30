@@ -14,13 +14,13 @@ namespace ServiceReleaseManager.UnitTests.Api.Endpoints.OrganisationUsers;
 
 public class OrganisationUsersCreateTest
 {
-
-  private readonly Mock<IOrganisationUserService> _organisationUserServiceMock;
+  private readonly Mock<IServiceManagerAuthorizationService> _authorizationServiceMock;
   private readonly Mock<IKeycloakClient> _keycloakClientMock;
   private readonly Mock<ILogger<Create>> _loggerMock;
-  private readonly Mock<IOrganisationService> _organisationServiceMock;
   private readonly Mock<IReadRepository<OrganisationRole>> _organisationRoleRepositoryMock;
-  private readonly Mock<IServiceManagerAuthorizationService> _authorizationServiceMock;
+  private readonly Mock<IOrganisationService> _organisationServiceMock;
+
+  private readonly Mock<IOrganisationUserService> _organisationUserServiceMock;
 
   public OrganisationUsersCreateTest()
   {
@@ -37,51 +37,99 @@ public class OrganisationUsersCreateTest
   {
     var cancellationToken = new CancellationToken();
 
-    int orgId = 123;
+    var orgId = 123;
     var organisation = new Organisation("test") { Id = orgId };
 
-    int roleId = 456;
+    var roleId = 456;
     var role = new OrganisationRole(orgId, "test", true, true, true, true, true) { Id = roleId };
 
     var userId = "aaa";
     var userEmail = "a@a.a";
     var user = new OrganisationUser(userId, userEmail, "", "", role, orgId);
-    var keycloakUser = new KeycloakUserRecord(userId, "", "", "", userEmail, true, true, true, new List<string>(), DateTime.Now, DateTime.MinValue);
+    var keycloakUser = new KeycloakUserRecord(
+      userId,
+      "",
+      "",
+      "",
+      userEmail,
+      true,
+      true,
+      true,
+      new List<string>(),
+      DateTime.Now,
+      DateTime.MinValue
+    );
 
-    var request = new CreateOrganisationUserRequest() { OrganisationId = orgId, RoleId = role.Id, Email = userEmail};
+    var request =
+      new CreateOrganisationUserRequest
+      {
+        OrganisationId = orgId, RoleId = role.Id, Email = userEmail
+      };
 
-    _authorizationServiceMock.Setup(m => m.EvaluateOrganisationAuthorization(It.IsAny<ClaimsPrincipal>(), It.IsAny<int>(),
-      It.IsAny<OrganisationAuthorizationRequirement>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+    _authorizationServiceMock.Setup(
+      m => m.EvaluateOrganisationAuthorization(
+        It.IsAny<ClaimsPrincipal>(),
+        It.IsAny<int>(),
+        It.IsAny<OrganisationAuthorizationRequirement>(),
+        It.IsAny<CancellationToken>()
+      )
+    ).ReturnsAsync(true);
 
-    _organisationServiceMock.Setup(m => m.GetById(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Result<Organisation>(organisation));
+    _organisationServiceMock.Setup(m => m.GetById(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                            .ReturnsAsync(new Result<Organisation>(organisation));
 
-    _organisationRoleRepositoryMock.Setup(m => m.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(role);
+    _organisationRoleRepositoryMock
+     .Setup(m => m.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(role);
 
     _keycloakClientMock.Setup(m => m.GetUserByEmail(It.IsAny<string>())).ReturnsAsync(keycloakUser);
 
-    _organisationUserServiceMock.Setup(m => m.Create(It.IsAny<OrganisationUser>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Result<OrganisationUser>(user));
+    _organisationUserServiceMock
+     .Setup(m => m.Create(It.IsAny<OrganisationUser>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(new Result<OrganisationUser>(user));
 
-    var create = new Create(_organisationUserServiceMock.Object, _keycloakClientMock.Object,      _loggerMock.Object, 
-      _organisationServiceMock.Object, _organisationRoleRepositoryMock.Object, _authorizationServiceMock.Object);
-    
+    var create = new Create(
+      _organisationUserServiceMock.Object,
+      _keycloakClientMock.Object,
+      _loggerMock.Object,
+      _organisationServiceMock.Object,
+      _organisationRoleRepositoryMock.Object,
+      _authorizationServiceMock.Object
+    );
+
     var result = await create.HandleAsync(request, cancellationToken);
 
     Assert.NotNull(result.Result);
 
-    _authorizationServiceMock.Verify(m => m.EvaluateOrganisationAuthorization(null, orgId, OrganisationUserOperations.OrganisationUser_Create, cancellationToken), Times.Once);
+    _authorizationServiceMock.Verify(
+      m => m.EvaluateOrganisationAuthorization(
+        null,
+        orgId,
+        OrganisationUserOperations.OrganisationUser_Create,
+        cancellationToken
+      ),
+      Times.Once
+    );
     _authorizationServiceMock.VerifyNoOtherCalls();
 
     _organisationServiceMock.Verify(m => m.GetById(orgId, cancellationToken), Times.Once);
     _organisationServiceMock.VerifyNoOtherCalls();
 
-    _organisationRoleRepositoryMock.Verify(m => m.GetByIdAsync(roleId, cancellationToken), Times.Once);
+    _organisationRoleRepositoryMock.Verify(
+      m => m.GetByIdAsync(roleId, cancellationToken),
+      Times.Once
+    );
     _organisationRoleRepositoryMock.VerifyNoOtherCalls();
 
     _keycloakClientMock.Verify(m => m.GetUserByEmail(userEmail), Times.Exactly(2));
     _keycloakClientMock.VerifyNoOtherCalls();
 
     _organisationUserServiceMock.Verify(
-      m => m.Create(It.Is<OrganisationUser>(u => u.UserId == user.UserId && u.Email == user.Email), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+      m => m.Create(
+        It.Is<OrganisationUser>(u => u.UserId == user.UserId && u.Email == user.Email),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _organisationUserServiceMock.VerifyNoOtherCalls();
   }
 }

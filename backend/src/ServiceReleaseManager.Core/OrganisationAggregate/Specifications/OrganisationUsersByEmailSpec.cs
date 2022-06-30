@@ -7,7 +7,7 @@ public sealed class OrganisationUsersByEmailSpec : Specification<OrganisationUse
   public OrganisationUsersByEmailSpec(string email)
   {
     Query
-      .Where(u => u.IsActive)
-      .Where(u => u.Email == email);
+     .Where(u => u.IsActive)
+     .Where(u => u.Email == email);
   }
 }

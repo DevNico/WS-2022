@@ -11,11 +11,13 @@ namespace ServiceReleaseManager.Api.Endpoints.Locales;
 public class GetById : EndpointBase.WithRequest<GetLocaleByIdRequest>.WithActionResult<
   LocaleRecord>
 {
-  private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly ILocaleService _localeService;
 
-  public GetById(ILocaleService localeService,
-    IServiceManagerAuthorizationService authorizationService)
+  public GetById(
+    ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -32,13 +34,17 @@ public class GetById : EndpointBase.WithRequest<GetLocaleByIdRequest>.WithAction
   [SwaggerResponse(404, "Locale not found")]
   public override async Task<ActionResult<LocaleRecord>> HandleAsync(
     [FromRoute] GetLocaleByIdRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var locale = await _localeService.GetById(request.LocaleId, cancellationToken);
 
-    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(User,
+    if (!locale.IsSuccess || !await _authorizationService.EvaluateServiceAuthorization(
+          User,
           locale.Value.ServiceId,
-          LocaleOperations.Locale_Read, cancellationToken))
+          LocaleOperations.Locale_Read,
+          cancellationToken
+        ))
     {
       return NotFound();
     }

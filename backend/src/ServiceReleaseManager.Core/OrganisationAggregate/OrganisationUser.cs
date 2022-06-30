@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 using ServiceReleaseManager.Core.OrganisationAggregate.Events;
-using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 

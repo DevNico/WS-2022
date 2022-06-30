@@ -9,7 +9,8 @@ public interface ILocaleService
 
   public Task<Result<List<Locale>>> ListByServiceRouteName(
     string serviceRouteName,
-    CancellationToken cancellationToken);
+    CancellationToken cancellationToken
+  );
 
   public Task<Result<Locale>> Create(Locale locale, CancellationToken cancellationToken);
 
