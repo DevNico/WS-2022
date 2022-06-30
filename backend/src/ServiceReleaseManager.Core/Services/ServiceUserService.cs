@@ -80,7 +80,7 @@ public class ServiceUserService : IServiceUserService
       });
     }
 
-    var serviceUser = new ServiceUser(role, user);
+    var serviceUser = new ServiceUser(serviceResult.Value.Id, role, user);
     var result = await _repository.AddAsync(serviceUser, cancellationToken);
     await _repository.SaveChangesAsync(cancellationToken);
 
@@ -105,5 +105,12 @@ public class ServiceUserService : IServiceUserService
     await _repository.SaveChangesAsync(cancellationToken);
 
     return Result.Success();
+  }
+
+  public async Task<Result<ServiceUser>> GetOrganisationUserById(int organisationUserid, int serviceId, CancellationToken cancellationToken)
+  {
+    var spec = new ServiceUserByOrganisationUserIdSpec(organisationUserid, serviceId);
+    var result = await _repository.GetBySpecAsync(spec, cancellationToken);
+    return ResultHelper.NullableSuccessNotFound(result);
   }
 }

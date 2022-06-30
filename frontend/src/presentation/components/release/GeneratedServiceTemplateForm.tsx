@@ -2,7 +2,9 @@ import React from 'react';
 import { MetadataArrayElement } from '../../../api/models';
 import {
 	Checkbox,
+	FormControl,
 	FormControlLabel,
+	FormHelperText,
 	TextField,
 	Typography,
 } from '@mui/material';
@@ -34,20 +36,26 @@ const FormElement: React.FC<FormElementProps> = ({
 			};
 
 			return (
-				<FormControlLabel
-					onChange={handleChange}
-					name={nameWithPrefix}
-					id={nameWithPrefix}
-					control={
-						<Checkbox
-							checked={
-								v(formik.values[prefix])[item.name!] ?? false
-							}
-						/>
-					}
-					label={item.label}
-					disabled={disabled}
-				/>
+				<FormControl>
+					<FormControlLabel
+						onChange={handleChange}
+						name={nameWithPrefix}
+						id={nameWithPrefix}
+						control={
+							<Checkbox
+								checked={
+									v(formik.values[prefix])[item.name!] ??
+									false
+								}
+							/>
+						}
+						label={item.label}
+						disabled={disabled}
+					/>
+					{item.placeholder && (
+						<FormHelperText>{item.placeholder}</FormHelperText>
+					)}
+				</FormControl>
 			);
 		default:
 			return (
@@ -66,6 +74,7 @@ const FormElement: React.FC<FormElementProps> = ({
 						v(formik.errors[prefix] as any)[item.name!]
 					}
 					disabled={disabled}
+					placeholder={item.placeholder ?? undefined}
 				/>
 			);
 	}

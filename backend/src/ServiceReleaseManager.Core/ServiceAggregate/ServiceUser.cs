@@ -7,8 +7,9 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class ServiceUser : EntityBase, IAggregateRoot
 {
-  public ServiceUser(ServiceRole serviceRole, OrganisationUser organisationUser)
+  public ServiceUser(int serviceId, ServiceRole serviceRole, OrganisationUser organisationUser)
   {
+    ServiceId = serviceId;
     ServiceRole = serviceRole;
     ServiceRoleId = serviceRole.Id;
     OrganisationUser = organisationUser;

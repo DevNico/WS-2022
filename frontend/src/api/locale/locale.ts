@@ -17,17 +17,31 @@ import {
 import type { LocaleRecord, CreateLocaleRequest } from '.././models';
 import { customInstance, ErrorType } from '.././axios';
 
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+	config: any,
+	args: infer P
+) => any
+	? P
+	: never;
+
 /**
  * Create a new locale
  * @summary Create a new locale
  */
-export const localeCreate = (createLocaleRequest: CreateLocaleRequest) => {
-	return customInstance<LocaleRecord>({
-		url: `/api/v1/locales`,
-		method: 'post',
-		headers: { 'Content-Type': 'application/json' },
-		data: createLocaleRequest,
-	});
+export const localeCreate = (
+	createLocaleRequest: CreateLocaleRequest,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<LocaleRecord>(
+		{
+			url: `/api/v1/locales`,
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			data: createLocaleRequest,
+		},
+		options
+	);
 };
 
 export type LocaleCreateMutationResult = NonNullable<
@@ -46,8 +60,10 @@ export const useLocaleCreate = <
 		{ data: CreateLocaleRequest },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof localeCreate>>,
@@ -55,7 +71,7 @@ export const useLocaleCreate = <
 	> = (props) => {
 		const { data } = props ?? {};
 
-		return localeCreate(data);
+		return localeCreate(data, requestOptions);
 	};
 
 	return useMutation<
@@ -69,11 +85,14 @@ export const useLocaleCreate = <
  * Deletes a locale from the database
  * @summary Delete a locale
  */
-export const localeDelete = (localeId: number) => {
-	return customInstance<void>({
-		url: `/api/v1/locales/${localeId}`,
-		method: 'delete',
-	});
+export const localeDelete = (
+	localeId: number,
+	options?: SecondParameter<typeof customInstance>
+) => {
+	return customInstance<void>(
+		{ url: `/api/v1/locales/${localeId}`, method: 'delete' },
+		options
+	);
 };
 
 export type LocaleDeleteMutationResult = NonNullable<
@@ -92,8 +111,10 @@ export const useLocaleDelete = <
 		{ localeId: number },
 		TContext
 	>;
+	request?: SecondParameter<typeof customInstance>;
 }) => {
-	const { mutation: mutationOptions } = options ?? {};
+	const { mutation: mutationOptions, request: requestOptions } =
+		options ?? {};
 
 	const mutationFn: MutationFunction<
 		Awaited<ReturnType<typeof localeDelete>>,
@@ -101,7 +122,7 @@ export const useLocaleDelete = <
 	> = (props) => {
 		const { localeId } = props ?? {};
 
-		return localeDelete(localeId);
+		return localeDelete(localeId, requestOptions);
 	};
 
 	return useMutation<
@@ -115,12 +136,15 @@ export const useLocaleDelete = <
  * Get a locale by id
  * @summary Get a locale by id
  */
-export const localeGetById = (localeId: number, signal?: AbortSignal) => {
-	return customInstance<LocaleRecord>({
-		url: `/api/v1/locales/${localeId}`,
-		method: 'get',
-		signal,
-	});
+export const localeGetById = (
+	localeId: number,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal
+) => {
+	return customInstance<LocaleRecord>(
+		{ url: `/api/v1/locales/${localeId}`, method: 'get', signal },
+		options
+	);
 };
 
 export const getLocaleGetByIdQueryKey = (localeId: number) => [
@@ -143,16 +167,17 @@ export const useLocaleGetById = <
 			TError,
 			TData
 		>;
+		request?: SecondParameter<typeof customInstance>;
 	}
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-	const { query: queryOptions } = options ?? {};
+	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
 		queryOptions?.queryKey ?? getLocaleGetByIdQueryKey(localeId);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof localeGetById>>> = ({
 		signal,
-	}) => localeGetById(localeId, signal);
+	}) => localeGetById(localeId, requestOptions, signal);
 
 	const query = useQuery<
 		Awaited<ReturnType<typeof localeGetById>>,

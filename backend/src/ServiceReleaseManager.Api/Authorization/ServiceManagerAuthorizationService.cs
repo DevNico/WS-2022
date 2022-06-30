@@ -87,7 +87,7 @@ public class ServiceManagerAuthorizationService : IServiceManagerAuthorizationSe
     var organisationUser = await getOrganisationUser(claimsPrincipal, service.Value.OrganisationId,
       cancellationToken);
     if (organisationUser == null || requirement.EvaluationFunction == null) return false;
-    var serviceUser = await _serviceUserService.GetById(organisationUser.Id, cancellationToken);
+    var serviceUser = await _serviceUserService.GetOrganisationUserById(organisationUser.Id, service.Value.Id, cancellationToken);
     if (!serviceUser.IsSuccess) return false;
     var result = await _authorizationService.AuthorizeAsync(claimsPrincipal,
       serviceUser.Value.ServiceRole, requirement);
