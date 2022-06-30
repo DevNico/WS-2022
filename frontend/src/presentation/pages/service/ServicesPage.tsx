@@ -2,8 +2,10 @@ import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useRouteParams } from 'typesafe-routes';
 import { OrganisationRecord, ServiceRecord } from '../../../api/models';
-import { useOrganisationsGetByRouteName } from '../../../api/organisation/organisation';
-import { useServiceList } from '../../../api/service-endpoints/service-endpoints';
+import {
+	useOrganisationListServices,
+	useOrganisationsGetByRouteName,
+} from '../../../api/organisation/organisation';
 import QueryWrapper from '../../components/QueryWrapper';
 import CreateServiceCard from '../../components/service/CreateServiceCard';
 import ServiceCard from '../../components/service/ServiceCard';
@@ -12,7 +14,7 @@ import { organisationRoute } from '../../Router';
 const ServicesPage: React.FC = () => {
 	const { name } = useRouteParams(organisationRoute);
 	const organisationResult = useOrganisationsGetByRouteName(name);
-	const servicesResult = useServiceList(name);
+	const servicesResult = useOrganisationListServices(name);
 
 	return (
 		<QueryWrapper<OrganisationRecord> result={organisationResult}>

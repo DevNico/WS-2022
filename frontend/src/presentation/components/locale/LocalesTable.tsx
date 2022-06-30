@@ -2,7 +2,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { LocaleRecord, OrganisationUserRecord } from '../../../api/models';
+import { LocaleRecord } from '../../../api/models';
 import DataGridOverlay from '../DataGridOverlay';
 import localeCodes from 'locale-codes';
 import { renderBoolAsSymbol } from '../../../common/dataGridUtils';
@@ -68,7 +68,7 @@ const LocalesTable: React.FC<LocalesTableProps> = ({
 				const locale = localeCodes.getByTag(params.value);
 
 				return `${locale.name} ${
-					locale.location && `(${locale.location})`
+					locale.location ? `(${locale.location})` : ''
 				}`;
 			},
 		},

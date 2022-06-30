@@ -38,7 +38,7 @@ public class Create : EndpointBase.WithRequest<CreateServiceTemplate>.WithAction
     Summary = "Add a new service template",
     Description = "Create a new service template",
     OperationId = "ServiceTemplate.Create",
-    Tags = new[] { "ServiceTemplateEndpoints" }
+    Tags = new[] { "ServiceTemplate" }
   )]
   [SwaggerResponse(200, "The service template was created", typeof(ServiceTemplateRecord))]
   [SwaggerResponse(400, "A parameter was null or invalid", typeof(ErrorResponse))]

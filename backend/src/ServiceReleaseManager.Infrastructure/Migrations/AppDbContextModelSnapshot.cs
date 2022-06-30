@@ -235,6 +235,45 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.ToTable("ReleaseLocalisedMetadata");
                 });
 
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTrigger", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Event")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("ReleaseTriggers");
+                });
+
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Locale", b =>
                 {
                     b.Property<int>("Id")
@@ -519,6 +558,17 @@ namespace ServiceReleaseManager.Infrastructure.Migrations
                     b.Navigation("Locale");
 
                     b.Navigation("Release");
+                });
+
+            modelBuilder.Entity("ServiceReleaseManager.Core.ReleaseAggregate.ReleaseTrigger", b =>
+                {
+                    b.HasOne("ServiceReleaseManager.Core.ServiceAggregate.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("ServiceReleaseManager.Core.ServiceAggregate.Locale", b =>

@@ -32,10 +32,11 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
   [SwaggerOperation(
     Summary = "List all service templates",
     Description = "List all service templates",
-    OperationId = "ServiceTemplate.List",
-    Tags = new[] { "ServiceTemplateEndpoints" }
+    OperationId = "Organisation.ListServiceTemplates",
+    Tags = new[] { "Organisation" }
   )]
   [SwaggerResponse(200, "Success", typeof(List<ServiceTemplateRecord>))]
+  [SwaggerResponse(400, "Invalid ID")]
   public override async Task<ActionResult<List<ServiceTemplateRecord>>> HandleAsync(
     [FromRoute] ListServiceTemplatesRequest request,
     CancellationToken cancellationToken = new())

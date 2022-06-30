@@ -1,18 +1,46 @@
-import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField/TextField';
-import { useFormik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from 'react-query';
 import * as yup from 'yup';
-import { CreateReleaseRequest, ServiceRecord } from '../../../api/models';
 import {
-	getReleasesListQueryKey,
-	releaseCreate,
-} from '../../../api/release-endpoints/release-endpoints';
-import { useLocalesList } from '../../../api/service/service';
+	CreateReleaseRequest,
+	LocaleRecord,
+	ServiceRecord,
+} from '../../../api/models';
+import {
+	getServicesListReleasesQueryKey,
+	useLocalesList,
+	useServiceGetServiceTemplate,
+} from '../../../api/service/service';
+import { releaseCreate } from '../../../api/release/release';
+import {
+	createYupSchemaFromServiceTemplateMetadata,
+	formikDefaultValuesFromServiceTemplateMetadata,
+} from '../../../common/serviceTemplateMetadataUtil';
+import ReleaseFormContents from './ReleaseFormContents';
+
+export type LocaleFormKey = `locale-${string}`;
+
+export interface ReleaseFormValues {
+	serviceId: number;
+	version: string;
+	staticMetadata: Record<string, string | boolean>;
+	[key: LocaleFormKey]: Record<string, string | boolean>;
+}
+
+function createLocalesSchema(
+	locales: LocaleRecord[],
+	data: Record<string, any>
+): Record<LocaleFormKey, any> {
+	const res: Record<LocaleFormKey, any> = {};
+	locales.forEach((locale) => {
+		res[`locale-${locale.tag}`] = data;
+	});
+
+	return res;
+}
 
 interface CreateReleaseFormProps {
 	service: ServiceRecord;
@@ -28,77 +56,106 @@ const ReleaseForm: React.FC<CreateReleaseFormProps> = ({
 	const queryClient = useQueryClient();
 	const createRelease = useMutation(releaseCreate);
 	const locales = useLocalesList(service.routeName!);
-	const isLoading = createRelease.isLoading || locales.isLoading;
+	const serviceTemplate = useServiceGetServiceTemplate(service.routeName!);
+	const [selectedLocales, setSelectedLocales] = React.useState<
+		LocaleRecord[]
+	>([]);
+
+	const isLoading =
+		createRelease.isLoading ||
+		locales.isLoading ||
+		serviceTemplate.isLoading;
 
 	const validationSchema = yup.object({
-		email: yup.string().email().required(),
-		firstName: yup
-			.string()
-			.min(5)
-			.max(50)
-			.required('First name is required'),
-		lastName: yup.string().min(5).max(50).required('Last name is required'),
-		roleId: yup.number().positive('Role is required'),
+		version: yup.string().min(2).max(50).required(),
+		staticMetadata: createYupSchemaFromServiceTemplateMetadata(
+			serviceTemplate.data?.staticMetadata ?? []
+		),
+		...createLocalesSchema(
+			selectedLocales,
+			createYupSchemaFromServiceTemplateMetadata(
+				serviceTemplate.data?.localizedMetadata ?? []
+			)
+		),
 	});
 
-	const formik = useFormik<CreateReleaseRequest>({
-		initialValues: {
-			serviceId: service.id!,
-			version: '',
-			metaData: '',
-			localisedMetadataList: [],
-		},
-		validationSchema,
-		onSubmit: async (values) => {
-			await toast.promise(createRelease.mutateAsync(values), {
-				loading: t('common.loading'),
-				success: () => {
-					formik.resetForm();
-					return t('release.create.success');
-				},
-				error: t('release.create.error', {
-					error:
-						(createRelease.error as any)?.message ||
-						'No message available',
-				}),
-			});
-			queryClient.invalidateQueries(getReleasesListQueryKey(service.id!));
-			onSubmitSuccess();
-		},
-	});
+	const initialValues = {
+		serviceId: service.id!,
+		version: '',
+		staticMetadata: formikDefaultValuesFromServiceTemplateMetadata(
+			serviceTemplate.data?.staticMetadata ?? []
+		),
+		...createLocalesSchema(
+			selectedLocales,
+			formikDefaultValuesFromServiceTemplateMetadata(
+				serviceTemplate.data?.localizedMetadata ?? []
+			)
+		),
+	};
+
+	const onSubmit = async (
+		values: ReleaseFormValues,
+		formik: FormikHelpers<ReleaseFormValues>
+	) => {
+		const request: CreateReleaseRequest = {
+			serviceId: values.serviceId,
+			version: values.version,
+			metaData: JSON.stringify(values.staticMetadata),
+			localisedMetadataList: selectedLocales.map((locale) => ({
+				localeId: locale.id!,
+				metadata: JSON.stringify(values[`locale-${locale.tag}`]),
+			})),
+		};
+
+		await toast.promise(createRelease.mutateAsync(request), {
+			loading: t('common.loading'),
+			success: () => {
+				formik.resetForm();
+				return t('release.create.success');
+			},
+			error: t('release.create.error', {
+				error:
+					(createRelease.error as any)?.message ||
+					'No message available',
+			}),
+		});
+		await queryClient.invalidateQueries(
+			getServicesListReleasesQueryKey(service.id!)
+		);
+		onSubmitSuccess();
+	};
+
+	const handleLocaleAdd = (locale: LocaleRecord) => {
+		setSelectedLocales([...selectedLocales, locale]);
+	};
+
+	const handleLocaleDelete = (locale: LocaleRecord) => {
+		setSelectedLocales(selectedLocales.filter((l) => l.id !== locale.id));
+	};
 
 	return (
-		<form onSubmit={formik.handleSubmit}>
-			<Grid container spacing={2} justifyContent='center'>
-				<Grid item xs={12}>
-					<TextField
-						fullWidth
-						id='version'
-						name='version'
-						label='Email'
-						value={formik.values.version}
-						onChange={formik.handleChange}
-						error={
-							formik.touched.version &&
-							Boolean(formik.errors.version)
+		<Formik
+			initialValues={initialValues}
+			onSubmit={onSubmit}
+			validationSchema={validationSchema}
+		>
+			{(formik) => (
+				<form onSubmit={formik.handleSubmit}>
+					<ReleaseFormContents
+						isLoading={isLoading}
+						locales={locales.data ?? []}
+						localizedMetadata={
+							serviceTemplate.data?.localizedMetadata ?? []
 						}
-						helperText={
-							formik.touched.version && formik.errors.version
+						staticMetadata={
+							serviceTemplate.data?.staticMetadata ?? []
 						}
-						disabled={isLoading}
+						onLocaleAdd={handleLocaleAdd}
+						onLocaleDelete={handleLocaleDelete}
 					/>
-				</Grid>
-				<Grid item>
-					<LoadingButton
-						type='submit'
-						loading={isLoading}
-						variant='contained'
-					>
-						{t('release.create.submit')}
-					</LoadingButton>
-				</Grid>
-			</Grid>
-		</form>
+				</form>
+			)}
+		</Formik>
 	);
 };
 

@@ -44,6 +44,14 @@
       },
       "required": {
         "type": "boolean"
+      },
+      "placeholder": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "minLength": 2,
+        "maxLength": 50
       }
     },
     "required": [

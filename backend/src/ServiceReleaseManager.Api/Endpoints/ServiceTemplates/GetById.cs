@@ -26,7 +26,7 @@ public class Get : EndpointBase.WithRequest<GetServiceTemplateById>.WithActionRe
     Summary = "Get a service template",
     Description = "Get a service template by its id",
     OperationId = "ServiceTemplate.Get",
-    Tags = new[] { "ServiceTemplateEndpoints" }
+    Tags = new[] { "ServiceTemplate" }
   )]
   [SwaggerResponse(200, "The service template was found", typeof(ServiceTemplateRecord))]
   [SwaggerResponse(404, "The service template was not found")]

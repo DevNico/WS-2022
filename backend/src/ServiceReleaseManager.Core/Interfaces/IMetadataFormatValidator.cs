@@ -15,6 +15,7 @@ public record MetadataArrayElement(
   string Label,
   int? MinLength,
   int? MaxLength,
+  string? Placeholder,
   bool Required
 )
 {

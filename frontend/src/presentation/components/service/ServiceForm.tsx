@@ -9,9 +9,11 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from 'react-query';
 import * as yup from 'yup';
 import { CreateServiceRequest, OrganisationRecord } from '../../../api/models';
-import { getServiceListQueryKey } from '../../../api/service-endpoints/service-endpoints';
-import { useServiceTemplateList } from '../../../api/service-template-endpoints/service-template-endpoints';
 import { serviceCreate } from '../../../api/service/service';
+import {
+	getOrganisationListServicesQueryKey,
+	useOrganisationListServiceTemplates,
+} from '../../../api/organisation/organisation';
 
 export interface ServiceFormProps {
 	onSubmitSuccess: () => void;
@@ -26,7 +28,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 
 	const queryClient = useQueryClient();
 	const createService = useMutation(serviceCreate);
-	const serviceTemplate = useServiceTemplateList(organisation.routeName!);
+	const serviceTemplate = useOrganisationListServiceTemplates(
+		organisation.routeName!
+	);
 
 	const validationSchema = yup.object({
 		name: yup.string().min(5).max(50).required('Name is required'),
@@ -57,8 +61,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({
 						'No message available',
 				}),
 			});
-			queryClient.invalidateQueries(
-				getServiceListQueryKey(organisation.routeName!)
+			await queryClient.invalidateQueries(
+				getOrganisationListServicesQueryKey(organisation.routeName!)
 			);
 			onSubmitSuccess();
 		},

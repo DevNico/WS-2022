@@ -1,4 +1,4 @@
-﻿using Ardalis.Result.AspNetCore;
+﻿ using Ardalis.Result.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Api.Authorization.Operations.Service;
@@ -46,7 +46,7 @@ public class Create : EndpointBase
       return Conflict(new ErrorResponse("A role with the same name already exists"));
     }
 
-    var role = new ServiceRole(request.Name, request.ReleaseCreate, request.ReleaseApprove,
+    var role = new ServiceRole(request.OrganisationId, request.Name, request.ReleaseCreate, request.ReleaseApprove,
       request.ReleasePublish, request.ReleaseMetadataEdit, request.ReleaseLocalizedMetadataEdit);
     var result = await _service.Create(request.OrganisationId, role, cancellationToken);
     return this.ToActionResult(result.MapValue(ServiceRoleRecord.FromEntity));

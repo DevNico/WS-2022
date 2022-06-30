@@ -32,7 +32,7 @@ public class ListUsers : EndpointBase
   [SwaggerResponse(200, "The users for the service", typeof(List<ServiceUserRecord>))]
   [SwaggerResponse(404, "The service was not found")]
   public override async Task<ActionResult<List<ServiceUserRecord>>> HandleAsync(
-    ListUsersByServiceId request,
+    [FromRoute] ListUsersByServiceId request,
     CancellationToken cancellationToken = new())
   {
     if (!await _authorizationService.EvaluateOrganisationAuthorizationServiceId(User,

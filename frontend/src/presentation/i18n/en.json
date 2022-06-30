@@ -24,7 +24,8 @@
 		},
 		"loading": "Loading",
 		"retry": "Try again",
-		"submit": "Submit"
+		"submit": "Submit",
+		"delete": "Delete"
 	},
 	"home": {
 		"noOrganisations": "No organizations found, you need to be invited to one to start using the application."
@@ -135,11 +136,31 @@
 			"error": "Error creating new release: {{error}}",
 			"submit": "Submit",
 			"success": "Release created successfully",
-			"title": "Create Release"
+			"title": "Create Release",
+			"basicInformation": "Basic Information",
+			"selectServiceTemplate": "Service Template",
+			"staticMetadata": "Static Metadata",
+			"editStaticMetadata": "Edit Static Metadata",
+			"localizedMetadata": "Localized Metadata",
+			"emptyTemplate": "No data available",
+			"addLocalizedMetadata": "Add localized metadata",
+			"locale": "Locale",
+			"localizedMetadataFor": "Localized Metadata for locale '{{locale}}'"
 		},
 		"list": {
 			"create": "Create Release",
-			"title": "Releases"
+			"title": "Releases",
+			"error": "Couldn't load releases",
+			"noData": "No releases found"
+		},
+		"delete": {
+			"confirm": "Are you sure you want to delete the release {{name}}?",
+			"error": "Failed to delete release",
+			"success": "Release deleted successfully"
+		},
+		"model": {
+			"version": "Version",
+			"createdAt": "Created At"
 		}
 	},
 	"service": {
@@ -176,7 +197,13 @@
 		"model": {
 			"localizedMetadata": "Localized Metadata",
 			"name": "Name",
-			"staticMetadata": "Static Metadata"
+			"staticMetadata": "Static Metadata",
+			"actions": "Actions"
+		},
+		"delete": {
+			"confirm": "Are you sure you want to delete the service template {{name}}?",
+			"error": "Failed to delete service template",
+			"success": "Service template deleted"
 		}
 	}
 }

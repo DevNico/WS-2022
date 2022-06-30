@@ -12,8 +12,8 @@ public interface IServiceService
     CancellationToken cancellationToken
   );
 
-  public Task<Result<List<Service>>> GetByOrganisationUserIds(
-    ICollection<int> organisationUserIds,
+  public Task<Result<List<Service>>> GetByOrganisationUserId(
+    int organisationUserId,
     CancellationToken cancellationToken
   );
 
@@ -34,5 +34,6 @@ public interface IServiceService
 
   public Task<Result> Deactivate(int serviceId, CancellationToken cancellationToken);
 
-  public Task<ServiceTemplate?> GetServiceTemplate(int serviceTemplateId, CancellationToken cancellationToken);
+  public Task<Result<ServiceTemplate>> GetServiceTemplate(int serviceTemplateId,
+    CancellationToken cancellationToken);
 }
