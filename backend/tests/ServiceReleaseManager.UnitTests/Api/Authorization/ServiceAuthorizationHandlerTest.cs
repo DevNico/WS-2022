@@ -12,9 +12,9 @@ public class ServiceAuthorizationHandlerTest : ServiceAuthorizationHandler
   [Fact]
   public async Task HandleRequirementAsync_Should()
   {
-    var roleAdmin = new ServiceRole("admin", true, true, true, true, true);
-    var roleDev = new ServiceRole("dev", true, false, false, false, false);
-    var roleUser = new ServiceRole("user", false, false, false, false, false);
+    var roleAdmin = new ServiceRole(0, "admin", true, true, true, true, true);
+    var roleDev = new ServiceRole(0, "dev", true, false, false, false, false);
+    var roleUser = new ServiceRole(0, "user", false, false, false, false, false);
 
     var req = new ServiceAuthorizationRequirement() { Name = "releaseCreate", EvaluationFunction = r => r.ReleaseCreate };
 

@@ -24,8 +24,10 @@ public class OrganisationService : IOrganisationService
     return ResultHelper.NullableSuccessNotFound(organisation);
   }
 
-  public async Task<Result<Organisation>> GetByRouteName(string routeName,
-    CancellationToken cancellationToken)
+  public async Task<Result<Organisation>> GetByRouteName(
+    string routeName,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new OrganisationByRouteNameSpec(routeName);
     var organisation = await _organisationRepository.GetBySpecAsync(spec, cancellationToken);
@@ -33,16 +35,20 @@ public class OrganisationService : IOrganisationService
     return ResultHelper.NullableSuccessNotFound(organisation);
   }
 
-  public async Task<Result<List<Organisation>>> List(bool includeDeactivated,
-    CancellationToken cancellationToken)
+  public async Task<Result<List<Organisation>>> List(
+    bool includeDeactivated,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new OrganisationsSearchSpec(includeDeactivated);
     var organisations = await _organisationRepository.ListAsync(spec, cancellationToken);
     return Result.Success(organisations);
   }
 
-  public async Task<Result<List<Organisation>>> ListByUserEmail(string userEmail,
-    CancellationToken cancellationToken)
+  public async Task<Result<List<Organisation>>> ListByUserEmail(
+    string userEmail,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new OrganisationsByUserEmailSpec(userEmail.ToLower());
     var organisations = await _organisationRepository.ListAsync(spec, cancellationToken);
@@ -50,8 +56,10 @@ public class OrganisationService : IOrganisationService
     return Result.Success(organisations);
   }
 
-  public async Task<Result<Organisation>> Create(string routeName,
-    CancellationToken cancellationToken)
+  public async Task<Result<Organisation>> Create(
+    string routeName,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new OrganisationByRouteNameSpec(routeName);
     var org = await _organisationRepository.GetBySpecAsync(spec, cancellationToken);
@@ -67,7 +75,7 @@ public class OrganisationService : IOrganisationService
     newOrganisation.Roles = OrganisationRole.GetDefaultRoles(newOrganisation.Id);
     await _organisationRepository.UpdateAsync(newOrganisation, cancellationToken);
     await _organisationRepository.SaveChangesAsync(cancellationToken);
-    
+
     return Result.Success(createdOrganisation);
   }
 
@@ -79,8 +87,10 @@ public class OrganisationService : IOrganisationService
     return Result.Success();
   }
 
-  public async Task<Result> Delete(string routeName,
-    CancellationToken cancellationToken)
+  public async Task<Result> Delete(
+    string routeName,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new OrganisationByRouteNameSpec(routeName);
     var org = await _organisationRepository.GetBySpecAsync(spec, cancellationToken);
@@ -95,5 +105,4 @@ public class OrganisationService : IOrganisationService
 
     return Result.Success();
   }
-
 }
