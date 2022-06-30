@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ServiceReleaseManager.Core.GitHub.Entities;
+namespace ServiceReleaseManager.Infrastructure.GitHub.Entities;
 
 [Serializable]
 public class GitHubCommit : GitHubEntity

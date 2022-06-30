@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace ServiceReleaseManager.Core.GitHub;
+namespace ServiceReleaseManager.Infrastructure.GitHub;
 
 public class LowerCaseNamingPolicy : JsonNamingPolicy
 {

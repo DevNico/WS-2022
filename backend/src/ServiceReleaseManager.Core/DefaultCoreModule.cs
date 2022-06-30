@@ -1,6 +1,4 @@
 ﻿using Autofac;
-using ServiceReleaseManager.Core.GitHub;
-using ServiceReleaseManager.Core.GitHub.Converters;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.Core.Services;
 
@@ -44,14 +42,6 @@ public class DefaultCoreModule : Module
     
     builder.RegisterType<ServiceRoleService>()
       .As<IServiceRoleService>()
-      .InstancePerLifetimeScope();
-
-    builder.RegisterType<ChangeLogConverter>()
-      .As<IChangeLogConverter>()
-      .InstancePerLifetimeScope();
-
-    builder.RegisterType<GitHubProxy>()
-      .As<IGitHubProxy>()
       .InstancePerLifetimeScope();
   }
 }
