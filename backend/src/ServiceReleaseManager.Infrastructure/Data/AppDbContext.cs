@@ -44,9 +44,9 @@ public class AppDbContext : DbContext
 
     // dispatch events only if save was successful
     var entitiesWithEvents = ChangeTracker.Entries<EntityBase>()
-      .Select(e => e.Entity)
-      .Where(e => e.DomainEvents.Any())
-      .ToArray();
+                                          .Select(e => e.Entity)
+                                          .Where(e => e.DomainEvents.Any())
+                                          .ToArray();
 
     await _dispatcher.DispatchAndClearEvents(entitiesWithEvents);
 
@@ -61,7 +61,10 @@ public class AppDbContext : DbContext
   private void AddTimestamps()
   {
     var entities = ChangeTracker.Entries()
-      .Where(x => x.Entity is EntityBase && x.State is EntityState.Added or EntityState.Modified);
+                                .Where(
+                                   x => x.Entity is EntityBase &&
+                                        x.State is EntityState.Added or EntityState.Modified
+                                 );
 
     foreach (var entity in entities)
     {

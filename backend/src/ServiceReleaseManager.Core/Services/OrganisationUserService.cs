@@ -13,19 +13,25 @@ public class OrganisationUserService : IOrganisationUserService
 
   private readonly IRepository<OrganisationUser> _organisationUserRepository;
 
-  public OrganisationUserService(IRepository<OrganisationUser> organisationUserRepository,
-    IOrganisationService organisationService)
+  public OrganisationUserService(
+    IRepository<OrganisationUser> organisationUserRepository,
+    IOrganisationService organisationService
+  )
   {
     _organisationUserRepository = organisationUserRepository;
     _organisationService = organisationService;
   }
 
-  public async Task<Result<OrganisationUser>> Create(OrganisationUser organisationUser,
-    CancellationToken cancellationToken)
+  public async Task<Result<OrganisationUser>> Create(
+    OrganisationUser organisationUser,
+    CancellationToken cancellationToken
+  )
   {
     var spec =
-      new OrganisationUserByOrganisationIdAndEmailSpec(organisationUser.OrganisationId,
-        organisationUser.Email);
+      new OrganisationUserByOrganisationIdAndEmailSpec(
+        organisationUser.OrganisationId,
+        organisationUser.Email
+      );
     var existingUser = await _organisationUserRepository.GetBySpecAsync(spec, cancellationToken);
 
     if (existingUser != null)
@@ -40,16 +46,21 @@ public class OrganisationUserService : IOrganisationUserService
     return Result.Success(createdUser);
   }
 
-  public async Task<Result<List<OrganisationUser>>> GetByEmail(string email,
-    CancellationToken cancellationToken)
+  public async Task<Result<List<OrganisationUser>>> GetByEmail(
+    string email,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new OrganisationUsersByEmailSpec(email);
     var result = await _organisationUserRepository.ListAsync(spec, cancellationToken);
     return result;
   }
 
-  public async Task<Result<List<OrganisationUser>>> ListByOrganisationRouteName(string
-    organisationRouteName, CancellationToken cancellationToken)
+  public async Task<Result<List<OrganisationUser>>> ListByOrganisationRouteName(
+    string
+      organisationRouteName,
+    CancellationToken cancellationToken
+  )
   {
     var organisation = await
       _organisationService.GetByRouteName(organisationRouteName, cancellationToken);
@@ -65,8 +76,10 @@ public class OrganisationUserService : IOrganisationUserService
     return Result.Success(organisations.ToList());
   }
 
-  public async Task<Result<OrganisationUser>> GetById(int userId,
-    CancellationToken cancellationToken)
+  public async Task<Result<OrganisationUser>> GetById(
+    int userId,
+    CancellationToken cancellationToken
+  )
   {
     var user = await _organisationUserRepository.GetByIdAsync(userId, cancellationToken);
     return ResultHelper.NullableSuccessNotFound(user);
@@ -90,10 +103,12 @@ public class OrganisationUserService : IOrganisationUserService
     return Result.Success();
   }
 
-  public async Task<List<OrganisationUser>?> GetUsers(int
-    organisationId, CancellationToken cancellationToken)
+  public async Task<List<OrganisationUser>?> GetUsers(
+    int
+      organisationId,
+    CancellationToken cancellationToken
+  )
   {
-
     var spec = new OrganisationUserByOrganisationIdSpec(organisationId);
     var users = await _organisationUserRepository.ListAsync(spec, cancellationToken);
 

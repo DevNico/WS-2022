@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 using ServiceReleaseManager.Core.OrganisationAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate.Events;
 using ServiceReleaseManager.SharedKernel;
@@ -10,13 +11,17 @@ namespace ServiceReleaseManager.Core.ServiceAggregate;
 
 public class ServiceTemplate : EntityBase, IAggregateRoot
 {
-  // Required for EF
+  [UsedImplicitly]
   protected ServiceTemplate()
   {
   }
 
-  public ServiceTemplate(string name, string staticMetadata, string localizedMetadata, int
-    organisationId)
+  public ServiceTemplate(
+    string name,
+    string staticMetadata,
+    string localizedMetadata,
+    int organisationId
+  )
   {
     Name = name.Trim().ToLower();
     StaticMetadata = staticMetadata;
@@ -27,22 +32,22 @@ public class ServiceTemplate : EntityBase, IAggregateRoot
 
   [Required]
   [MaxLength(50)]
-  public string Name { get; set; }
+  public string Name { get; set; } = null!;
 
 
   [Required]
   [Column(TypeName = "json")]
-  public string StaticMetadata { get; set; }
+  public string StaticMetadata { get; set; } = null!;
 
   [Required]
   [Column(TypeName = "json")]
-  public string LocalizedMetadata { get; set; }
+  public string LocalizedMetadata { get; set; } = null!;
 
   [Required]
   [DefaultValue(true)]
   public bool IsActive { get; set; }
 
-  public Organisation Organisation { get; set; }
+  public Organisation Organisation { get; set; } = null!;
 
   public int OrganisationId { get; set; }
 

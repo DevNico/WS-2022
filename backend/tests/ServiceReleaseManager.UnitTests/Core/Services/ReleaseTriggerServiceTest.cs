@@ -12,6 +12,7 @@ namespace ServiceReleaseManager.UnitTests.Core.Services;
 public class ReleaseTriggerServiceTest
 {
   private readonly Mock<IRepository<ReleaseTrigger>> _repositoryMock;
+
   public ReleaseTriggerServiceTest()
   {
     _repositoryMock = new Mock<IRepository<ReleaseTrigger>>();
@@ -26,7 +27,9 @@ public class ReleaseTriggerServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _repositoryMock.Setup(m => m.AddAsync(It.IsAny<ReleaseTrigger>(), It.IsAny<CancellationToken>())).ReturnsAsync(trigger);
+    _repositoryMock
+     .Setup(m => m.AddAsync(It.IsAny<ReleaseTrigger>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(trigger);
 
     var releaseTriggerService = new ReleaseTriggerService(_repositoryMock.Object);
     var result = await releaseTriggerService.Create(trigger, cancellationToken);
@@ -49,7 +52,10 @@ public class ReleaseTriggerServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _repositoryMock.Setup(m => m.GetBySpecAsync(It.IsAny<ReleaseTriggerByIdSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(trigger);
+    _repositoryMock
+     .Setup(
+        m => m.GetBySpecAsync(It.IsAny<ReleaseTriggerByIdSpec>(), It.IsAny<CancellationToken>())
+      ).ReturnsAsync(trigger);
 
     var releaseTriggerService = new ReleaseTriggerService(_repositoryMock.Object);
     var result = await releaseTriggerService.Delete(triggerId, cancellationToken);
@@ -57,7 +63,13 @@ public class ReleaseTriggerServiceTest
     Assert.True(result.IsSuccess);
     Assert.Null(result.Value);
 
-    _repositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<ReleaseTriggerByIdSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _repositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<ReleaseTriggerByIdSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _repositoryMock.Verify(m => m.DeleteAsync(trigger, cancellationToken), Times.Once);
     _repositoryMock.Verify(m => m.SaveChangesAsync(cancellationToken), Times.Once);
     _repositoryMock.VerifyNoOtherCalls();
@@ -73,7 +85,10 @@ public class ReleaseTriggerServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _repositoryMock.Setup(m => m.GetBySpecAsync(It.IsAny<ReleaseTriggerByIdSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(trigger);
+    _repositoryMock
+     .Setup(
+        m => m.GetBySpecAsync(It.IsAny<ReleaseTriggerByIdSpec>(), It.IsAny<CancellationToken>())
+      ).ReturnsAsync(trigger);
 
     var releaseTriggerService = new ReleaseTriggerService(_repositoryMock.Object);
     var result = await releaseTriggerService.GetById(triggerId, cancellationToken);
@@ -81,13 +96,19 @@ public class ReleaseTriggerServiceTest
     Assert.True(result.IsSuccess);
     Assert.Equal(trigger, result.Value);
 
-    _repositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<ReleaseTriggerByIdSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _repositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<ReleaseTriggerByIdSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _repositoryMock.VerifyNoOtherCalls();
   }
 
   private ReleaseTrigger getExampleTrigger(int orgId, int serviceId, int triggerId = 987)
   {
-    var organisation = new Organisation("org") { Id = orgId};
+    var organisation = new Organisation("org") { Id = orgId };
     var template = new ServiceTemplate("temp", "", "", orgId);
     var service = new Service("ser", "", template, organisation) { Id = serviceId };
     return new ReleaseTrigger("trig", "", "", service);

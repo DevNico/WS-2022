@@ -9,7 +9,7 @@ public sealed class OrganisationsSearchSpec : Specification<Organisation>
     if (!includeDeactivated)
     {
       Query
-        .Where(o => o.IsActive);
+       .Where(o => o.IsActive);
     }
   }
 }

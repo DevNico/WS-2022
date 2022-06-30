@@ -7,7 +7,7 @@ public sealed class DefaultLocaleSpec : Specification<Locale>, ISingleResultSpec
   public DefaultLocaleSpec(int serviceId)
   {
     Query
-      .Where(l => l.ServiceId == serviceId)
-      .Where(l => l.IsDefault);
+     .Where(l => l.ServiceId == serviceId)
+     .Where(l => l.IsDefault);
   }
 }

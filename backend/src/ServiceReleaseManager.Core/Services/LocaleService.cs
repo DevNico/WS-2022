@@ -26,7 +26,8 @@ public class LocaleService : ILocaleService
 
   public async Task<Result<List<Locale>>> ListByServiceRouteName(
     string serviceRouteName,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken
+  )
   {
     var service = await _serviceService.GetByRouteName(serviceRouteName, cancellationToken);
     if (!service.IsSuccess)
@@ -96,7 +97,8 @@ public class LocaleService : ILocaleService
   private async Task<Result<Locale>> _getLocaleByTag(
     int serviceId,
     string tag,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken
+  )
   {
     var spec = new LocaleByTagSpec(serviceId, tag);
     var locale = await _localeRepository.GetBySpecAsync(spec, cancellationToken);

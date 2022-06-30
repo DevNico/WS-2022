@@ -6,8 +6,11 @@ namespace ServiceReleaseManager.Api.Authorization;
 public class
   ServiceAuthorizationHandler : AuthorizationHandler<ServiceAuthorizationRequirement, ServiceRole>
 {
-  protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-    ServiceAuthorizationRequirement requirement, ServiceRole resource)
+  protected override Task HandleRequirementAsync(
+    AuthorizationHandlerContext context,
+    ServiceAuthorizationRequirement requirement,
+    ServiceRole resource
+  )
   {
     if (context.User.IsInRole("superAdmin"))
     {

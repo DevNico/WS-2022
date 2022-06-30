@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using ServiceReleaseManager.Core.OrganisationAggregate;
-using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Core.ReleaseAggregate;
+using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.Infrastructure.Data;
 using ServiceReleaseManager.SharedKernel.Interfaces;
 
@@ -26,14 +26,14 @@ public abstract class BaseEfRepoTestFixture
     // Create a fresh service provider, and therefore a fresh
     // InMemory database instance.
     var serviceProvider = new ServiceCollection()
-      .AddEntityFrameworkInMemoryDatabase()
-      .BuildServiceProvider();
+                         .AddEntityFrameworkInMemoryDatabase()
+                         .BuildServiceProvider();
 
     // Create a new options instance telling the context to use an
     // InMemory database and the new service provider.
     var builder = new DbContextOptionsBuilder<AppDbContext>();
     builder.UseInMemoryDatabase("service_release_manager")
-      .UseInternalServiceProvider(serviceProvider);
+           .UseInternalServiceProvider(serviceProvider);
 
     return builder.Options;
   }
@@ -47,7 +47,8 @@ public abstract class BaseEfRepoTestFixture
   {
     return new EfRepository<OrganisationRole>(_dbContext);
   }
-    protected EfRepository<OrganisationUser> GetOrganisationUserRepository()
+
+  protected EfRepository<OrganisationUser> GetOrganisationUserRepository()
   {
     return new EfRepository<OrganisationUser>(_dbContext);
   }
@@ -61,5 +62,4 @@ public abstract class BaseEfRepoTestFixture
   {
     return new EfRepository<Release>(_dbContext);
   }
-
 }

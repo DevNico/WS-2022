@@ -7,12 +7,10 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Changelogs;
 
-public class GetByCommits : EndpointBase
-  .WithRequest<GetByCommitsRequest>
-  .WithActionResult<string>
+public class GetByCommits : EndpointBase.WithRequest<GetByCommitsRequest>.WithActionResult<string>
 {
-  private readonly IGitHubProxy _proxy;
   private readonly IChangeLogConverter _converter;
+  private readonly IGitHubProxy _proxy;
 
   public GetByCommits(IGitHubProxy proxy, IChangeLogConverter converter)
   {
@@ -32,23 +30,30 @@ public class GetByCommits : EndpointBase
   [SwaggerResponse(404, "GitHub Repository not found")]
   public override async Task<ActionResult<string>> HandleAsync(
     [FromBody] GetByCommitsRequest request,
-    CancellationToken cancellationToken = new CancellationToken())
+    CancellationToken cancellationToken = new()
+  )
   {
     // Validate input
     if (request.Limit is < 1 or > 100)
     {
       return BadRequest(new ErrorResponse(GitHubProxy.LimitOutOfRangeMessage));
     }
-    
+
     // Fetch information from GitHub
-    var commits = await _proxy.ListCommits(request.Owner, request.Repo, cancellationToken, request.ClosedAfter, request.Limit);
+    var commits = await _proxy.ListCommits(
+      request.Owner,
+      request.Repo,
+      cancellationToken,
+      request.ClosedAfter,
+      request.Limit
+    );
 
     // Check if repo exists
     if (commits.Status == ResultStatus.NotFound)
     {
       return NotFound();
     }
-    
+
     // Convert list to a changelog
     return _converter.Convert(commits.Value, " - ");
   }

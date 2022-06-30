@@ -15,12 +15,15 @@ namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithActionResult<
   ServiceTemplateRecord>
 {
-  private readonly IMetadataFormatValidator _metadataValidator;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IMetadataFormatValidator _metadataValidator;
   private readonly IRepository<ServiceTemplate> _repository;
 
-  public Update(IRepository<ServiceTemplate> repository, IMetadataFormatValidator metadataValidator,
-    IServiceManagerAuthorizationService authorizationService)
+  public Update(
+    IRepository<ServiceTemplate> repository,
+    IMetadataFormatValidator metadataValidator,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _repository = repository;
     _metadataValidator = metadataValidator;
@@ -39,7 +42,8 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
   [SwaggerResponse(404, "A service template with the specified name was not found")]
   public override async Task<ActionResult<ServiceTemplateRecord>> HandleAsync(
     UpdateServiceTemplate request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var idSpec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
     var serviceTemplate = await _repository.GetBySpecAsync(idSpec, cancellationToken);
@@ -48,9 +52,12 @@ public class Update : EndpointBase.WithRequest<UpdateServiceTemplate>.WithAction
       return NotFound();
     }
 
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          serviceTemplate.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Create,
-          cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          serviceTemplate.OrganisationId,
+          ServiceTemplateOperations.ServiceTemplate_Create,
+          cancellationToken
+        ))
     {
       return NotFound();
     }

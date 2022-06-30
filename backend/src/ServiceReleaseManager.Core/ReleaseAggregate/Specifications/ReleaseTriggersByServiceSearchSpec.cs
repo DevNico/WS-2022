@@ -8,8 +8,8 @@ public sealed class ReleaseTriggersByServiceSearchSpec :
   public ReleaseTriggersByServiceSearchSpec(int serviceId)
   {
     Query
-      .Include(trigger => trigger.Service);
+     .Include(trigger => trigger.Service);
     Query
-      .Where(trigger => trigger.Service.Id == serviceId);
+     .Where(trigger => trigger.Service.Id == serviceId);
   }
 }

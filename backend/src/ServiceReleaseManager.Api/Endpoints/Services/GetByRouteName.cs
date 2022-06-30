@@ -12,11 +12,13 @@ public class
   GetServiceByRouteName : EndpointBase.WithRequest<GetServiceByRouteNameRequest>.WithActionResult<
     ServiceRecord>
 {
-  private readonly IServiceService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceService _service;
 
-  public GetServiceByRouteName(IServiceService service,
-    IServiceManagerAuthorizationService authorizationService)
+  public GetServiceByRouteName(
+    IServiceService service,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -33,15 +35,21 @@ public class
   [SwaggerResponse(404, "The service was not found")]
   public override async Task<ActionResult<ServiceRecord>> HandleAsync(
     [FromRoute] GetServiceByRouteNameRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var service =
       await _service.GetByRouteName(
-        request.ServiceRouteName, cancellationToken);
+        request.ServiceRouteName,
+        cancellationToken
+      );
 
-    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
           service.Value.OrganisationId,
-          ServiceOperations.Service_Read, cancellationToken))
+          ServiceOperations.Service_Read,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

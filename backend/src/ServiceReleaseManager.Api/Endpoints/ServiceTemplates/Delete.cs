@@ -10,11 +10,13 @@ namespace ServiceReleaseManager.Api.Endpoints.ServiceTemplates;
 
 public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutResult
 {
-  private readonly IRepository<ServiceTemplate> _repository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IRepository<ServiceTemplate> _repository;
 
-  public Delete(IRepository<ServiceTemplate> repository,
-    IServiceManagerAuthorizationService authorizationService)
+  public Delete(
+    IRepository<ServiceTemplate> repository,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _repository = repository;
     _authorizationService = authorizationService;
@@ -31,7 +33,8 @@ public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutRes
   [SwaggerResponse(404, "A service template with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteServiceTemplate request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var spec = new ServiceTemplateByIdSpec(request.ServiceTemplateId);
     var toDelete = await _repository.GetBySpecAsync(spec, cancellationToken);
@@ -40,9 +43,12 @@ public class Delete : EndpointBase.WithRequest<DeleteServiceTemplate>.WithoutRes
       return NotFound();
     }
 
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          toDelete.OrganisationId, ServiceTemplateOperations.ServiceTemplate_Delete,
-          cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          toDelete.OrganisationId,
+          ServiceTemplateOperations.ServiceTemplate_Delete,
+          cancellationToken
+        ))
     {
       return NotFound();
     }

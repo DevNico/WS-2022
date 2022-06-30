@@ -7,7 +7,7 @@ public sealed class ServiceRoleByIdSpec : Specification<ServiceRole>, ISingleRes
   public ServiceRoleByIdSpec(int id)
   {
     Query
-      .Where(r => r.IsActive)
-      .Where(r => r.Id == id);
+     .Where(r => r.IsActive)
+     .Where(r => r.Id == id);
   }
 }

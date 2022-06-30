@@ -10,19 +10,23 @@ internal class AuthorizeOperationFilter : IOperationFilter
   public void Apply(OpenApiOperation operation, OperationFilterContext context)
   {
     var authAttributes = context.MethodInfo.DeclaringType?.GetCustomAttributes(true)
-      .Union(context.MethodInfo.GetCustomAttributes(true))
-      .OfType<AuthorizeAttribute>()
-      .ToList();
+                                .Union(context.MethodInfo.GetCustomAttributes(true))
+                                .OfType<AuthorizeAttribute>()
+                                .ToList();
 
     if (authAttributes?.Any() != true)
     {
       return;
     }
 
-    operation.Responses.Add(StatusCodes.Status401Unauthorized.ToString(),
-      new OpenApiResponse { Description = nameof(HttpStatusCode.Unauthorized) });
-    operation.Responses.Add(StatusCodes.Status403Forbidden.ToString(),
-      new OpenApiResponse { Description = nameof(HttpStatusCode.Forbidden) });
+    operation.Responses.Add(
+      StatusCodes.Status401Unauthorized.ToString(),
+      new OpenApiResponse { Description = nameof(HttpStatusCode.Unauthorized) }
+    );
+    operation.Responses.Add(
+      StatusCodes.Status403Forbidden.ToString(),
+      new OpenApiResponse { Description = nameof(HttpStatusCode.Forbidden) }
+    );
 
     operation.Security = new List<OpenApiSecurityRequirement>();
 
@@ -32,9 +36,8 @@ internal class AuthorizeOperationFilter : IOperationFilter
     };
 
 
-    operation.Security.Add(new OpenApiSecurityRequirement
-    {
-      [oauth2SecurityScheme] = new[] { "OAuth2" }
-    });
+    operation.Security.Add(
+      new OpenApiSecurityRequirement { [oauth2SecurityScheme] = new[] { "OAuth2" } }
+    );
   }
 }

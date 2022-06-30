@@ -7,12 +7,10 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class Delete : EndpointBase
-  .WithRequest<DeleteServiceRequest>
-  .WithoutResult
+public class Delete : EndpointBase.WithRequest<DeleteServiceRequest>.WithoutResult
 {
-  private readonly IServiceService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceService _service;
 
   public Delete(IServiceService service, IServiceManagerAuthorizationService authorizationService)
   {
@@ -31,13 +29,17 @@ public class Delete : EndpointBase
   [SwaggerResponse(404, "A service with the given id was not found")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteServiceRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var service = await _service.GetById(request.ServiceId, cancellationToken);
 
-    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
           service.Value.OrganisationId,
-          ServiceOperations.Service_Delete, cancellationToken))
+          ServiceOperations.Service_Delete,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

@@ -12,11 +12,13 @@ namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 public class ListServices : EndpointBase.WithRequest<ListOrganisationServicesRequest>.
   WithActionResult<List<ServiceRecord>>
 {
-  private readonly IRepository<Service> _serviceRepository;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IRepository<Service> _serviceRepository;
 
-  public ListServices(IRepository<Service> serviceRepository,
-    IServiceManagerAuthorizationService authorizationService)
+  public ListServices(
+    IRepository<Service> serviceRepository,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _serviceRepository = serviceRepository;
     _authorizationService = authorizationService;
@@ -32,10 +34,15 @@ public class ListServices : EndpointBase.WithRequest<ListOrganisationServicesReq
   [SwaggerResponse(200, "Success", typeof(List<ServiceRecord>))]
   public override async Task<ActionResult<List<ServiceRecord>>> HandleAsync(
     [FromRoute] ListOrganisationServicesRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          request.OrganisationRouteName, ServiceOperations.Service_List, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationRouteName,
+          ServiceOperations.Service_List,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

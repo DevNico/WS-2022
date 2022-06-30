@@ -8,9 +8,9 @@ public sealed class ServiceByOrganisationSearchSpec :
   public ServiceByOrganisationSearchSpec(string organisationRouteName)
   {
     Query
-      .Include(service => service.Organisation);
+     .Include(service => service.Organisation);
     Query
-      .Where(service => service.IsActive)
-      .Where(service => service.Organisation.RouteName == organisationRouteName.ToLower());
+     .Where(service => service.IsActive)
+     .Where(service => service.Organisation.RouteName == organisationRouteName.ToLower());
   }
 }

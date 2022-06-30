@@ -9,7 +9,8 @@ public record ReleaseRecord(
   string Metadata,
   List<ReleaseLocalisedMetadataRecord> LocalisedMetadata,
   DateTime UpdatedAt,
-  DateTime CreatedAt)
+  DateTime CreatedAt
+)
 {
   public static ReleaseRecord FromEntity(Release entity)
   {
@@ -19,10 +20,11 @@ public record ReleaseRecord(
       entity.ServiceId,
       entity.Metadata,
       entity
-        .LocalisedMetadataList
-        .Select(ReleaseLocalisedMetadataRecord.FromEntity)
-        .ToList(),
+       .LocalisedMetadataList
+       .Select(ReleaseLocalisedMetadataRecord.FromEntity)
+       .ToList(),
       entity.UpdatedAt,
-      entity.CreatedAt);
+      entity.CreatedAt
+    );
   }
 }

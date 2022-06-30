@@ -35,27 +35,38 @@ public class KeycloakOAuthClient
     }
 
     _logger.LogDebug("Retrieving a new keycloak oAuth token");
-    using (var content = new FormUrlEncodedContent(new Dictionary<string, string>
-           {
-             { "client_id", _clientId },
-             { "client_secret", _clientSecret },
-             { "grant_type", "client_credentials" }
-           }))
+    using (var content = new FormUrlEncodedContent(
+             new Dictionary<string, string>
+             {
+               { "client_id", _clientId },
+               { "client_secret", _clientSecret },
+               { "grant_type", "client_credentials" }
+             }
+           ))
     {
       content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
       var response =
-        await _httpClient.PostAsync($"{_url}/realms/{_realm}/protocol/openid-connect/token",
-          content);
+        await _httpClient.PostAsync(
+          $"{_url}/realms/{_realm}/protocol/openid-connect/token",
+          content
+        );
 
       var responseContent = await response.Content.ReadAsStringAsync();
       if (response.StatusCode != HttpStatusCode.OK)
       {
         _logger.LogError(
           "Could not get the keycloak oAuth token, status code {Status}, message; {Message}",
-          response.StatusCode.ToString(), responseContent);
+          response.StatusCode.ToString(),
+          responseContent
+        );
         throw new HttpRequestException(
-          string.Format("Could not get the keycloak oauth token. Message from keycloak: {0}",
-            responseContent), null, response.StatusCode);
+          string.Format(
+            "Could not get the keycloak oauth token. Message from keycloak: {0}",
+            responseContent
+          ),
+          null,
+          response.StatusCode
+        );
       }
 
       var token = JsonConvert.DeserializeObject<TokenResponse>(responseContent);

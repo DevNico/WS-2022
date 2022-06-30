@@ -14,10 +14,10 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUsers;
 public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.WithActionResult<
   OrganisationUserRecord>
 {
+  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IKeycloakClient _keycloakClient;
   private readonly ILogger<Create> _logger;
   private readonly IReadRepository<OrganisationRole> _organisationRoleRepository;
-  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IOrganisationService _organisationService;
   private readonly IOrganisationUserService _organisationUserService;
 
@@ -54,7 +54,9 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
       {
         _logger.LogError(
           "The request to the keycloak client failed with code {Status} and message {Message}",
-          e.StatusCode.ToString(), e.Message);
+          e.StatusCode.ToString(),
+          e.Message
+        );
         if (e.InnerException != null)
         {
           _logger.LogError("Inner exception message: {Message}", e.InnerException.Message);
@@ -69,10 +71,11 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
 
   [HttpPost]
   [SwaggerOperation(
-    Summary = "Creates a new OrganisationUser",
-    Description = "Creates a new OrganisationUser",
-    OperationId = "OrganisationUser.Create",
-    Tags = new[] { "OrganisationUser" })
+      Summary = "Creates a new OrganisationUser",
+      Description = "Creates a new OrganisationUser",
+      OperationId = "OrganisationUser.Create",
+      Tags = new[] { "OrganisationUser" }
+    )
   ]
   [SwaggerResponse(200, "User created", typeof(OrganisationUserRecord))]
   [SwaggerResponse(400, "Invalid request")]
@@ -80,10 +83,15 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
   [SwaggerResponse(424, "The keycloak request failed")]
   public override async Task<ActionResult<OrganisationUserRecord>> HandleAsync(
     [FromBody] CreateOrganisationUserRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationId,
-          OrganisationUserOperations.OrganisationUser_Create, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationId,
+          OrganisationUserOperations.OrganisationUser_Create,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }
@@ -113,16 +121,27 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     {
       try
       {
-        await _keycloakClient.CreateUser(new KeycloakUserCreation(request.Email,
-          request.FirstName, request.LastName, request.Email));
+        await _keycloakClient.CreateUser(
+          new KeycloakUserCreation(
+            request.Email,
+            request.FirstName,
+            request.LastName,
+            request.Email
+          )
+        );
       }
       catch (HttpRequestException e)
       {
-        _logger.LogError("Keycloak user creation failed with code {Status} and message {Message}",
-          e.StatusCode.ToString(), e.Message);
+        _logger.LogError(
+          "Keycloak user creation failed with code {Status} and message {Message}",
+          e.StatusCode.ToString(),
+          e.Message
+        );
 
-        return StatusCode(StatusCodes.Status424FailedDependency,
-          "Keycloak client create request failed");
+        return StatusCode(
+          StatusCodes.Status424FailedDependency,
+          "Keycloak client create request failed"
+        );
       }
     }
 
@@ -135,8 +154,10 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationUserRequest>.Wi
     if (keycloakUser.User == null)
     {
       _logger.LogError("Keycloak did not return a user record");
-      return StatusCode(StatusCodes.Status424FailedDependency,
-        "Keycloak client create request failed");
+      return StatusCode(
+        StatusCodes.Status424FailedDependency,
+        "Keycloak client create request failed"
+      );
     }
 
     var newUser = new OrganisationUser(

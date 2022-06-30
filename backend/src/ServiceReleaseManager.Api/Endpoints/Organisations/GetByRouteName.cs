@@ -19,19 +19,23 @@ public class GetByRouteName : EndpointBase.WithRequest<GetOrganisationByRouteNam
 
   [HttpGet(GetOrganisationByRouteNameRequest.Route)]
   [SwaggerOperation(
-    Summary = "Gets a single Organisation",
-    Description = "Gets a single Organisation by its route name",
-    OperationId = "Organisations.GetByRouteName",
-    Tags = new[] { "Organisation" })
+      Summary = "Gets a single Organisation",
+      Description = "Gets a single Organisation by its route name",
+      OperationId = "Organisations.GetByRouteName",
+      Tags = new[] { "Organisation" }
+    )
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "Organisation found", typeof(OrganisationRecord))]
   public override async Task<ActionResult<OrganisationRecord>> HandleAsync(
     [FromRoute] GetOrganisationByRouteNameRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var result =
-      await _organisationService.GetByRouteName(request.OrganisationRouteName,
-        cancellationToken);
+      await _organisationService.GetByRouteName(
+        request.OrganisationRouteName,
+        cancellationToken
+      );
 
     return this.ToActionResult(result.MapValue(OrganisationRecord.FromEntity));
   }

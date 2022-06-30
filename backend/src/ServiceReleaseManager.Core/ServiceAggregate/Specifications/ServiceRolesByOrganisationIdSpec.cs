@@ -7,7 +7,7 @@ public sealed class ServiceRolesByOrganisationIdSpec : Specification<ServiceRole
   public ServiceRolesByOrganisationIdSpec(int organisationId)
   {
     Query
-      .Where(r => r.IsActive)
-      .Where(r => r.OrganisationId == organisationId);
+     .Where(r => r.IsActive)
+     .Where(r => r.OrganisationId == organisationId);
   }
 }

@@ -9,10 +9,10 @@ public class GetByPullRequestsRequest
 
   [Required]
   public string Owner { get; set; } = null!;
-  
+
   [Required]
   public string Repo { get; set; } = null!;
-  
+
   public DateTime? MergedAfter { get; set; } = null;
 
   [DefaultValue(100)]

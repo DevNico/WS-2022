@@ -11,9 +11,9 @@ namespace ServiceReleaseManager.UnitTests.Core.Services;
 
 public class ServiceRoleServiceTest
 {
-  private readonly Mock<IRepository<ServiceRole>> _repositoryMock;
-  private readonly Mock<IOrganisationService> _organisationServiceMock;
   private readonly Organisation _organisation;
+  private readonly Mock<IOrganisationService> _organisationServiceMock;
+  private readonly Mock<IRepository<ServiceRole>> _repositoryMock;
   private readonly ServiceRole _serviceRole0;
 
   public ServiceRoleServiceTest()
@@ -31,8 +31,10 @@ public class ServiceRoleServiceTest
     var cancellationToken = new CancellationToken();
     var serviceRole = GetServiceRole();
 
-    _repositoryMock.Setup(m => m.AddAsync(It.IsAny<ServiceRole>(), It.IsAny<CancellationToken>())).ReturnsAsync(serviceRole);
-    _organisationServiceMock.Setup(r => r.GetById(0, cancellationToken)).ReturnsAsync(_organisation);
+    _repositoryMock.Setup(m => m.AddAsync(It.IsAny<ServiceRole>(), It.IsAny<CancellationToken>()))
+                   .ReturnsAsync(serviceRole);
+    _organisationServiceMock.Setup(r => r.GetById(0, cancellationToken))
+                            .ReturnsAsync(_organisation);
 
     var serviceService = GetServiceRoleService();
     var result = await serviceService.Create(_organisation.Id, serviceRole, cancellationToken);
@@ -51,20 +53,28 @@ public class ServiceRoleServiceTest
   {
     var serviceService = GetServiceRoleService();
     var cancellationToken = new CancellationToken();
-  
-    _repositoryMock.Setup(m => m.GetBySpecAsync(It.IsAny<ServiceRoleByIdSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(_serviceRole0);
-    
+
+    _repositoryMock
+     .Setup(m => m.GetBySpecAsync(It.IsAny<ServiceRoleByIdSpec>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(_serviceRole0);
+
     var result = await serviceService.Deactivate(0, cancellationToken);
-  
+
     Assert.True(result.IsSuccess);
     Assert.Null(result.Value);
-  
-    _repositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<ServiceRoleByIdSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+
+    _repositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<ServiceRoleByIdSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _repositoryMock.Verify(m => m.UpdateAsync(_serviceRole0, cancellationToken), Times.Once);
     _repositoryMock.Verify(m => m.SaveChangesAsync(cancellationToken), Times.Once);
     _repositoryMock.VerifyNoOtherCalls();
   }
-  
+
   [Fact]
   public async Task DeleteInvalidShould()
   {
@@ -72,58 +82,86 @@ public class ServiceRoleServiceTest
     var cancellationToken = new CancellationToken();
 
     var result = await serviceService.Deactivate(1, cancellationToken);
-  
+
     Assert.False(result.IsSuccess);
   }
-  
+
   [Fact]
   public async Task GetByIdShould()
   {
     var serviceService = GetServiceRoleService();
     var cancellationToken = new CancellationToken();
-  
-    _repositoryMock.Setup(m => m.GetBySpecAsync(It.IsAny<ServiceRoleByIdSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(_serviceRole0);
-    
+
+    _repositoryMock
+     .Setup(m => m.GetBySpecAsync(It.IsAny<ServiceRoleByIdSpec>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(_serviceRole0);
+
     var result = await serviceService.GetById(0, cancellationToken);
-  
+
     Assert.True(result.IsSuccess);
     Assert.Equal(_serviceRole0, result.Value);
-  
-    _repositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<ServiceRoleByIdSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+
+    _repositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<ServiceRoleByIdSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _repositoryMock.VerifyNoOtherCalls();
   }
-  
+
   [Fact]
   public async Task GetByRouteNameShould()
   {
     var serviceService = GetServiceRoleService();
     var cancellationToken = new CancellationToken();
-  
-    _repositoryMock.Setup(m => m.ListAsync(It.IsAny<ServiceRoleByNameSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<ServiceRole> { _serviceRole0 });
-    
+
+    _repositoryMock
+     .Setup(m => m.ListAsync(It.IsAny<ServiceRoleByNameSpec>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(new List<ServiceRole> { _serviceRole0 });
+
     var result = await serviceService.GetByName(_serviceRole0.Name, cancellationToken);
-  
+
     Assert.True(result.IsSuccess);
     Assert.Equal(1, result.Value.Count);
-  
-    _repositoryMock.Verify(m => m.ListAsync(It.IsAny<ServiceRoleByNameSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+
+    _repositoryMock.Verify(
+      m => m.ListAsync(
+        It.IsAny<ServiceRoleByNameSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _repositoryMock.VerifyNoOtherCalls();
   }
-  
+
   [Fact]
   public async Task GetByOrganisationUserIdShould()
   {
     var serviceService = GetServiceRoleService();
     var cancellationToken = new CancellationToken();
-  
-    _repositoryMock.Setup(m => m.ListAsync(It.IsAny<ServiceRolesByOrganisationIdSpec>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<ServiceRole>() { _serviceRole0 });
-    
+
+    _repositoryMock
+     .Setup(
+        m => m.ListAsync(
+          It.IsAny<ServiceRolesByOrganisationIdSpec>(),
+          It.IsAny<CancellationToken>()
+        )
+      ).ReturnsAsync(new List<ServiceRole> { _serviceRole0 });
+
     var result = await serviceService.GetByOrganisationId(0, cancellationToken);
-  
+
     Assert.True(result.IsSuccess);
     Assert.Equal(1, result.Value.Count);
-  
-    _repositoryMock.Verify(m => m.ListAsync(It.IsAny<ServiceRolesByOrganisationIdSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+
+    _repositoryMock.Verify(
+      m => m.ListAsync(
+        It.IsAny<ServiceRolesByOrganisationIdSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _repositoryMock.VerifyNoOtherCalls();
   }
 

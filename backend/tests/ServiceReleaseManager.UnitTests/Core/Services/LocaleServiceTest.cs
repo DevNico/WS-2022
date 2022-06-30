@@ -12,7 +12,6 @@ namespace ServiceReleaseManager.UnitTests.Core.Services;
 
 public class LocaleServiceTest
 {
-
   private readonly Mock<IRepository<Locale>> _localeRepositoryMock;
   private readonly Mock<IServiceService> _serviceServiceMock;
 
@@ -32,8 +31,10 @@ public class LocaleServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _serviceServiceMock.Setup(m => m.GetById(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Result<Service>(service));
-    _localeRepositoryMock.Setup(m => m.AddAsync(It.IsAny<Locale>(), It.IsAny<CancellationToken>())).ReturnsAsync(locale);
+    _serviceServiceMock.Setup(m => m.GetById(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                       .ReturnsAsync(new Result<Service>(service));
+    _localeRepositoryMock.Setup(m => m.AddAsync(It.IsAny<Locale>(), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(locale);
 
     var localeService = new LocaleService(_serviceServiceMock.Object, _localeRepositoryMock.Object);
     var result = await localeService.Create(locale, cancellationToken);
@@ -46,7 +47,13 @@ public class LocaleServiceTest
 
     _localeRepositoryMock.Verify(m => m.AddAsync(locale, cancellationToken), Times.Once);
     _localeRepositoryMock.Verify(m => m.SaveChangesAsync(cancellationToken), Times.Once);
-    _localeRepositoryMock.Verify(m => m.GetBySpecAsync(It.IsAny<LocaleByTagSpec>(), It.Is<CancellationToken>(c => c == cancellationToken)), Times.Once);
+    _localeRepositoryMock.Verify(
+      m => m.GetBySpecAsync(
+        It.IsAny<LocaleByTagSpec>(),
+        It.Is<CancellationToken>(c => c == cancellationToken)
+      ),
+      Times.Once
+    );
     _localeRepositoryMock.VerifyNoOtherCalls();
   }
 
@@ -59,7 +66,8 @@ public class LocaleServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _localeRepositoryMock.Setup(m => m.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(locale);
+    _localeRepositoryMock.Setup(m => m.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(locale);
 
     var localeService = new LocaleService(_serviceServiceMock.Object, _localeRepositoryMock.Object);
     var result = await localeService.GetById(localeId, cancellationToken);
@@ -84,9 +92,12 @@ public class LocaleServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _serviceServiceMock.Setup(m => m.GetByRouteName(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Result<Service>(service));
+    _serviceServiceMock
+     .Setup(m => m.GetByRouteName(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+     .ReturnsAsync(new Result<Service>(service));
 
-    _localeRepositoryMock.Setup(m => m.ListAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Locale> { locale0, locale1});
+    _localeRepositoryMock.Setup(m => m.ListAsync(It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(new List<Locale> { locale0, locale1 });
 
     var localeService = new LocaleService(_serviceServiceMock.Object, _localeRepositoryMock.Object);
     var result = await localeService.ListByServiceRouteName(serviceRouteName, cancellationToken);
@@ -94,7 +105,10 @@ public class LocaleServiceTest
     Assert.Equal(ResultStatus.Ok, result.Status);
     Assert.NotNull(result.Value);
 
-    _serviceServiceMock.Verify(m => m.GetByRouteName(serviceRouteName, cancellationToken), Times.Once());
+    _serviceServiceMock.Verify(
+      m => m.GetByRouteName(serviceRouteName, cancellationToken),
+      Times.Once()
+    );
     _serviceServiceMock.VerifyNoOtherCalls();
 
     _localeRepositoryMock.Verify(m => m.ListAsync(cancellationToken), Times.Once);
@@ -110,7 +124,8 @@ public class LocaleServiceTest
 
     var cancellationToken = new CancellationToken();
 
-    _localeRepositoryMock.Setup(m => m.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(locale);
+    _localeRepositoryMock.Setup(m => m.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                         .ReturnsAsync(locale);
 
     var localeService = new LocaleService(_serviceServiceMock.Object, _localeRepositoryMock.Object);
     var result = await localeService.Delete(localeId, cancellationToken);

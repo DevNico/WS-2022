@@ -9,10 +9,10 @@ public class GetByIssuesRequest
 
   [Required]
   public string Owner { get; set; } = null!;
-  
+
   [Required]
   public string Repo { get; set; } = null!;
-  
+
   public DateTime? ClosedAfter { get; set; } = null;
 
   [DefaultValue(100)]

@@ -33,20 +33,22 @@ public class ServiceService : IServiceService
 
     if (template == null)
     {
-      return Result<Service>.Invalid(new List<ValidationError>
-      {
-        new()
+      return Result<Service>.Invalid(
+        new List<ValidationError>
         {
-          Identifier = "ServiceTemplateId",
-          Severity = ValidationSeverity.Error,
-          ErrorMessage = "Service template not found"
+          new()
+          {
+            Identifier = "ServiceTemplateId",
+            Severity = ValidationSeverity.Error,
+            ErrorMessage = "Service template not found"
+          }
         }
-      });
+      );
     }
 
     var service = new Service(
-      name: name,
-      description: description,
+      name,
+      description,
       template,
       template.Organisation
     );
@@ -59,7 +61,8 @@ public class ServiceService : IServiceService
 
   public async Task<Result<List<Service>>> GetByOrganisationUserId(
     int organisationUserId,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken
+  )
   {
     var spec = new ServicesByOrganisationUserIdSpec(organisationUserId);
     var result = await _serviceRepository.ListAsync(spec, cancellationToken);
@@ -76,15 +79,19 @@ public class ServiceService : IServiceService
 
   public async Task<Result<Service>> GetByRouteName(
     string serviceRouteName,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken
+  )
   {
     var serviceSpec = new ServiceByRouteNameSpec(serviceRouteName);
     var service = await _serviceRepository.GetBySpecAsync(serviceSpec, cancellationToken);
     return ResultHelper.NullableSuccessNotFound(service);
   }
 
-  public async Task<Result<Service>> GetByNameAndOrganisationId(string name, int organisationId,
-    CancellationToken cancellationToken)
+  public async Task<Result<Service>> GetByNameAndOrganisationId(
+    string name,
+    int organisationId,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new ServiceByNameAndOrganisationIdSpec(name, organisationId);
     var result = await _serviceRepository.GetBySpecAsync(spec, cancellationToken);
@@ -111,8 +118,10 @@ public class ServiceService : IServiceService
     return Result.Success();
   }
 
-  public async Task<Result<ServiceTemplate>> GetServiceTemplate(int serviceTemplateId,
-    CancellationToken cancellationToken)
+  public async Task<Result<ServiceTemplate>> GetServiceTemplate(
+    int serviceTemplateId,
+    CancellationToken cancellationToken
+  )
   {
     var templateSpec = new ServiceTemplateByIdSpec(serviceTemplateId);
     var result = await _serviceTemplateRepository.GetBySpecAsync(templateSpec, cancellationToken);

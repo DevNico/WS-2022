@@ -8,6 +8,6 @@ public class ServiceUserDeactivatedEvent : DomainEventBase
   {
     ServiceUser = serviceUser;
   }
-  
+
   public ServiceUser ServiceUser { get; }
 }

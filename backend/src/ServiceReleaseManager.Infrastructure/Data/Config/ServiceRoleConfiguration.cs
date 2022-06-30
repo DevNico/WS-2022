@@ -9,7 +9,7 @@ public class ServiceRoleConfiguration : IEntityTypeConfiguration<ServiceRole>
   public void Configure(EntityTypeBuilder<ServiceRole> builder)
   {
     builder
-      .HasIndex(i => i.Name)
-      .IsUnique();
+     .HasIndex(i => i.Name)
+     .IsUnique();
   }
 }

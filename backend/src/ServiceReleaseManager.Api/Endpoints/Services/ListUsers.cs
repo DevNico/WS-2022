@@ -9,15 +9,16 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Services;
 
-public class ListUsers : EndpointBase
-  .WithRequest<ListUsersByServiceId>
-  .WithActionResult<List<ServiceUserRecord>>
+public class ListUsers : EndpointBase.WithRequest<ListUsersByServiceId>.WithActionResult<
+  List<ServiceUserRecord>>
 {
-  private readonly IServiceUserService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceUserService _service;
 
-  public ListUsers(IServiceUserService service,
-    IServiceManagerAuthorizationService authorizationService)
+  public ListUsers(
+    IServiceUserService service,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _service = service;
     _authorizationService = authorizationService;
@@ -33,11 +34,15 @@ public class ListUsers : EndpointBase
   [SwaggerResponse(404, "The service was not found")]
   public override async Task<ActionResult<List<ServiceUserRecord>>> HandleAsync(
     [FromRoute] ListUsersByServiceId request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorizationServiceId(User,
+    if (!await _authorizationService.EvaluateOrganisationAuthorizationServiceId(
+          User,
           request.ServiceId,
-          ServiceUserOperations.ServiceUser_List, cancellationToken))
+          ServiceUserOperations.ServiceUser_List,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

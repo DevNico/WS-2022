@@ -12,11 +12,13 @@ namespace ServiceReleaseManager.Api.Endpoints.Services;
 public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceRouteName>.WithActionResult<
   List<LocaleRecord>>
 {
-  private readonly ILocaleService _localeService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly ILocaleService _localeService;
 
-  public ListLocales(ILocaleService localeService,
-    IServiceManagerAuthorizationService authorizationService)
+  public ListLocales(
+    ILocaleService localeService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _localeService = localeService;
     _authorizationService = authorizationService;
@@ -32,10 +34,15 @@ public class ListLocales : EndpointBase.WithRequest<ListLocalesByServiceRouteNam
   [SwaggerResponse(404, "The service was not found")]
   public override async Task<ActionResult<List<LocaleRecord>>> HandleAsync(
     [FromRoute] ListLocalesByServiceRouteName request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceRouteName,
-          LocaleOperations.Locale_List, cancellationToken))
+    if (!await _authorizationService.EvaluateServiceAuthorization(
+          User,
+          request.ServiceRouteName,
+          LocaleOperations.Locale_List,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

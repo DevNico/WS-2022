@@ -17,17 +17,19 @@ public class Delete : EndpointBase.WithRequest<DeleteOrganisationRoleRequest>.Wi
 
   [HttpDelete(DeleteOrganisationRoleRequest.Route)]
   [SwaggerOperation(
-    Summary = "Deletes a OrganisationRole",
-    Description = "Deletes a OrganisationRole",
-    OperationId = "OrganisationRoles.Delete",
-    Tags = new[] { "OrganisationRole" })
+      Summary = "Deletes a OrganisationRole",
+      Description = "Deletes a OrganisationRole",
+      OperationId = "OrganisationRoles.Delete",
+      Tags = new[] { "OrganisationRole" }
+    )
   ]
   [SwaggerResponse(201, "OrganisationRole deleted")]
   [SwaggerResponse(404, "OrganisationRole not found")]
   [SwaggerResponse(409, "A User exists depending on this role")]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteOrganisationRoleRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var result =
       await _organisationRoleService.Delete(request.OrganisationRoleId, cancellationToken);

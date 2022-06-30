@@ -7,10 +7,10 @@ public sealed class ServiceByRouteNameSpec : Specification<Service>, ISingleResu
   public ServiceByRouteNameSpec(string routeName)
   {
     Query
-      .Where(s => s.IsActive)
-      .Where(s => s.RouteName == routeName.ToLower())
-      .Include(s => s.Releases)
-      .Include(s => s.Locales)
-      .Include(s => s.ServiceTemplate);
+     .Where(s => s.IsActive)
+     .Where(s => s.RouteName == routeName.ToLower())
+     .Include(s => s.Releases)
+     .Include(s => s.Locales)
+     .Include(s => s.ServiceTemplate);
   }
 }

@@ -11,8 +11,8 @@ namespace ServiceReleaseManager.Api.Endpoints.Services;
 public class
   GetById : EndpointBase.WithRequest<GetServiceByIdRequest>.WithActionResult<ServiceRecord>
 {
-  private readonly IServiceService _service;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IServiceService _service;
 
   public GetById(IServiceService service, IServiceManagerAuthorizationService authorizationService)
   {
@@ -31,13 +31,17 @@ public class
   [SwaggerResponse(400, "The service was not found")]
   public override async Task<ActionResult<ServiceRecord>> HandleAsync(
     [FromRoute] GetServiceByIdRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var service = await _service.GetById(request.ServiceId, cancellationToken);
 
-    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+    if (!service.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
           service.Value.OrganisationId,
-          ServiceOperations.Service_Read, cancellationToken))
+          ServiceOperations.Service_Read,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

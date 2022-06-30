@@ -13,9 +13,9 @@ namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplatesRequest>.
   WithActionResult<List<ServiceTemplateRecord>>
 {
-  private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
-  private readonly IOrganisationService _organisationService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IOrganisationService _organisationService;
+  private readonly IRepository<ServiceTemplate> _serviceTemplateRepository;
 
   public ListServiceTemplates(
     IRepository<ServiceTemplate> serviceTemplateRepository,
@@ -39,11 +39,15 @@ public class ListServiceTemplates : EndpointBase.WithRequest<ListServiceTemplate
   [SwaggerResponse(400, "Invalid ID")]
   public override async Task<ActionResult<List<ServiceTemplateRecord>>> HandleAsync(
     [FromRoute] ListServiceTemplatesRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          request.OrganisationRouteName, ServiceTemplateOperations.ServiceTemplate_List,
-          cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationRouteName,
+          ServiceTemplateOperations.ServiceTemplate_List,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

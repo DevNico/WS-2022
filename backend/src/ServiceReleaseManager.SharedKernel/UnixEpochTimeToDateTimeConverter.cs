@@ -11,8 +11,12 @@ public class UnixEpochTimeToDateTimeConverter : JsonConverter
     throw new NotImplementedException();
   }
 
-  public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue,
-    JsonSerializer serializer)
+  public override object? ReadJson(
+    JsonReader reader,
+    Type objectType,
+    object? existingValue,
+    JsonSerializer serializer
+  )
   {
     if (reader.TokenType is JsonToken.Null or not JsonToken.Integer)
     {

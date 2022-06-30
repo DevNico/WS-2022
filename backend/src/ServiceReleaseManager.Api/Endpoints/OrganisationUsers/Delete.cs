@@ -9,11 +9,13 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationUsers;
 
 public class Delete : EndpointBase.WithRequest<DeleteOrganisationUserRequest>.WithoutResult
 {
-  private readonly IOrganisationUserService _organisationUserService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IOrganisationUserService _organisationUserService;
 
-  public Delete(IOrganisationUserService organisationUserService,
-    IServiceManagerAuthorizationService authorizationService)
+  public Delete(
+    IOrganisationUserService organisationUserService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _organisationUserService = organisationUserService;
     _authorizationService = authorizationService;
@@ -21,21 +23,26 @@ public class Delete : EndpointBase.WithRequest<DeleteOrganisationUserRequest>.Wi
 
   [HttpDelete(DeleteOrganisationUserRequest.Route)]
   [SwaggerOperation(
-    Summary = "Deletes a OrganisationUser",
-    Description = "Deletes a OrganisationUser",
-    OperationId = "OrganisationUser.Delete",
-    Tags = new[] { "OrganisationUser" })
+      Summary = "Deletes a OrganisationUser",
+      Description = "Deletes a OrganisationUser",
+      OperationId = "OrganisationUser.Delete",
+      Tags = new[] { "OrganisationUser" }
+    )
   ]
   public override async Task<ActionResult> HandleAsync(
     [FromRoute] DeleteOrganisationUserRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var user =
       await _organisationUserService.GetById(request.OrganisationUserId, cancellationToken);
 
-    if (!user.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(User,
+    if (!user.IsSuccess || !await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
           user.Value.OrganisationId,
-          OrganisationUserOperations.OrganisationUser_Delete, cancellationToken))
+          OrganisationUserOperations.OrganisationUser_Delete,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

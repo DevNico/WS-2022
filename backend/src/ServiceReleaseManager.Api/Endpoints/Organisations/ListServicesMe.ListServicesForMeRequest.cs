@@ -9,5 +9,5 @@ public class ListServicesForMeRequest
 
   [Required]
   [FromRoute]
-  public string OrganisationRouteName { get; set; }
+  public string OrganisationRouteName { get; set; } = default!;
 }

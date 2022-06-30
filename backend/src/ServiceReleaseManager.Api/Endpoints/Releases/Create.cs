@@ -1,5 +1,4 @@
-﻿using Ardalis.Specification;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Api.Authorization;
 using ServiceReleaseManager.Api.Authorization.Operations.Service;
@@ -16,16 +15,17 @@ namespace ServiceReleaseManager.Api.Endpoints.Releases;
 public class Create : EndpointBase.WithRequest<CreateReleaseRequest>.WithActionResult<
   ReleaseRecord>
 {
+  private readonly IServiceManagerAuthorizationService _authorizationService;
   private readonly IRepository<Locale> _localeRepository;
   private readonly IRepository<Release> _releaseRepository;
   private readonly IRepository<Service> _serviceRepository;
-  private readonly IServiceManagerAuthorizationService _authorizationService;
 
   public Create(
     IRepository<Release> releaseRepository,
     IRepository<Locale> localeRepository,
     IRepository<Service> serviceRepository,
-    IServiceManagerAuthorizationService authorizationService)
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _releaseRepository = releaseRepository;
     _localeRepository = localeRepository;
@@ -36,18 +36,22 @@ public class Create : EndpointBase.WithRequest<CreateReleaseRequest>.WithActionR
   [HttpPost]
   [Authorize]
   [SwaggerOperation(
-    Summary = "Creates a new Release",
-    Description = "Creates a new Release",
-    OperationId = "Release.Create",
-    Tags = new[] { "Release" })
+      Summary = "Creates a new Release",
+      Description = "Creates a new Release",
+      OperationId = "Release.Create",
+      Tags = new[] { "Release" }
+    )
   ]
   [SwaggerResponse(StatusCodes.Status200OK, "The Release was created", typeof(ReleaseRecord))]
   [SwaggerResponse(StatusCodes.Status400BadRequest, "Service or locale id not found")]
-  [SwaggerResponse(StatusCodes.Status409Conflict,
-    "There already is an active release for this service")]
+  [SwaggerResponse(
+    StatusCodes.Status409Conflict,
+    "There already is an active release for this service"
+  )]
   public override async Task<ActionResult<ReleaseRecord>> HandleAsync(
     CreateReleaseRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var service = await _serviceRepository.GetByIdAsync(request.ServiceId, cancellationToken);
 
@@ -57,8 +61,12 @@ public class Create : EndpointBase.WithRequest<CreateReleaseRequest>.WithActionR
       return BadRequest("Service id not found");
     }
 
-    if (!await _authorizationService.EvaluateServiceAuthorization(User, request.ServiceId,
-          ReleaseOperations.Release_Create, cancellationToken))
+    if (!await _authorizationService.EvaluateServiceAuthorization(
+          User,
+          request.ServiceId,
+          ReleaseOperations.Release_Create,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }
@@ -83,8 +91,10 @@ public class Create : EndpointBase.WithRequest<CreateReleaseRequest>.WithActionR
     var locales = localesByServiceSpec.Evaluate(allLocales);
     var localeById = locales.ToDictionary(l => l.Id);
 
-    if (request.LocalisedMetadataList.Any(localisedMetadata =>
-          !localeById.ContainsKey(localisedMetadata.LocaleId)))
+    if (request.LocalisedMetadataList.Any(
+          localisedMetadata =>
+            !localeById.ContainsKey(localisedMetadata.LocaleId)
+        ))
     {
       return BadRequest("Locale id not found");
     }

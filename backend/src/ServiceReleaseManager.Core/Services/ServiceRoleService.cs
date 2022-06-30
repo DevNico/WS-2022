@@ -9,18 +9,23 @@ namespace ServiceReleaseManager.Core.Services;
 
 public class ServiceRoleService : IServiceRoleService
 {
-  private readonly IRepository<ServiceRole> _repository;
   private readonly IOrganisationService _organisationService;
+  private readonly IRepository<ServiceRole> _repository;
 
-  public ServiceRoleService(IRepository<ServiceRole> repository,
-    IOrganisationService organisationService)
+  public ServiceRoleService(
+    IRepository<ServiceRole> repository,
+    IOrganisationService organisationService
+  )
   {
     _repository = repository;
     _organisationService = organisationService;
   }
 
-  public async Task<Result<ServiceRole>> Create(int organisationId, ServiceRole serviceRole,
-    CancellationToken cancellationToken)
+  public async Task<Result<ServiceRole>> Create(
+    int organisationId,
+    ServiceRole serviceRole,
+    CancellationToken cancellationToken
+  )
   {
     var organisation = await _organisationService.GetById(organisationId, cancellationToken);
     if (!organisation.IsSuccess)
@@ -37,8 +42,10 @@ public class ServiceRoleService : IServiceRoleService
     return ResultHelper.NullableSuccessNotFound(created);
   }
 
-  public async Task<Result<List<ServiceRole>>> GetByOrganisationId(int organisationId,
-    CancellationToken cancellationToken)
+  public async Task<Result<List<ServiceRole>>> GetByOrganisationId(
+    int organisationId,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new ServiceRolesByOrganisationIdSpec(organisationId);
     var result = await _repository.ListAsync(spec, cancellationToken);
@@ -54,8 +61,10 @@ public class ServiceRoleService : IServiceRoleService
     return ResultHelper.NullableSuccessNotFound(role);
   }
 
-  public async Task<Result<List<ServiceRole>>> GetByName(string name,
-    CancellationToken cancellationToken)
+  public async Task<Result<List<ServiceRole>>> GetByName(
+    string name,
+    CancellationToken cancellationToken
+  )
   {
     var spec = new ServiceRoleByNameSpec(name);
     var role = await _repository.ListAsync(spec, cancellationToken);

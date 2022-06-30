@@ -9,16 +9,18 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 
-public class ListServiceRoles : EndpointBase
-  .WithRequest<ListServiceRolesRequest>
-  .WithActionResult<List<ServiceRoleRecord>>
+public class ListServiceRoles : EndpointBase.WithRequest<ListServiceRolesRequest>.WithActionResult<
+  List<ServiceRoleRecord>>
 {
-  private readonly IServiceRoleService _service;
-  private readonly IOrganisationService _organisationService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IOrganisationService _organisationService;
+  private readonly IServiceRoleService _service;
 
-  public ListServiceRoles(IServiceRoleService service, IOrganisationService organisationService,
-    IServiceManagerAuthorizationService authorizationService)
+  public ListServiceRoles(
+    IServiceRoleService service,
+    IOrganisationService organisationService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _service = service;
     _organisationService = organisationService;
@@ -35,10 +37,15 @@ public class ListServiceRoles : EndpointBase
   [SwaggerResponse(404, "The organisation does not exist")]
   public override async Task<ActionResult<List<ServiceRoleRecord>>> HandleAsync(
     [FromRoute] ListServiceRolesRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User,
-          request.OrganisationRouteName, ServiceRoleOperations.ServiceRole_List, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationRouteName,
+          ServiceRoleOperations.ServiceRole_List,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }

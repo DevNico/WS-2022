@@ -7,9 +7,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.ReleaseTriggers;
 
-public class Create : EndpointBase
-  .WithRequest<CreateReleaseTriggerRequest>
-  .WithActionResult<ReleaseTriggerRecord>
+public class Create : EndpointBase.WithRequest<CreateReleaseTriggerRequest>.WithActionResult<
+  ReleaseTriggerRecord>
 {
   private readonly IReleaseTriggerService _service;
   private readonly IServiceService _serviceService;
@@ -31,13 +30,15 @@ public class Create : EndpointBase
   [SwaggerResponse(400, "A parameter was null or invalid", typeof(ErrorResponse))]
   public override async Task<ActionResult<ReleaseTriggerRecord>> HandleAsync(
     [FromBody] CreateReleaseTriggerRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var service = await _serviceService.GetById(request.ServiceId, cancellationToken);
     if (!service.IsSuccess)
     {
       return BadRequest(
-        new ErrorResponse($"A service with the id {request.ServiceId} does not exist."));
+        new ErrorResponse($"A service with the id {request.ServiceId} does not exist.")
+      );
     }
 
     var trigger = new ReleaseTrigger(request.Name, request.Event, request.Url, service.Value);

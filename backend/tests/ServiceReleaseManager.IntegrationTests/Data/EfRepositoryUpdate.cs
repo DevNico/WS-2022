@@ -19,7 +19,7 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
 
     // fetch the item and update its title
     var newOrganisation = (await repository.ListAsync())
-      .FirstOrDefault(project => project.Id == organisation.Id);
+     .FirstOrDefault(project => project.Id == organisation.Id);
     if (newOrganisation == null)
     {
       Assert.NotNull(newOrganisation);
@@ -34,7 +34,7 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
 
     // Fetch the updated item
     var updatedItem = (await repository.ListAsync())
-      .FirstOrDefault(project => project.Id == newOrganisation.Id);
+     .FirstOrDefault(project => project.Id == newOrganisation.Id);
 
     Assert.NotNull(updatedItem);
     Assert.Equal(organisation.Name, updatedItem?.Name);

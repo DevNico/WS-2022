@@ -9,8 +9,9 @@ public class GitHubCommit : GitHubEntity
   public CommitInformation Info { get; set; } = default!;
 
   [JsonIgnore]
-  public override string Title { 
-    get => Info.Message; 
-    set => Info.Message = value; 
+  public override string Title
+  {
+    get => Info.Message;
+    set => Info.Message = value;
   }
 }

@@ -9,13 +9,13 @@ public class ServiceTemplateConfiguration : IEntityTypeConfiguration<ServiceTemp
   public void Configure(EntityTypeBuilder<ServiceTemplate> builder)
   {
     builder
-      .HasIndex(s => s.Name)
-      .IsUnique();
+     .HasIndex(s => s.Name)
+     .IsUnique();
 
     builder
-      .HasOne(s => s.Organisation)
-      .WithMany()
-      .HasForeignKey(s => s.OrganisationId)
-      .IsRequired();
+     .HasOne(s => s.Organisation)
+     .WithMany(o => o.ServiceTemplates)
+     .HasForeignKey(s => s.OrganisationId)
+     .IsRequired();
   }
 }

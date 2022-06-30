@@ -24,7 +24,10 @@ public class ReleaseTriggerService : IReleaseTriggerService
     return ResultHelper.NullableSuccessNotFound(organisation);
   }
 
-  public async Task<Result<ReleaseTrigger>> Create(ReleaseTrigger trigger, CancellationToken cancellationToken)
+  public async Task<Result<ReleaseTrigger>> Create(
+    ReleaseTrigger trigger,
+    CancellationToken cancellationToken
+  )
   {
     var created = await _repository.AddAsync(trigger, cancellationToken);
     await _repository.SaveChangesAsync(cancellationToken);

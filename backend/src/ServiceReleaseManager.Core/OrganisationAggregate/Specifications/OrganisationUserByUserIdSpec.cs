@@ -7,7 +7,7 @@ public sealed class OrganisationUserByUserIdSpec : Specification<OrganisationUse
   public OrganisationUserByUserIdSpec(string userId)
   {
     Query
-      .Where(user => user.IsActive)
-      .Where(user => user.UserId == userId);
+     .Where(user => user.IsActive)
+     .Where(user => user.UserId == userId);
   }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Ardalis.Result.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceReleaseManager.Core.Interfaces;
 using ServiceReleaseManager.SharedKernel;
@@ -19,14 +18,19 @@ public class ListMe : EndpointBase.WithoutRequest.WithActionResult<List<Organisa
 
   [HttpGet("me")]
   [SwaggerOperation(
-    Summary = "Get all Organisations the current user is a member of",
-    OperationId = "Organisations.Me",
-    Tags = new[] { "Organisation" })
+      Summary = "Get all Organisations the current user is a member of",
+      OperationId = "Organisations.Me",
+      Tags = new[] { "Organisation" }
+    )
   ]
-  [SwaggerResponse(StatusCodes.Status200OK, "Organisations found",
-    typeof(List<OrganisationRecord>))]
+  [SwaggerResponse(
+    StatusCodes.Status200OK,
+    "Organisations found",
+    typeof(List<OrganisationRecord>)
+  )]
   public override async Task<ActionResult<List<OrganisationRecord>>> HandleAsync(
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
     if (email == null)
@@ -36,7 +40,11 @@ public class ListMe : EndpointBase.WithoutRequest.WithActionResult<List<Organisa
 
     var result = await _organisationService.ListByUserEmail(email, cancellationToken);
 
-    return this.ToActionResult(result.MapValue(organisations =>
-      organisations.ConvertAll(OrganisationRecord.FromEntity)));
+    return this.ToActionResult(
+      result.MapValue(
+        organisations =>
+          organisations.ConvertAll(OrganisationRecord.FromEntity)
+      )
+    );
   }
 }

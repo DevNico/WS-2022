@@ -9,15 +9,18 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace ServiceReleaseManager.Api.Endpoints.Organisations;
 
-public class ListServicesMe : EndpointBase
-  .WithRequest<ListServicesForMeRequest>
-  .WithActionResult<List<ServiceRecord>>
+public class ListServicesMe : EndpointBase.WithRequest<ListServicesForMeRequest>.WithActionResult<
+  List<ServiceRecord>>
 {
-  private readonly IOrganisationUserService _organisationUserService;
   private readonly IOrganisationService _organisationService;
+  private readonly IOrganisationUserService _organisationUserService;
   private readonly IServiceService _service;
 
-  public ListServicesMe(IServiceService service, IOrganisationUserService organisationUserService, IOrganisationService organisationService)
+  public ListServicesMe(
+    IServiceService service,
+    IOrganisationUserService organisationUserService,
+    IOrganisationService organisationService
+  )
   {
     _service = service;
     _organisationUserService = organisationUserService;
@@ -34,12 +37,19 @@ public class ListServicesMe : EndpointBase
   [SwaggerResponse(200, "The operation was successful", typeof(List<ServiceRecord>))]
   public override async Task<ActionResult<List<ServiceRecord>>> HandleAsync(
     [FromRoute] ListServicesForMeRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
     var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
-    if (email == null) return Unauthorized();
+    if (email == null)
+    {
+      return Unauthorized();
+    }
 
-    var organisation = await _organisationService.GetByRouteName(request.OrganisationRouteName, cancellationToken);
+    var organisation = await _organisationService.GetByRouteName(
+      request.OrganisationRouteName,
+      cancellationToken
+    );
     if (!organisation.IsSuccess)
     {
       return Unauthorized();

@@ -12,11 +12,13 @@ namespace ServiceReleaseManager.Api.Endpoints.OrganisationRoles;
 public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.WithActionResult<
   OrganisationRoleRecord>
 {
-  private readonly IOrganisationRoleService _organisationRoleService;
   private readonly IServiceManagerAuthorizationService _authorizationService;
+  private readonly IOrganisationRoleService _organisationRoleService;
 
-  public Create(IOrganisationRoleService organisationRoleService,
-    IServiceManagerAuthorizationService authorizationService)
+  public Create(
+    IOrganisationRoleService organisationRoleService,
+    IServiceManagerAuthorizationService authorizationService
+  )
   {
     _organisationRoleService = organisationRoleService;
     _authorizationService = authorizationService;
@@ -24,23 +26,36 @@ public class Create : EndpointBase.WithRequest<CreateOrganisationRoleRequest>.Wi
 
   [HttpPost]
   [SwaggerOperation(
-    Summary = "Creates a new OrganisationRole",
-    Description = "Creates a new OrganisationRole",
-    OperationId = "OrganisationRole.Create",
-    Tags = new[] { "OrganisationRole" })
+      Summary = "Creates a new OrganisationRole",
+      Description = "Creates a new OrganisationRole",
+      OperationId = "OrganisationRole.Create",
+      Tags = new[] { "OrganisationRole" }
+    )
   ]
   public override async Task<ActionResult<OrganisationRoleRecord>> HandleAsync(
     [FromBody] CreateOrganisationRoleRequest request,
-    CancellationToken cancellationToken = new())
+    CancellationToken cancellationToken = new()
+  )
   {
-    if (!await _authorizationService.EvaluateOrganisationAuthorization(User, request.OrganisationId,
-          OrganisationRoleOperation.OrganisationRole_Create, cancellationToken))
+    if (!await _authorizationService.EvaluateOrganisationAuthorization(
+          User,
+          request.OrganisationId,
+          OrganisationRoleOperation.OrganisationRole_Create,
+          cancellationToken
+        ))
     {
       return Unauthorized();
     }
 
-    var newRole = new OrganisationRole(request.OrganisationId, request.Name, request.ServiceWrite,
-      request.ServiceDelete, request.UserRead, request.UserWrite, request.UserDelete);
+    var newRole = new OrganisationRole(
+      request.OrganisationId,
+      request.Name,
+      request.ServiceWrite,
+      request.ServiceDelete,
+      request.UserRead,
+      request.UserWrite,
+      request.UserDelete
+    );
 
     var result = await _organisationRoleService.Create(newRole, cancellationToken);
 

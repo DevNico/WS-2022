@@ -41,7 +41,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
     }
 
     return GetProperties().All(p => PropertiesAreEqual(obj, p))
-           && GetFields().All(f => FieldsAreEqual(obj, f));
+        && GetFields().All(f => FieldsAreEqual(obj, f));
   }
 
   private bool PropertiesAreEqual(object obj, PropertyInfo p)
@@ -59,9 +59,9 @@ public abstract class ValueObject : IEquatable<ValueObject>
     if (properties == null)
     {
       properties = GetType()
-        .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-        .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
-        .ToList();
+                  .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                  .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
+                  .ToList();
 
       // Not available in Core
       // !Attribute.IsDefined(p, typeof(IgnoreMemberAttribute))).ToList();
@@ -75,8 +75,8 @@ public abstract class ValueObject : IEquatable<ValueObject>
     if (fields == null)
     {
       fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public)
-        .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
-        .ToList();
+                        .Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
+                        .ToList();
     }
 
     return fields;

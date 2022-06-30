@@ -9,12 +9,16 @@ public static class KebabNamespace
 {
   public static MvcOptions UseKebabCaseNamespaceRouteToken(this MvcOptions options)
   {
-    options.Conventions.Add(new CustomRouteToken(
-      "namespace", (Func<ControllerModel, string>)(c =>
-      {
-        var str = c.ControllerType.Namespace ?? String.Empty;
-        return str.Split(new[] { '.' }).Last().PascalToKebabCase();
-      })));
+    options.Conventions.Add(
+      new CustomRouteToken(
+        "namespace",
+        c =>
+        {
+          var str = c.ControllerType.Namespace ?? String.Empty;
+          return str.Split(new[] { '.' }).Last().PascalToKebabCase();
+        }
+      )
+    );
     return options;
   }
 
@@ -47,9 +51,9 @@ public static class KebabNamespace
   private class CustomRouteToken : IApplicationModelConvention
   {
     private readonly string _tokenRegex;
-    private readonly Func<ControllerModel, string?> _valueGenerator;
+    private readonly Func<ControllerModel, string> _valueGenerator;
 
-    public CustomRouteToken(string tokenName, Func<ControllerModel, string?> valueGenerator)
+    public CustomRouteToken(string tokenName, Func<ControllerModel, string> valueGenerator)
     {
       _tokenRegex = "(\\[" + tokenName + "])(?<!\\[\\1(?=]))";
       _valueGenerator = valueGenerator;
@@ -64,14 +68,18 @@ public static class KebabNamespace
         UpdateSelectors(
           controller.Actions.SelectMany(
             a =>
-              a.Selectors), tokenValue);
+              a.Selectors
+          ),
+          tokenValue
+        );
       }
     }
 
-    private void UpdateSelectors(IEnumerable<SelectorModel> selectors, string? tokenValue)
+    private void UpdateSelectors(IEnumerable<SelectorModel> selectors, string tokenValue)
     {
       foreach (var selectorModel in selectors.Where(
-                 s => s.AttributeRouteModel != null))
+                 s => s.AttributeRouteModel != null
+               ))
       {
         if (selectorModel.AttributeRouteModel == null)
         {
@@ -85,7 +93,7 @@ public static class KebabNamespace
       }
     }
 
-    private string? InsertTokenValue(string? template, string? tokenValue)
+    private string? InsertTokenValue(string? template, string tokenValue)
     {
       return template == null
         ? template

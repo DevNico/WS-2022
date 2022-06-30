@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 using ServiceReleaseManager.Core.ServiceAggregate;
 using ServiceReleaseManager.SharedKernel;
 using ServiceReleaseManager.SharedKernel.Interfaces;
@@ -8,7 +9,7 @@ namespace ServiceReleaseManager.Core.ReleaseAggregate;
 
 public class ReleaseLocalisedMetadata : EntityBase, IAggregateRoot
 {
-  // Used by EF Core
+  [UsedImplicitly]
   protected ReleaseLocalisedMetadata()
   {
   }
@@ -24,15 +25,15 @@ public class ReleaseLocalisedMetadata : EntityBase, IAggregateRoot
 
   [Required]
   [Column(TypeName = "json")]
-  public string Metadata { get; set; }
+  public string Metadata { get; set; } = null!;
 
   [Required]
   public int ReleaseId { get; }
 
-  public Release Release { get; set; }
+  public Release Release { get; set; } = null!;
 
   [Required]
   public int LocaleId { get; }
 
-  public Locale Locale { get; set; }
+  public Locale Locale { get; set; } = null!;
 }

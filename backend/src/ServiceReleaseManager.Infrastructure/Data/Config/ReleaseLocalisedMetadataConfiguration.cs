@@ -10,8 +10,8 @@ public class
   public void Configure(EntityTypeBuilder<ReleaseLocalisedMetadata> builder)
   {
     builder
-      .HasOne(localisedMetadata => localisedMetadata.Locale)
-      .WithMany()
-      .HasForeignKey(localisedMetadata => localisedMetadata.LocaleId);
+     .HasOne(localisedMetadata => localisedMetadata.Locale)
+     .WithMany()
+     .HasForeignKey(localisedMetadata => localisedMetadata.LocaleId);
   }
 }

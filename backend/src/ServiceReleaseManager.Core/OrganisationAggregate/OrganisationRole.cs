@@ -6,8 +6,15 @@ namespace ServiceReleaseManager.Core.OrganisationAggregate;
 
 public class OrganisationRole : EntityBase, IAggregateRoot
 {
-  public OrganisationRole(int organisationId, string name, bool serviceWrite, bool serviceDelete,
-    bool userRead, bool userWrite, bool userDelete)
+  public OrganisationRole(
+    int organisationId,
+    string name,
+    bool serviceWrite,
+    bool serviceDelete,
+    bool userRead,
+    bool userWrite,
+    bool userDelete
+  )
   {
     OrganisationId = organisationId;
     Name = name;
@@ -16,15 +23,6 @@ public class OrganisationRole : EntityBase, IAggregateRoot
     UserRead = userRead;
     UserWrite = userWrite;
     UserDelete = userDelete;
-  }
-
-  public static List<OrganisationRole> GetDefaultRoles(int organisationId)
-  {
-    return new List<OrganisationRole>
-    {
-      new(organisationId, "Admin", true, true, true, true, true),
-      new(organisationId, "User", false, false, true, false, false)
-    };
   }
 
   [Required]
@@ -49,5 +47,12 @@ public class OrganisationRole : EntityBase, IAggregateRoot
 
   public int OrganisationId { get; set; }
 
-  public List<OrganisationUser> Users { get; set; } = new();
+  public static List<OrganisationRole> GetDefaultRoles(int organisationId)
+  {
+    return new List<OrganisationRole>
+    {
+      new(organisationId, "Admin", true, true, true, true, true),
+      new(organisationId, "User", false, false, true, false, false)
+    };
+  }
 }

@@ -34,8 +34,10 @@ public static class ApiTokenHelper
     {
       Subject = new ClaimsIdentity(claims.ToArray()),
       Expires = DateTime.UtcNow.AddHours(1),
-      SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(AuthorizationKey),
-        SecurityAlgorithms.HmacSha256Signature)
+      SigningCredentials = new SigningCredentials(
+        new SymmetricSecurityKey(AuthorizationKey),
+        SecurityAlgorithms.HmacSha256Signature
+      )
     };
     var tokenHandler = new JwtSecurityTokenHandler();
     var token = tokenHandler.CreateToken(tokenDescriptor);
